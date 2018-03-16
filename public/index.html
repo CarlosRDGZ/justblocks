@@ -4,19 +4,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link rel="stylesheet" href="bulma">
-  <title>Document</title>
+  <link rel="stylesheet" href="bulma.css">
+  <title>JustBlocks</title>
 </head>
-<body>
+<body style="text-align: center;">
+  <section class="hero is-danger">
+    <div class="hero-body">
+      <h1 class="title" style="text-align: left;">JustBlocks</h1>
+    </div>
+  </section>
   <section class="section">
-    <div class="container">
-      <h1 class="title">
-        Hello World
-      </h1>
-      <p class="subtitle">
-        My first website with <strong>Bulma</strong>!
-      </p>
-      <button class="button is-primary">button</button>
+    <img src="kamikaze.jpg" alt="Foto de perfil" class="image is-128x128" style="display: block; margin: 0 auto;"></img>
+    <br>
+    <div class="container" style="border: ">
+      <form id="login" action="" method="POST">
+        <input type="text" name="user" class="input is-rounded" placeholder="Usuario" style="width: 450px;">
+        <br>
+        <br>
+        <input type="password" name="password" class="input is-rounded" placeholder="Contraseña" style="width: 450px;">
+      </form>
+        <p>¿No tienes usuario? <a href="">Regístrate</a></p>
+        <br>
+        <button type="submit" for="login" class="button is-danger is-rounded">Iniciar sesión</button>
+    </div>
+    <div>
     </div>
   </section>
 </body>
