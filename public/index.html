@@ -4,31 +4,172 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link rel="stylesheet" href="bulma.css">
+  <!-- Style -->
+  <link rel="stylesheet" href="./../node_modules/bulma/css/bulma.css">
+  <link rel="stylesheet" href="./../node_modules/bulma-extensions/dist/bulma-extensions.min.css">
+
   <title>JustBlocks</title>
 </head>
-<body style="text-align: center;">
-  <section class="hero is-danger">
-    <div class="hero-body">
-      <h1 class="title" style="text-align: left;">JustBlocks</h1>
+
+<body>
+  <!-- Navbar -->
+  <nav class="navbar is-transparent" role="navigation">
+    <div class="navbar-brand">
+      <a href="./index.html" class="navbar-item">
+        <span>
+          <i class="fas fa-cubes fa-3x"></i>
+        </span>
+        <span hidden>
+          <h1 class="title" style="color: white">JustBlocks</h1>
+        </span>
+      </a>
+      <div class="navbar-burger burger" data-target="nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
     </div>
-  </section>
-  <section class="section">
-    <img src="kamikaze.jpg" alt="Foto de perfil" class="image is-128x128" style="display: block; margin: 0 auto;"></img>
-    <br>
-    <div class="container" style="border: ">
-      <form id="login" action="" method="POST">
-        <input type="text" name="user" class="input is-rounded" placeholder="Usuario" style="width: 450px;">
-        <br>
-        <br>
-        <input type="password" name="password" class="input is-rounded" placeholder="Contraseña" style="width: 450px;">
-      </form>
-        <p>¿No tienes usuario? <a href="">Regístrate</a></p>
-        <br>
-        <button type="submit" for="login" class="button is-danger is-rounded">Iniciar sesión</button>
+    <div id="nav" class="navbar-menu">
+      <div class="navbar-start">
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a href="" class="navbar-link">
+            <b>Convocatorias</b>
+          </a>
+          <div class="navbar-dropdown is-boxed">
+            <a href="" class="navbar-item">Abiertas</a>
+            <a href="" class="navbar-item">Resultados</a>
+          </div>
+        </div>
+        <a href="" class="navbar-item">
+          <b>Servicios</b>
+        </a>
+        <a href="" class="navbar-item">
+          <b>M&eacute;todo Evaluaci&oacute;n</b>
+        </a>
+      </div>
+      <div class="navbar-end">
+        <div class="navbar-item">
+          <div class="field is-grouped">
+            <p class="control">
+              <a href="" class="button is-primary">
+                <span>
+                  <i class="fas fa-sign-in-alt  "></i>
+                </span>
+                <span>Sign in</span>
+              </a>
+            </p>
+            <p class="control">
+              <span>or</span>
+            </p>
+            <p class="control">
+              <a href="" class="button is-info">
+                <span>
+                  <i class="fas fa-user-plus"></i>
+                </span>
+                <span>Sign up</span>
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
-    <div>
+  </nav>
+  <!-- /Navbar -->
+  <section class="hero is-medium has-carousel">
+    <div class="hero-carousel carousel-animated carousel-animate-fade">
+      <div class='carousel-container'>
+        <div class='carousel-item has-background is-active'>
+          <img class="is-background" src="https://wikiki.github.io/images/merry-christmas.jpg" alt="" />
+        </div>
+        <div class='carousel-item has-background'>
+          <img class="is-background" src="https://wikiki.github.io/images/singer.jpg" alt="" />
+        </div>
+        <div class='carousel-item has-background'>
+          <img class="is-background" src="https://wikiki.github.io/images/sushi.jpg" alt="" />
+        </div>
+        <div class='carousel-item has-background'>
+          <img class="is-background" src="https://wikiki.github.io/images/life.jpg" alt="" />
+        </div>
+      </div>
+      <div class="carousel-navigation is-overlay">
+        <div class="carousel-nav-left">
+          <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        </div>
+        <div class="carousel-nav-right">
+          <i class="fa fa-chevron-right" aria-hidden="true"></i>
+        </div>
+      </div>
     </div>
+    <div class="hero-body has-text-centered">
+      <div class="columns is-mobile is-centered">
+        <div class="column is-half is-narrow">
+          <div class="field has-addons has-icons-left">
+            <div class="control is-expanded has-icons-left">
+              <input class="input" type="text" placeholder="Encontrar Convocatoria">
+              <span class="icon is-small is-left">
+                  <i class="fas fa-search"></i> 
+              </span>
+            </div>
+            <div class="control">
+              <a class="button is-info">
+                Buscar
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--div class="hero-foot">
+      <nav class="tabs is-boxed is-fullwidth">
+        <div class="container">
+          <ul>
+            <li class="is-active">
+              <a>Overview</a>
+            </li>
+            <li>
+              <a class="has-text-white">Modifiers</a>
+            </li>
+            <li>
+              <a class="has-text-white">Grid</a>
+            </li>
+            <li>
+              <a class="has-text-white">Elements</a>
+            </li>
+            <li>
+              <a class="has-text-white">Components</a>
+            </li>
+            <li>
+              <a class="has-text-white">Layout</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div-->
   </section>
 </body>
+<footer>
+  <script defer src="./js/fontawesome-all.js"></script>
+  <script src="./../node_modules/bulma-extensions/bulma-carousel/dist/bulma-carousel.min.js"></script>
+</footer>
+
 </html>
+
+<!--
+  <div class="field">
+    <p class="control has-icons-left is-primary">
+      <input type="text" class="input" placeholder="Buscar JustBlocks">
+      <span class="icon is-small is-left">
+        <i class="fas fa-search"></i>
+      </span>
+    </p>
+  </div>
+  
+  <section class="hero is-bold is-primary is-centered">
+    <div class="hero-body">
+      <div class="container">
+        <h1 class="title">Convocatorias</h1>
+        <h2 class="subtitle"></h2>
+      </div>
+    </div>
+  </section>
+-->
