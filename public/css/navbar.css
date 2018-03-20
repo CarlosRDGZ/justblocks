@@ -1,3 +1,47 @@
 #mainNavbar { background-color: rgb(66, 110, 160); }
-.button.is-primary.is-inverted{ border: solid 1px #00d1b2; }
-.button.is-info.is-inverted { border: solid 1px #209cee; }
+
+.button.is-info.is-outlined {
+    background-color: #fff;
+    border-color: #209cee;
+    color: #209cee
+}
+
+.button.is-info.is-outlined:focus,
+.button.is-info.is-outlined:hover {
+    background-color: #209cee;
+    border-color: #209cee;
+    color: #fff
+}
+
+.button.is-info.is-outlined.is-loading:after {
+    border-color: #fff #fff #209cee #209cee!important
+}
+
+.button.is-info.is-outlined[disabled] {
+    background-color: #fff;
+    border-color: #209cee;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    color: #209cee
+}
+
+.button.is-primary.is-outlined {
+    background-color: #fff;
+    border-color: #00d1b2;
+    color: #00d1b2
+}
+
+.button.is-primary.is-outlined:focus,
+.button.is-primary.is-outlined:hover {
+    background-color: #00d1b2;
+    border-color: #00d1b2;
+    color: #fff
+}
+
+.button.is-primary.is-outlined.is-loading:after {
+    border-color: #fff #fff #00d1b2 #00d1b2!important
+}
+
+.button.is-primary.is-outlined[disabled] {
+    background-color: #fff;
+}
