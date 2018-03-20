@@ -100,7 +100,11 @@
         <div class="navbar-item">
           <div class="field is-grouped">
             <p class="control">
+<<<<<<< HEAD
               <a href="#" class="button is-primary">
+=======
+              <a href="#" onclick="launchSignInModal()" class="button is-primary" data-toggle="modal">
+>>>>>>> 5fa25746b26fa60bdd7a3a4a84c921ff2ab4ea5f
                 <span>
                   <i class="fas fa-sign-in-alt"></i>
                 </span>
@@ -111,7 +115,11 @@
               <span>or</span>
             </p>
             <p class="control">
+<<<<<<< HEAD
               <a href="#" class="button is-info">
+=======
+              <a href="#" onclick="launchSignUpModal()" class="button is-info" data-toggle="modal">
+>>>>>>> 5fa25746b26fa60bdd7a3a4a84c921ff2ab4ea5f
                 <span>
                   <i class="fas fa-user-plus"></i>
                 </span>
@@ -172,6 +180,68 @@
     </div>
   </section>
 
+  <!--Modals-->
+  <!--SignIn-->
+  <div id="signIn" class="modal" role="dialog">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head" style="background: hsl(204, 86%, 53%);">
+        <p class="modal-card-title">Iniciar sesión</p>
+        <button class="delete" aria-label="close" onclick="closeSignInModal()" style="background: red;"></button>
+      </header>
+      <section class="modal-card-body" style="text-align: center;">
+
+        <img src="images\user.png" alt="Foto de perfil" class="image is-128x128" 
+              style="display: block; margin: 0 auto; border-radius: 50%"></img>
+        <br>
+        <div class="">
+          <form id="login" action="" method="POST">
+            <input type="text" name="user" class="input is-rounded" placeholder="Usuario" style="width: 450px;">
+            <br>
+            <br>
+            <input type="password" name="password" class="input is-rounded" placeholder="Contraseña" style="width: 450px;">
+          </form>
+            <p>¿No tienes usuario? <a href="#" onclick="toSignUp()">Regístrate</a></p>
+            <br>
+            <button type="submit" for="login" class="button is-info is-rounded">Iniciar sesión</button>
+        </div>
+
+      </section>
+    </div>
+  </div>
+
+  <!--SignUp-->
+  <div id="signUp" class="modal" role="dialog">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head" style="background: hsl(204, 86%, 53%);">
+        <p class="modal-card-title">Regístrate</p>
+        <button class="delete" aria-label="close" onclick="closeSignUpModal()" style="background: red;"></button>
+      </header>
+      <section class="modal-card-body" style="text-align: center;">
+
+        <br>
+        <div class="">
+          <form id="register" action="" method="POST">
+            <input type="text" name="user" class="input is-rounded" placeholder="Usuario" style="width: 450px;">
+            <br>
+            <br>
+            <input type="password" name="password" class="input is-rounded" placeholder="Contraseña" style="width: 450px;">
+            <br>
+            <br>
+            <input type="password" name="confirmPassword" class="input is-rounded" 
+                    placeholder="Confirmar contraseña" style="width: 450px;">
+          </form>
+            <p>¿Ya tienes cuenta?<a href="#" onclick="toSignIn()">Inicia sesión</a></p>
+            <br>
+            <button type="submit" for="login" class="button is-info is-rounded">Registrarse</button>
+        </div>
+
+      </section>
+    </div>
+  </div>
+
+<!--
   <main class="section">
     <div class="container-fluid">
       <div class="columns is-variable is-6">
@@ -351,8 +421,13 @@
         </article>
       </div>
     </div>
+<<<<<<< HEAD
     </div>
   </section>
+=======
+  </main>
+-->
+>>>>>>> 5fa25746b26fa60bdd7a3a4a84c921ff2ab4ea5f
 </body>
 <footer class="footer">
   <div class="container">
@@ -373,6 +448,43 @@
   </div>
   <script defer src="./js/fontawesome-all.js"></script>
   <script src="./../node_modules/bulma-extensions/bulma-carousel/dist/bulma-carousel.min.js"></script>
+  <script type="text/javascript">
+    function launchSignInModal()
+    {
+      var modal = document.getElementById("signIn");
+      modal.classList.add("is-active");
+    }
+
+    function closeSignInModal()
+    {
+      var modal = document.getElementById("signIn");
+      modal.classList.remove("is-active");
+    }
+
+    function launchSignUpModal()
+    {
+      var modal = document.getElementById("signUp");
+      modal.classList.add("is-active");
+    }
+
+    function closeSignUpModal()
+    {
+      var modal = document.getElementById("signUp");
+      modal.classList.remove("is-active");
+    }
+
+    function toSignUp()
+    {
+      closeSignInModal();
+      launchSignUpModal();
+    }
+
+    function toSignIn()
+    {
+      closeSignUpModal();
+      launchSignInModal(); 
+    }
+  </script>
 </footer>
 
 </html>
@@ -423,6 +535,7 @@
         </div>
       </nav>
     </div-->
+<<<<<<< HEAD
 
 <!--
   <div class="columns">
@@ -435,3 +548,5 @@
                 <div class="column"></div>
               </div>
             -->
+=======
+>>>>>>> 5fa25746b26fa60bdd7a3a4a84c921ff2ab4ea5f
