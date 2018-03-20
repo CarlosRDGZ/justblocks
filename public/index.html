@@ -8,6 +8,54 @@
   <!-- Style -->
   <link rel="stylesheet" href="./../node_modules/bulma/css/bulma.css">
   <link rel="stylesheet" href="./../node_modules/bulma-extensions/dist/bulma-extensions.min.css">
+  <style>
+    main {
+      background-color: #eee
+      /* background-color: #f5fffd */
+    }
+
+    .notification.is-success.is-inverted {
+      background-color: #fff;
+      /*border: solid 1px #23d160;*/
+      color: #23d160
+    }
+
+    .notification.is-info.is-inverted {
+      background-color: #fff;
+      color: #209cee
+    }
+
+    .notification.costume {
+      background-color: #355c7D
+    }
+
+    .notification.costume.is-inverted {
+      background-color: #fff;
+      color: #355c7D
+    }
+
+    .progress.costume::-webkit-progress-value {
+      background-color: #355c7D
+    }
+
+    .progress.costume::-moz-progress-bar {
+      background-color: #355c7D
+    }
+
+    .progress.costume::-ms-fill {
+      background-color: #355c7D
+    }
+
+    .is-centered {
+      justify-content: center;
+    }
+
+    #about {
+      background-color: #fff;
+      color: #da251c;
+      border: solid 1px #da251c;
+    }
+  </style>
 
   <title>JustBlocks</title>
 </head>
@@ -16,9 +64,9 @@
   <!-- Navbar -->
   <nav class="navbar is-transparent" role="navigation">
     <div class="navbar-brand">
-      <a href="./index.html" class="navbar-item">
+      <a href="#" class="navbar-item">
         <span>
-          <i class="fas fa-cubes fa-3x"></i>
+          <i class="fab fa-rebel fa-3x"></i>
         </span>
         <span hidden>
           <h1 class="title" style="color: white">JustBlocks</h1>
@@ -33,18 +81,18 @@
     <div id="nav" class="navbar-menu">
       <div class="navbar-start">
         <div class="navbar-item has-dropdown is-hoverable">
-          <a href="" class="navbar-link">
+          <a href="#" class="navbar-link">
             <b>Convocatorias</b>
           </a>
           <div class="navbar-dropdown is-boxed">
-            <a href="" class="navbar-item">Abiertas</a>
-            <a href="" class="navbar-item">Resultados</a>
+            <a href="#" class="navbar-item">Abiertas</a>
+            <a href="#" class="navbar-item">Resultados</a>
           </div>
         </div>
-        <a href="" class="navbar-item">
+        <a href="#" class="navbar-item">
           <b>Servicios</b>
         </a>
-        <a href="" class="navbar-item">
+        <a href="#" class="navbar-item">
           <b>M&eacute;todo Evaluaci&oacute;n</b>
         </a>
       </div>
@@ -52,7 +100,7 @@
         <div class="navbar-item">
           <div class="field is-grouped">
             <p class="control">
-              <a href="" class="button is-primary">
+              <a href="#" class="button is-primary">
                 <span>
                   <i class="fas fa-sign-in-alt"></i>
                 </span>
@@ -63,7 +111,7 @@
               <span>or</span>
             </p>
             <p class="control">
-              <a href="" class="button is-info">
+              <a href="#" class="button is-info">
                 <span>
                   <i class="fas fa-user-plus"></i>
                 </span>
@@ -78,7 +126,7 @@
   <!-- /Navbar -->
 
   <section class="hero is-medium has-carousel">
-    <div class="hero-carousel carousel-animated carousel-animate-fade">
+    <div class="hero-carousel carousel-animated carousel-animate-fade" data-autoplay="true">
       <div class='carousel-container'>
         <div class='carousel-item has-background is-active'>
           <img class="is-background" src="https://wikiki.github.io/images/merry-christmas.jpg" alt="" />
@@ -103,6 +151,7 @@
       </div>
     </div>
     <div class="hero-body has-text-centered">
+      <h1 class="">JustBlocks</h1>
       <div class="columns is-mobile is-centered">
         <div class="column is-half is-narrow">
           <div class="field has-addons has-icons-left">
@@ -125,34 +174,46 @@
 
   <main class="section">
     <div class="container-fluid">
-      <div class="columns is-variable is-8">
+      <div class="columns is-variable is-6">
         <div class="column">
           <div class="card">
             <div class="card-image">
               <figure class="image is-4by3">
-                <img src="https://bulma.io/images/placeholders/1280x960.png" alt="Placeholder image">
+                <img src="https://www.iagua.es/sites/default/files/styles/thumbnail-830x455/public/glaciar_perito_moreno_0.jpg?itok=9a_iNcsz"
+                  alt="Placeholder image">
               </figure>
             </div>
             <div class="card-content">
-              <div class="media">
-                <div class="media-left">
-                  <figure class="image is-48x48">
-                    <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
-                  </figure>
+              <div class="columns is-gapless is-multiline">
+                <div class="column is-full">
+                  <div class="notification is-success">
+                    <p class="title is-4">App Cambio Clim&aacute;tico</p>
+                    <p class="subtitle is-6">SEMARNAT</p>
+                  </div>
                 </div>
-                <div class="media-content">
-                  <p class="title is-4">John Smith</p>
-                  <p class="subtitle is-6">@johnsmith</p>
+                <div class="column is-three-fifths">
+                  <div class="notification has-text-centered is-success is-inverted">
+                    <p>
+                      <b>Etapa:&nbsp;Lanzamiento</b>
+                    </p>
+                    <progress class="progress is-success" value="25" max="100">25%</progress>
+                  </div>
+                </div>
+                <div class="column is-two-fifths">
+                  <div class="notification has-text-centered">
+                    <p>
+                      <b>183</b>
+                    </p>
+                    <p>Participantes</p>
+                  </div>
                 </div>
               </div>
-  
               <div class="content">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.
-                <a>@bulmaio</a>.
-                <a href="#">#css</a>
-                <a href="#">#responsive</a>
-                <br>
-                <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
+                <p hidden>Desarrollar una app web que permita a la población conocer sobre el Cambio Climático y colaborar con acciones
+                  para su mitigación.</p>
+                <p>
+                  <a href="#">ver mas...</a>
+                </p>
               </div>
             </div>
           </div>
@@ -161,29 +222,42 @@
           <div class="card">
             <div class="card-image">
               <figure class="image is-4by3">
-                <img src="https://bulma.io/images/placeholders/1280x960.png" alt="Placeholder image">
+                <img src="https://cdn4.educacion2.com/wp-content/uploads/nene-dibujando1.jpg" alt="Placeholder image">
               </figure>
             </div>
             <div class="card-content">
-              <div class="media">
-                <div class="media-left">
-                  <figure class="image is-48x48">
-                    <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
-                  </figure>
+              <div class="columns is-gapless is-multiline">
+                <div class="column is-full">
+                  <div class="notification is-info">
+                    <p class="title is-4">Concurso de Dibujo</p>
+                    <p class="subtitle is-6">SEP</p>
+                  </div>
                 </div>
-                <div class="media-content">
-                  <p class="title is-4">John Smith</p>
-                  <p class="subtitle is-6">@johnsmith</p>
+                <div class="column is-three-fifths">
+                  <div class="notification has-text-centered is-info is-inverted">
+                    <p>
+                      <b>Etapa:&nbsp;Lanzamiento</b>
+                    </p>
+                    <progress class="progress is-info" value="25" max="100">25%</progress>
+                  </div>
+                </div>
+                <div class="column is-two-fifths">
+                  <div class="notification has-text-centered">
+                    <p>
+                      <b>5483</b>
+                    </p>
+                    <p>Participantes</p>
+                  </div>
                 </div>
               </div>
-  
+
               <div class="content">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.
-                <a>@bulmaio</a>.
-                <a href="#">#css</a>
-                <a href="#">#responsive</a>
-                <br>
-                <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
+                <p hidden>La Secretaría de Educación Pública (SEP) y el Colegio de Ingenieros Civiles de México (CICM) invitan a participar
+                  en el Primer Concurso Nacional de Dibujo ¿Cómo imaginas tu comunidad cuando seas grande?, mediante la realización
+                  de un dibujo con la técnica que prefieran y explicar por qué imaginan así la comunidad.</p>
+                <p>
+                  <a href="#">ver mas...</a>
+                </p>
               </div>
             </div>
           </div>
@@ -192,195 +266,111 @@
           <div class="card">
             <div class="card-image">
               <figure class="image is-4by3">
-                <img src="https://bulma.io/images/placeholders/1280x960.png" alt="Placeholder image">
+                <img src="http://www.radiotele.com.mx/wp-content/uploads/2016/03/conacyt-1.jpg" alt="Placeholder image">
               </figure>
             </div>
             <div class="card-content">
-              <div class="media">
-                <div class="media-left">
-                  <figure class="image is-48x48">
-                    <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
-                  </figure>
+              <div class="columns is-gapless is-multiline">
+                <div class="column is-full">
+                  <div class="costume notification is-primary">
+                    <p class="title is-4">Desarrollo Científico</p>
+                    <p class="subtitle is-6">CONACYT</p>
+                  </div>
                 </div>
-                <div class="media-content">
-                  <p class="title is-4">John Smith</p>
-                  <p class="subtitle is-6">@johnsmith</p>
+                <div class="column is-three-fifths">
+                  <div class="notification has-text-centered is-primary is-inverted costume">
+                    <p>
+                      <b>Etapa:&nbsp;Lanzamiento</b>
+                    </p>
+                    <progress class="progress is-primary costume" value="25" max="100">25%</progress>
+                  </div>
+                </div>
+                <div class="column is-two-fifths">
+                  <div class="notification has-text-centered">
+                    <p>
+                      <b>978</b>
+                    </p>
+                    <p>Participantes</p>
+                  </div>
                 </div>
               </div>
-  
               <div class="content">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.
-                <a>@bulmaio</a>.
-                <a href="#">#css</a>
-                <a href="#">#responsive</a>
-                <br>
-                <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="column">
-          <div class="card">
-            <div class="card-image">
-              <figure class="image is-4by3">
-                <img src="https://bulma.io/images/placeholders/1280x960.png" alt="Placeholder image">
-              </figure>
-            </div>
-            <div class="card-content">
-              <div class="media">
-                <div class="media-left">
-                  <figure class="image is-48x48">
-                    <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
-                  </figure>
-                </div>
-                <div class="media-content">
-                  <p class="title is-4">John Smith</p>
-                  <p class="subtitle is-6">@johnsmith</p>
-                </div>
-              </div>
-  
-              <div class="content">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.
-                <a>@bulmaio</a>.
-                <a href="#">#css</a>
-                <a href="#">#responsive</a>
-                <br>
-                <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
+                <p hidden>Desarrollar una app web que permita a la población conocer sobre el Cambio Climático y colaborar con acciones
+                  para su mitigación.</p>
+                <p>
+                  <a href="#">ver mas...</a>
+                </p>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="columns is-variable is-8">
-          <div class="column">
-            <div class="card">
-              <div class="card-image">
-                <figure class="image is-4by3">
-                  <img src="https://bulma.io/images/placeholders/1280x960.png" alt="Placeholder image">
-                </figure>
-              </div>
-              <div class="card-content">
-                <div class="media">
-                  <div class="media-left">
-                    <figure class="image is-48x48">
-                      <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
-                    </figure>
-                  </div>
-                  <div class="media-content">
-                    <p class="title is-4">John Smith</p>
-                    <p class="subtitle is-6">@johnsmith</p>
-                  </div>
-                </div>
-    
-                <div class="content">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.
-                  <a>@bulmaio</a>.
-                  <a href="#">#css</a>
-                  <a href="#">#responsive</a>
-                  <br>
-                  <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="column">
-            <div class="card">
-              <div class="card-image">
-                <figure class="image is-4by3">
-                  <img src="https://bulma.io/images/placeholders/1280x960.png" alt="Placeholder image">
-                </figure>
-              </div>
-              <div class="card-content">
-                <div class="media">
-                  <div class="media-left">
-                    <figure class="image is-48x48">
-                      <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
-                    </figure>
-                  </div>
-                  <div class="media-content">
-                    <p class="title is-4">John Smith</p>
-                    <p class="subtitle is-6">@johnsmith</p>
-                  </div>
-                </div>
-    
-                <div class="content">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.
-                  <a>@bulmaio</a>.
-                  <a href="#">#css</a>
-                  <a href="#">#responsive</a>
-                  <br>
-                  <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="column">
-            <div class="card">
-              <div class="card-image">
-                <figure class="image is-4by3">
-                  <img src="https://bulma.io/images/placeholders/1280x960.png" alt="Placeholder image">
-                </figure>
-              </div>
-              <div class="card-content">
-                <div class="media">
-                  <div class="media-left">
-                    <figure class="image is-48x48">
-                      <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
-                    </figure>
-                  </div>
-                  <div class="media-content">
-                    <p class="title is-4">John Smith</p>
-                    <p class="subtitle is-6">@johnsmith</p>
-                  </div>
-                </div>
-    
-                <div class="content">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.
-                  <a>@bulmaio</a>.
-                  <a href="#">#css</a>
-                  <a href="#">#responsive</a>
-                  <br>
-                  <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="column">
-            <div class="card">
-              <div class="card-image">
-                <figure class="image is-4by3">
-                  <img src="https://bulma.io/images/placeholders/1280x960.png" alt="Placeholder image">
-                </figure>
-              </div>
-              <div class="card-content">
-                <div class="media">
-                  <div class="media-left">
-                    <figure class="image is-48x48">
-                      <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
-                    </figure>
-                  </div>
-                  <div class="media-content">
-                    <p class="title is-4">John Smith</p>
-                    <p class="subtitle is-6">@johnsmith</p>
-                  </div>
-                </div>
-    
-                <div class="content">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.
-                  <a>@bulmaio</a>.
-                  <a href="#">#css</a>
-                  <a href="#">#responsive</a>
-                  <br>
-                  <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <nav class="breadcrumb" aria-label="breadcrumbs">
+        <ul>
+          <li>
+            <a href="#">
+              <span class="icon is-small">
+                <i class="fas fa-plus"></i>
+              </span>
+              <span>ver mas...</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
     </div>
   </main>
+
+  <section class="section">
+    <div class="container">
+      <h1 class="title has-text-centered">About</h1>
+      <div class="columns">
+        <div class="column">
+          <article class="tile is-child notification is-primary" style="background-color: rgb(66, 110, 160)">
+            <div class="content">
+              <p class="title">
+                <a href="#">JustBlocks</a> y la Evaluaci&oacute;n con An&aacute;lisis de Varianza</p>
+              <div class="content">
+                <p>El an&aacute;lisis de varianza sirve para que tus resultados de las evaluaciones sean justos, esto no solo
+                  afecta positivamente a los participantes, tambien a los organizadores de las convocatorias.</p>
+                <a href="#">Continuar...</a>
+              </div>
+            </div>
+          </article>
+        </div>
+        <div class="is-divider-vertical"></div>
+        <div class="column is-centered">
+          <article class="tile is-child notification is-danger" id="about">
+            <div class="content has-text-centered">
+              <p class="title is-2">Kamikaze</p>
+              <p class="subtitle">&iquest;Qui&eacute;nes somos?</p>
+              <a href="#">
+                <i class="fab fa-empire fa-7x"></i>
+              </a>
+            </div>
+        </div>
+        </article>
+      </div>
+    </div>
+    </div>
+  </section>
 </body>
-<footer>
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <p>
+        <strong>JustBlocks</strong> por
+        <a href="#">Kamikaze inc.</a> El codigo fuente es con licencia
+        <a href="#">MIT</a>.
+      </p>
+      <nav class="breadcrumb has-dot-separator is-centered" aria-label="breadcrumbs">
+        <ul>
+          <li><a href="#">Aviso de Privacidad</a></li>
+          <li><a href="#">FAQ</a></li>
+          <li><a href="#">T&eacute;rminos y condiciones</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
   <script defer src="./js/fontawesome-all.js"></script>
   <script src="./../node_modules/bulma-extensions/bulma-carousel/dist/bulma-carousel.min.js"></script>
 </footer>
@@ -405,10 +395,8 @@
       </div>
     </div>
   </section>
-<<<<<<< HEAD
 
 -->
-
 <!--div class="hero-foot">
       <nav class="tabs is-boxed is-fullwidth">
         <div class="container">
@@ -435,6 +423,15 @@
         </div>
       </nav>
     </div-->
-=======
--->
->>>>>>> 3e250f119d7e303f15cadd00a9ab51f4d4f41698
+
+<!--
+  <div class="columns">
+                <div class="column"></div>
+                <div class="column">
+                  <figure class="image is-128x128">
+                    <img src="./images/index.jpg">
+                  </figure>
+                </div>
+                <div class="column"></div>
+              </div>
+            -->
