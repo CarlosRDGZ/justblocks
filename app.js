@@ -18,34 +18,57 @@ mongoose.connection.once('open', function() {
 app.route('/user')
   .get((req, res) => {
     User.find({}, function(err, users) {
-      if (err) throw err
-      res.json(users)
+      if (err)
+        res.sendStatus(500)
+      else
+        res.json(users)
     })
   })
   .post((req, res) => {
     let user = new User(req.body);
-    user.save(function(err) {
-      if (err) throw err
-      res.json(req.body)
+    user.save(function(err, user) {
+      if (req.body._id)
+        res.status(409).send('Cannot Send User With Id')
+      else if (err)
+        res.sendStatus(500)
+      else
+        res.json(user)
     })
   })
 
 app.route('/user/:id')
   .get((req, res) => {
     User.findById(req.params.id, (err, user) => {
-      if (err) throw err
-      res.json(user)
+      if (err)
+        if (err.name == 'CastError' && err.kind == 'ObjectId')
+          res.status(404).send('User Not Found')
+        else
+          res.sendStatus(500)
+      else
+        res.json(user)
     })
   })
   .put((req, res) => {
     User.findByIdAndUpdate(req.params.id, req.body, (err, user) => {
-      if (err) throw err
-      res.json(user)
+      if (err)
+        if (err.name == 'CastError' && err.kind == 'ObjectId')
+          res.status(404).send('User Not Found')
+        else
+          res.sendStatus(500)
+      else if (req.body._id)
+        res.status(409).send('Cannot Send User With Id')
+      else
+        res.json(user)
     })
   })
   .delete((req, res) => {
     User.findByIdAndRemove(req.params.id, (err, user) => {
-      if (err) throw err
-      res.json(user)
+      if (err)
+        if (err.name == 'CastError' && err.kind == 'ObjectId')
+          res.status(404).send('User Not Found')
+        else
+          res.sendStatus(500)
+      else
+        res.json(user)
     })
   })
