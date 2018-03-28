@@ -1,13 +1,8 @@
-const express = require('express'),
-  bodyParser = require('body-parser'),
-  mongoose = require('mongoose'),
-  routes = require('./routes'),
-  path = require('path')
-  app = express()
-
-mongoose.connect('mongodb://localhost/justblocks')
-mongoose.connection.on('error',
-  console.error.bind(console, 'MongoDB connection error:'));
+const express = require('express')
+const mongoose = require('./database/config')
+const routes = require('./routes')
+const path = require('path')
+const app = express()
 
 mongoose.connection.once('open', function() {
   console.log('open')

@@ -1,5 +1,5 @@
-const routes = require('express').Router(),
-  users = require('./users/users')
+const routes = require('express').Router()
+const users = require('./users/users')
 
 routes.use('/user', users)
 
@@ -10,9 +10,5 @@ routes.get('/convocatoria', (req, res) => {
 routes.get('/faq', (req,res) => {
   res.status(200).render('faq.pug')
 })
-/*
-routes.get('/otro', (req, res) => {
-  res.status(200).sendFile('convocatoria.html')
-})
-*/
+
 module.exports = routes
