@@ -26,4 +26,12 @@ users.route('/')
     })
   })
 
+users.route('/:id')
+  .get((req,res) => {
+    User.findById(req.params.id, (err, user) => {
+      if (err) res.sendStatus(500)
+      else res.json(user)
+    })
+  })
+
 module.exports = users
