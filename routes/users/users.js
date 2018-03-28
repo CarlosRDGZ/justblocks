@@ -16,6 +16,8 @@ users.route('/')
   })
   .post((req,res) => {
     console.log(req.body)
+    res.json(req.body)
+    /*
     let user = new User(req.body);
     user.save((err, user) => {
       if (req.body._id)
@@ -25,6 +27,7 @@ users.route('/')
       else
         res.json(user)
     })
+    */
   })
 
 module.exports = users
