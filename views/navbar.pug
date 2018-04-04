@@ -1,0 +1,38 @@
+nav#mainNavbar.navbar.is-info(role='navigation')
+  .navbar-brand
+    a.navbar-item(href='#')
+      span
+        i.fab.fa-rebel.fa-3x
+      span(hidden='')
+        h1.title(style='color: white') JustBlocks
+    .navbar-burger.burger(data-target='nav')
+      span
+      span
+      span
+  #nav.navbar-menu
+    .navbar-start
+      .navbar-item.has-dropdown.is-hoverable
+        a.navbar-link(href='#')
+          b Convocatorias
+        .navbar-dropdown.is-boxed
+          a.navbar-item(href='#') Abiertas
+          a.navbar-item(href='#') Resultados
+      a.navbar-item(href='#')
+        b Servicios
+      a.navbar-item(href='#')
+        b Método Evaluación
+    .navbar-end
+      .navbar-item
+        .field.is-grouped
+          p.control
+            button.button.is-primary.is-outlined(href='#')
+              span.icon
+                i.fas.fa-sign-in-alt
+              span Sign in
+          p.control
+            span or
+          p.control
+            button.button.is-info.is-outlined(href='#')
+              span.icon
+                i.fas.fa-user-plus
+              span Sign up
