@@ -1,0 +1,155 @@
+doctype html
+html(lang="en")
+  head
+    include header.pug
+    link(rel="stylesheet", href="../css/index.css")
+    title JustBlocks
+  body
+    include navbar.pug
+
+    section.hero.is-medium.has-carousel
+      .hero-carousel.carousel-animated.carousel-animate-fade(data-autoplay="true")
+        .carousel-container
+          .carousel-item.has-background.is-active
+            img.is-background(src="https://retroent.com/wp-content/uploads/2017/09/StarWars.jpg")
+          .carousel-item.has-background.is-active
+            img.is-background(src="https://media.contentapi.ea.com/content/starwars-ea-com/en_US/starwars/battlefront/death-star/_jcr_content/ogimage.img.jpg")        
+          .carousel-item.has-background.is-active
+            img.is-background(src="https://i.pinimg.com/originals/f5/91/f1/f591f17932436a23bf7071d0e43f809d.jpg")
+          .carousel-item.has-background.is-active
+            img.is-background(src="https://i.pinimg.com/originals/35/11/ab/3511abc1d72e458225edee44e475d13c.jpg")
+        .carousel-navigation.is-overlay
+          .carousel-nav-left
+            i.fa.fa-chevron-left(aria-hidden="true")
+          .carousel-nav-right
+            i.fa.fa-chevron-right(aria-hidden="true")
+      .hero-body.has-text-centered
+        h1 JustBlocks
+        .columns.is-mobile.is-centered
+          .column.is-half.is-narrow
+            .field.has-addons.has-icons-left
+              .control.is-expanded.has-icons-left
+                input.input(type="text", placeholder="Encontrar Convocatoria")
+                span.icon.is-small.is-left
+                  i.fa.fa-search
+              .control
+                a.button.is-info Buscar
+
+    main.section
+      .container-fluid
+        h1.title.has-text-centered Más Recientes
+        .columns.is-variable.is-6
+          .column
+            .card
+              .card-image
+                figure.image.is-4by3
+                  img(src='https://www.iagua.es/sites/default/files/styles/thumbnail-830x455/public/glaciar_perito_moreno_0.jpg?itok=9a_iNcsz', alt='Placeholder image')
+              .card-content
+                .columns.is-gapless.is-multiline
+                  .column.is-full
+                    .notification.is-success
+                      p.title.is-4 App Cambio Climático
+                      p.subtitle.is-6 SEMARNAT
+                  .column.is-three-fifths
+                    .notification.has-text-centered.is-success.is-inverted
+                      p
+                        b Etapa: Lanzamiento
+                      progress.progress.is-success(value='33', max='100') 33%
+                  .column.is-two-fifths
+                    .notification.has-text-centered
+                      p
+                        b 183
+                      p Participantes
+                .content
+                  p(hidden='')
+                    | Desarrollar una app web que permita a la población conocer sobre el Cambio Climático y colaborar con acciones
+                    | para su mitigación.
+                  p
+                    a(href='/convocarias/464646464646') ver más...
+          .column
+            .card
+              .card-image
+                figure.image.is-4by3
+                  img(src='https://cdn4.educacion2.com/wp-content/uploads/nene-dibujando1.jpg', alt='Placeholder image')
+              .card-content
+                .columns.is-gapless.is-multiline
+                  .column.is-full
+                    .notification.is-info
+                      p.title.is-4 Concurso de Dibujo
+                      p.subtitle.is-6 SEP
+                  .column.is-three-fifths
+                    .notification.has-text-centered.is-info.is-inverted
+                      p
+                        b Etapa: Lanzamiento
+                      progress.progress.is-info(value='33', max='100') 33%
+                  .column.is-two-fifths
+                    .notification.has-text-centered
+                      p
+                        b 5483
+                      p Participantes
+                .content
+                  p(hidden='')
+                    | La Secretaría de Educación Pública (SEP) y el Colegio de Ingenieros Civiles de México (CICM) invitan a participar
+                    | en el Primer Concurso Nacional de Dibujo ¿Cómo imaginas tu comunidad cuando seas grande?, mediante la realización
+                    | de un dibujo con la técnica que prefieran y explicar por qué imaginan así la comunidad.
+                  p
+                    a(href='#') ver más...
+          .column
+            .card
+              .card-image
+                figure.image.is-4by3
+                  img(src='http://www.radiotele.com.mx/wp-content/uploads/2016/03/conacyt-1.jpg', alt='Placeholder image')
+              .card-content
+                .columns.is-gapless.is-multiline
+                  .column.is-full
+                    .costume.notification.is-primary
+                      p.title.is-4 Desarrollo Científico
+                      p.subtitle.is-6 CONACYT
+                  .column.is-three-fifths
+                    .notification.has-text-centered.is-primary.is-inverted.costume
+                      p
+                        b Etapa: Lanzamiento
+                      progress.progress.is-primary.costume(value='33', max='100') 33%
+                  .column.is-two-fifths
+                    .notification.has-text-centered
+                      p
+                        b 978
+                      p Participantes
+                .content
+                  p(hidden='')
+                    | Desarrollar una app web que permita a la población conocer sobre el Cambio Climático y colaborar con acciones
+                    | para su mitigación.
+                  p
+                    a(href='#') ver más...
+        nav.breadcrumb(aria-label='breadcrumbs')
+          ul
+            li
+              a(href='#')
+                span.icon.is-small
+                  i.fas.fa-plus
+                span ver más...
+    section.section
+      .container
+        h1.title.has-text-centered About
+        .columns
+          .column
+            article.tile.is-child.notification.is-primary(style='background-color: rgb(66, 110, 160)')
+              .content
+                p.title
+                  a(href='#', style='font-family: Flaphead') JustBlocks
+                  |  y la Evaluación con Análisis de Varianza
+                .content
+                  p
+                    | El análisis de varianza sirve para que tus resultados de las evaluaciones sean justos, esto no solo
+                    | afecta positivamente a los participantes, tambien a los organizadores de las convocatorias.
+                  a(href='#') Continuar...
+          .is-divider-vertical
+          .column.is-centered
+            article#about.tile.is-child.notification.is-danger
+              .content.has-text-centered
+                p.title.is-2(style='font-family: kamikaze') KAMIKAZE
+                p.subtitle ¿Quiénes somos?
+                a(href='#')
+                  i.fab.fa-empire.fa-7x
+    include footer.pug
+    script(src="/bulma-carousel/bulma-carousel.min.js")

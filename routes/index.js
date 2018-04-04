@@ -11,4 +11,6 @@ routes.get('/faq', (req,res) => {
   res.status(200).render('faq.pug')
 })
 
+routes.get('/', (req,res) => res.status(200).render('index.pug'))
+
 module.exports = routes
