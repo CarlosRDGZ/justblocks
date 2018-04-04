@@ -1,6 +1,6 @@
-const users = require('express').Router(),
-      User = require('../../models/User'),
-      bodyParser = require('body-parser')
+const users = require('express').Router()
+const User = require('../../models/User')
+const bodyParser = require('body-parser')
 
 users.use(bodyParser.urlencoded({ extended: true }))
 users.use(bodyParser.json())
@@ -15,7 +15,6 @@ users.route('/')
     })
   })
   .post((req,res) => {
-    console.log(req.body)
     let user = new User(req.body);
     user.save((err, user) => {
       if (req.body._id)
@@ -24,6 +23,14 @@ users.route('/')
         res.sendStatus(500)
       else
         res.json(user)
+    })
+  })
+
+users.route('/:id')
+  .get((req,res) => {
+    User.findById(req.params.id, (err, user) => {
+      if (err) res.sendStatus(500)
+      else res.json(user)
     })
   })
 

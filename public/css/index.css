@@ -1,0 +1,29 @@
+.notification.is-success.is-inverted {
+  background-color: #fff;
+  color: #23d160
+}
+.notification.is-info.is-inverted {
+  background-color: #fff;
+  color: #209cee
+}
+.notification.costume { background-color: #355c7D }
+.notification.costume.is-inverted {
+  background-color: #fff;
+  color: #355c7D
+}
+.progress.costume::-webkit-progress-value { background-color: #355c7D }
+.progress.costume::-moz-progress-bar { background-color: #355c7D }
+.progress.costume::-ms-fill { background-color: #355c7D }
+#about {
+  background-color: #fff;
+  color: #da331c;
+  border: solid 1px #da331c;
+}
+@font-face {
+  font-family: kamikaze;
+  src: url('../fonts/kamikaze/Kamikaze.otf');
+}
+@font-face {
+  font-family: Flaphead;
+  src: url('../fonts/flaphead/FLAPHEAD.TTF');
+}

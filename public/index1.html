@@ -6,10 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <!-- Style -->
-  <link rel="stylesheet" href="/bulma/bulma.css">
-  <link rel="stylesheet" href="/bulma-extensions/bulma-extensions.min.css">
-  <link rel="stylesheet" href="./css/navbar.css">
-  <link rel="stylesheet" href="./css/main-content.css">
+    <link rel="stylesheet" href="/bulma/bulma.css">
+    <link rel="stylesheet" href="/bulma-extensions/bulma-extensions.min.css">
+    <link rel="stylesheet" href="./css/navbar.css">
+    <link rel="stylesheet" href="./css/main-content.css">
   <style>
     .notification.is-success.is-inverted {
       background-color: #fff;
@@ -212,9 +212,9 @@
                 <p hidden>Desarrollar una app web que permita a la población conocer sobre el Cambio Climático y colaborar con acciones
                   para su mitigación.</p>
                 <p>
-                  <a href="#">ver m&aacute;s...</a>
+                  <a href="/convocarias/464646464646">ver m&aacute;s...</a>
                 </p>
-              </div>
+              </div>            
             </div>
           </div>
         </div>
@@ -378,6 +378,31 @@
 
 </html>
 
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '157581398245135',
+      cookie     : true,
+      xfbml      : true,
+      version    : '1.0.0'
+    });
+      
+    FB.AppEvents.logPageView();   
+      
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "https://connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+
+   FB.getLoginStatus(response => {
+     console.log(response)
+   })
+</script>
 <!--
   <div class="field">
     <p class="control has-icons-left is-primary">

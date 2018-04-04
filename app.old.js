@@ -1,5 +1,5 @@
 const express = require('express'),
-  bodyParser = require('body-parser'),
+  // bodyParser = require('body-parser'),
   mongoose = require('mongoose'),
   User = require('./models/User'),
   app = express()
@@ -7,8 +7,8 @@ const express = require('express'),
 mongoose.connect('mongodb://localhost/justblocks')
 mongoose.connection.on('error',
   console.error.bind(console, 'MongoDB connection error:'));
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json())
+// app.use(bodyParser.urlencoded({ extended: false }))
+// app.use(bodyParser.json())
 
 mongoose.connection.once('open', function() {
   console.log('open')
