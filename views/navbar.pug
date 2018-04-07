@@ -25,14 +25,14 @@ nav#mainNavbar.navbar.is-info(role='navigation')
       .navbar-item
         .field.is-grouped
           p.control
-            button.button.is-primary.is-outlined(href='#')
+            button.button.is-primary.is-outlined(href='#' onclick="launchSignInModal()")
               span.icon
                 i.fas.fa-sign-in-alt
               span Sign in
           p.control
             span or
           p.control
-            button.button.is-info.is-outlined(href='#')
+            button.button.is-info.is-outlined(href='#' onclick="openSignUp()")
               span.icon
                 i.fas.fa-user-plus
               span Sign up

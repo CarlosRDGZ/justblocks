@@ -1,0 +1,21 @@
+// SignIn
+#signIn.modal(role='dialog')
+  .modal-background
+  .modal-card
+    header.modal-card-head(style='background: hsl(204, 86%, 53%);')
+      p.modal-card-title Iniciar sesión
+      button.delete(aria-label='close', onclick='closeSignInModal()', style='background: red;')
+    section.modal-card-body(style='text-align: center;')
+      img.image.is-128x128(src='../images/user.png', alt='Foto de perfil', style='display: block; margin: 0 auto; border-radius: 50%')
+      br
+      div
+        form#login(action='', method='POST')
+          input.input.is-rounded(type='text', name='email', placeholder='Correo', style='width: 450px;')
+          br
+          br
+          input.input.is-rounded(type='password', name='password', placeholder='Contraseña', style='width: 450px;')
+        p
+          | ¿No tienes usuario? 
+          a(href='#', onclick='toSignUp()') Regístrate
+        br
+        button.button.is-info.is-rounded(type='submit', for='login') Iniciar sesión
