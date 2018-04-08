@@ -22,7 +22,7 @@ const userSchema = new Schema({
     password: {
     	type: String,
     	required: true,
-    	minlength: [8, "The password must have at least 8 characters"],
+    	minlength: [3, "The password must have at least 8 characters"],
     	validate: passwordValidation
     },
     dateOfBirth: {type: Date, required: true},
