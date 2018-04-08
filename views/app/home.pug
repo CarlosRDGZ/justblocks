@@ -6,9 +6,10 @@ html(lang="en")
 		title JustBlocks
 	body
 		include ../navbar.pug
-		h1 Iniciaste sesión
+		h1 Iniciaste sesión 
+		h1 #{user.name.first} #{user.name.last}
+		h1 #{user.email}
 
 		include ../loginModal.pug
-		script(src="../../js/loginModal.js")
 		include ../footer.pug
 		script(src="../bulma-carousel/bulma-carousel.min.js")

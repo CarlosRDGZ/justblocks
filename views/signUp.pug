@@ -7,7 +7,7 @@ html(lang="en")
 	body
 		include navbar.pug
 		
-		form(action="/newUser", method="POST")
+		form#signUp(action="#", method="POST")
 			div(class="container")
 				label(for="name") Nombre
 					input(type="input" id="name" name="name" placeholder="Nombre")
@@ -34,7 +34,6 @@ html(lang="en")
 				br
 				br
 				input(type="submit" value="Registrarse")
-		script(src="../js/loginModal.js")
 		include loginModal.pug
 		include footer.pug
 		script(src="/bulma-carousel/bulma-carousel.min.js")

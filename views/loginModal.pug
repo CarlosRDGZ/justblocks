@@ -9,13 +9,13 @@
       img.image.is-128x128(src='../images/user.png', alt='Foto de perfil', style='display: block; margin: 0 auto; border-radius: 50%')
       br
       div
-        form#login(action='/signIn', method='POST', name="login")
-          input.input.is-rounded(type='text', name='email', placeholder='Correo', style='width: 450px;')
+        form#login(action='#', method='POST', name="login")
+          input#email.input.is-rounded(type='text', name='email', placeholder='Correo', style='width: 450px;')
           br
           br
-          input.input.is-rounded(type='password', name='password', placeholder='Contraseña', style='width: 450px;')
+          input#password.input.is-rounded(type='password', name='password', placeholder='Contraseña', style='width: 450px;')
           p
           | ¿No tienes usuario? 
           a(href='#', onclick='toSignUp()') Regístrate
           br
-          button.button.is-info.is-rounded(type='submit') Iniciar sesión
+          button#signIn.button.is-info.is-rounded(type='submit') Iniciar sesión

@@ -99,6 +99,10 @@ app.get("/allUsers", function(req, res) {
 	})
 })
 
+app.get("/deleteAllUsers", function(req, res) {
+	User.collection.drop().then(res.send("Usuarios eliminados")).catch(function(err) {console.log(err);});
+})
+
 app.use("/app", sessionMiddleware);
 app.use("/app", routerApp);
 
