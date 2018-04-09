@@ -7,33 +7,35 @@ html(lang="en")
 	body
 		include navbar.pug
 		
-		form#signUp(action="#", method="POST")
-			div(class="container")
-				label(for="name") Nombre
-					input(type="input" id="name" name="name" placeholder="Nombre")
-				br
-				br
-				label(for="lastName") Apellido
-					input(type="input" id="lastName" name="lastName" placeholder="Apellido(s)")
-				br
-				br
-				label(for="email") Correo electrónico
-					input(type="email" id="email" name="email" placeholder="Correo elctrónico")
-				br
-				br
-				label(for="password") Contraseña
-					input(type="password" id="password" name="password" placeholder="Password" class="form-control")
-				br
-				br
-				label(for="passwordConfirmation") Confirmación de contraseña
-					input(type="password" id="passwordConfirmation" name="passwordConfirmation" placeholder="Confirmación de contraseña")
-				br
-				br
-				label(for="dateOfBirth") Fecha de nacimiento
-					input(type="date" id="dateOfBirth" name="dateOfBirth" min="1900-01-01" max="2000-31-31")
-				br
-				br
-				input(type="submit" value="Registrarse")
+		.container
+			form#signUp.is-centered(action="#", method="POST")
+				.column.is-two-fifths
+					.field
+						label(for="name" class="title is-5") Nombre
+						.control
+							input.input(type="text" id="name" name="name" placeholder="Nombre")
+					.field
+						label(for="lastName" class="title is-5") Apellido
+						.control
+							input.input(type="text" id="lastName" name="lastName" placeholder="Apellido(s)")
+					.field
+						label(for="email" class="title is-5") Correo electrónico
+						.control
+							input.input(type="email" id="email" name="email" placeholder="Correo elctrónico")
+					.field
+						label(for="password" class="title is-5") Contraseña
+						.control
+							input.input(type="password" id="password" name="password" placeholder="Password" class="form-control")
+					.field
+						label(for="passwordConfirmation" class="title is-5") Confirmación de contraseña
+						.control
+							input.input(type="password" id="passwordConfirmation" name="passwordConfirmation" placeholder="Confirmación de contraseña")
+					.field
+						label(for="dateOfBirth" class="title is-5") Fecha de nacimiento
+						.control
+							input.input(type="date" id="dateOfBirth" name="dateOfBirth" min="1900-01-01" max="2000-31-31")
+					.control
+						input.button.is-primary(type="submit" value="Registrarse")
 		include loginModal.pug
 		include footer.pug
 		script(src="/bulma-carousel/bulma-carousel.min.js")

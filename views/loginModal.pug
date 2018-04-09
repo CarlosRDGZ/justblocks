@@ -5,17 +5,21 @@
     header.modal-card-head(style='background: hsl(204, 86%, 53%);')
       p.modal-card-title Iniciar sesión
       button.delete(aria-label='close', onclick='closeSignInModal()', style='background: red;')
-    section.modal-card-body(style='text-align: center;')
+    section.modal-card-body
       img.image.is-128x128(src='../images/user.png', alt='Foto de perfil', style='display: block; margin: 0 auto; border-radius: 50%')
-      br
-      div
+      .is-centered
         form#login(action='#', method='POST', name="login")
-          input#email.input.is-rounded(type='text', name='email', placeholder='Correo', style='width: 450px;')
-          br
-          br
-          input#password.input.is-rounded(type='password', name='password', placeholder='Contraseña', style='width: 450px;')
-          p
-          | ¿No tienes usuario? 
-          a(href='#', onclick='toSignUp()') Regístrate
-          br
-          button#signIn.button.is-info.is-rounded(type='submit') Iniciar sesión
+            .colum.is-two-fifths
+                .field
+                    label(for="email" class="title is-5") Correo electrónico
+                    .control
+                      input#email.input.is-rounded(type='text', name='email', placeholder='Correo', style='width: 450px;')
+                .field
+                    label(for="password" class="title is-5") Contraseña
+                    .control
+                      input#password.input.is-rounded(type='password', name='password', placeholder='Contraseña', style='width: 450px;')
+                      p
+                      | ¿No tienes usuario? 
+                      a(href='#', onclick='toSignUp()') Regístrate
+                .control.is-centered
+                    button#signIn.button.is-info.is-rounded(type='submit') Iniciar sesión
