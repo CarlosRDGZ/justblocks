@@ -3,7 +3,7 @@
 ## Modelos
 
 - **Usuario**
-```json
+```javascript
 Usuario {
 	_id: ObjectID 
 	nombre: { type: String, required: true },
