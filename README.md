@@ -3,9 +3,9 @@
 ## Modelos
 
 - **Usuario**
-```javascript
+```json
 {
-	"_id": "ObjectID" 
+	"_id": "ObjectID",
 	"nombre": { "type": "String", "required": "true" },
 	"correo": { "type": "String", "required": "true" },
 	"fechaNacimiento": { "type": "Date", "required": "true" },
