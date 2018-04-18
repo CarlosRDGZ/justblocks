@@ -6,10 +6,10 @@ html(lang="en")
 		title JustBlocks
 	body
 		include ../navbar.pug
-		h1 Iniciaste sesión 
-		h1 #{user.name.first} #{user.name.last}
-		h1 #{user.email}
-
+		h1.title Iniciaste sesión 
+		h1.title #{user.name.first} #{user.name.last}
+		h1.title #{user.email}
+		a(href="/app/logout") Salir
 		include ../loginModal.pug
 		include ../footer.pug
 		script(src="../bulma-carousel/bulma-carousel.min.js")

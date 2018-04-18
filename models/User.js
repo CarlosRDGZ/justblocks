@@ -31,7 +31,7 @@ const userSchema = new Schema({
 })
 
 userSchema.virtual("passwordConfirmation").get(function() {
-	//passConfirm hace reerencia a este virtual (passwordConfirmation)
+	//passConfirm hace referencia a este virtual (passwordConfirmation)
     return this.passConfirm;
 }).set(function(password) {
 	this.passConfirm = md5(password);

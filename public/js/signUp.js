@@ -16,12 +16,12 @@ formSignUp.addEventListener('submit', function(ev) {
 						email: emailSignUp.value
 					}).
 		then(({data})=> {
-			//Si el registro es exitoso lo loguea
-			window.axios.post('signIn', { email: emailSignUp.value, password: md5(passwordSignUp.value) })
-				.then(({data})=> {
-					//Cómo redirigirte
-					console.log(data);
-					document.write(data);
-				})
+			if(!data['err']) {
+				window.location = "/app";
+			}
+			else
+			{
+				alert(data['err']);
+			}
 		})
 })

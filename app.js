@@ -6,7 +6,8 @@ const app = express()
 const md5 = require('md5');
 
 
-//Manejo de sesiones
+//*************Manejo de sesiones
+//MongoStore connect-mongo
 const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
 const sessionRedisMiddleware = session({
@@ -19,18 +20,19 @@ const sessionRedisMiddleware = session({
 app.use(sessionRedisMiddleware)
 
 
-//middlewares
+//*************Middlewares
 const routerApp = require("./routeApp");
 const sessionMiddleware = require('./middlewares/session');//Para validar los usuarios
 
+//*************Modelos
 const User = require('./models/User').User;
 
-//Para poder acceder a los parámetros del cuerpo de las peticiones
+//*************Para poder acceder a los parámetros del cuerpo de las peticiones
 const bodyParser = require('body-parser');
 app.use(bodyParser.json()); //Para peticiones aplication/json
 app.use(bodyParser.urlencoded({extended: true}));
 
-//Usaremos pug para el renderizado de las vistas
+//*************Usaremos pug para el renderizado de las vistas
 app.set("view engine", "pug");
 
 mongoose.connection.once('open', function() {
@@ -59,38 +61,46 @@ app.post("/newUser", function(req, res) {
 	});
 
 	user.save().then(function(userSaved) {
-		res.send(userSaved);
+		//Lo logue si sí se pudo guardar el usuario
+		res.redirect(307, "/signIn");
+
 	}).catch(function(err) {
 		console.log(err.message);
 		if(err.message.includes("E11000 duplicate key error collection"))
-			res.send("El correo que tratas de registrar ya existe");
+			res.json({err: "El correo que tratas de registrar ya existe"});
 		else
-			res.send("Hubo un problema al guardar el usuario");
+			res.json({err: err.message/*"Hubo un problema al guardar el usuario"*/});
 	})
 })
 
 
 app.post("/signIn", function(req, res) {
+	//EL email es único
 	User.findOne({email: req.body.email}, function(err, user) {
-		if(user && !err) {
-			if(user.password == md5(req.body.password)) {
-				req.session.user_id = user._id;
-				res.redirect("/app");
-			} 
+		if(!err) {
+			if(user) {
+				if(user.password == md5(req.body.password)) {
+					req.session.user_id = user._id;
+					res.json({success: "success"});
+				} 
+				else {
+					console.log("Las contraseñas no coinciden");
+					res.json({err: "Las contraseñas no coinciden"});
+				}
+			}
 			else {
-				console.log("Las contraseñas no coinciden");
-				res.render("index");
+				console.log("El correo enviado todavía no está registrado");
+				res.json({err: "El correo enviado todavía no está registrado"}).status(404);		
 			}
 		}
 		else {
-			console.log("El correo enviado todavía no está registrado");
-			res.render("index");		
+			console.log(err);
+			res.json({err: "Ocurrió un error al conectarse con la base de datos"});
 		}
 	})
 })
 
-
-//Sólo para fines de pruebas
+//*************Sólo para fines de pruebas
 app.get("/allUsers", function(req, res) {
 	User.find({}, function(err, users) {
 		if(err) res.send("No se pueden ver todos los usuarios");
@@ -98,11 +108,11 @@ app.get("/allUsers", function(req, res) {
 		res.send(users);
 	})
 })
-
 app.get("/deleteAllUsers", function(req, res) {
 	User.collection.drop().then(res.send("Usuarios eliminados")).catch(function(err) {console.log(err);});
 })
 
+// *************Use middlewares
 app.use("/app", sessionMiddleware);
 app.use("/app", routerApp);
 

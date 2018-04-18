@@ -27,14 +27,30 @@ function openSignUp()
 const loginForm = document.getElementById('login');
 const emailInput = document.getElementById('email');
 const passwordInput = document.getElementById('password');
-// const signInButton = document.getElementById('signIn');
 
 loginForm.addEventListener('submit', function(ev) {
 	ev.preventDefault();
 
 	window.axios.post('signIn', { email: emailInput.value, password: md5(passwordInput.value) })
-		.then(({data})=> {
-			//Cómo redirigirte
-			document.write(data);
+		.then(({data})=>{
+			if(data['err'])
+			{
+				alert(data['err']);
+
+				/*switch(data['err']) {
+					case 'Las contraseñas no coinciden':
+						passwordInput.focus();
+						break;
+					case 'El correo enviado todavía no está registrado':
+						emailInput.focus();
+						break;
+					default:
+						break;
+				}*/
+			}
+			else if(data['success'])
+			{
+				window.location = "/app";
+			}
 		})
 })
