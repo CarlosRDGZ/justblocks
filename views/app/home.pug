@@ -9,7 +9,7 @@ html(lang="en")
 		h1.title Iniciaste sesión 
 		h1.title #{user.name.first} #{user.name.last}
 		h1.title #{user.email}
-		a(href="/app/logout") Salir
+		a(href="/session/logout") Salir
 		include ../loginModal.pug
 		include ../footer.pug
 		script(src="../bulma-carousel/bulma-carousel.min.js")

@@ -1,7 +1,9 @@
 const api = require('express').Router()
 const users = require('./users')
+const session = require('./session')
 
 api.use('/user', users)
+api.use('/session', session)
 
 api.get('/convocatoria', (req, res) => {
   res.status(200).sendFile('convocatoria.html', { root: './public' })

@@ -8,7 +8,7 @@ const dateInput = document.getElementById('dateOfBirth');
 
 formSignUp.addEventListener('submit', function(ev) {
 	ev.preventDefault();
-	window.axios.post("newUser", { name: nameInput.value, 
+	window.axios.post("/user/newUser", { name: nameInput.value, 
 						lastName: lastNameInput.value,
 						password: md5(passwordSignUp.value),
 						passwordConfirmation: md5(passwordConfirmationInput.value),
