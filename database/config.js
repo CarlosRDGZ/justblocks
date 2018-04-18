@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 mongoose.connect('mongodb://localhost/justblocks')
 mongoose.connection.on('error',
