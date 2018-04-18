@@ -1,6 +1,6 @@
 const express = require('express')
 const mongoose = require('./database/config')
-const routes = require('./routes')
+const api = require('./api')
 const path = require('path')
 const app = express()
 const md5 = require('md5');
@@ -81,6 +81,7 @@ app.post("/signIn", function(req, res) {
 			if(user) {
 				if(user.password == md5(req.body.password)) {
 					req.session.user_id = user._id;
+					console.log(req.session);
 					res.json({success: "success"});
 				} 
 				else {
@@ -121,5 +122,5 @@ app.use(express.static(path.join(__dirname,'/views')))
 app.use('/bulma', express.static(path.join(__dirname,'/node_modules/bulma/css')))
 app.use('/bulma-extensions', express.static(path.join(__dirname,'/node_modules/bulma-extensions/dist/')))
 app.use('/bulma-carousel', express.static(path.join(__dirname,'/node_modules/bulma-extensions/bulma-carousel/dist/')))
-app.use('/', routes)
+app.use('/', api)
 

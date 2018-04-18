@@ -1,5 +1,5 @@
 const users = require('express').Router()
-const User = require('../../models/User')
+const User = require('../models/User').User;
 const bodyParser = require('body-parser')
 
 users.use(bodyParser.urlencoded({ extended: true }))
