@@ -75,7 +75,7 @@ app.post("/newUser", function(req, res) {
 
 
 app.post("/signIn", function(req, res) {
-	//EL email es único
+	//El email es único
 	User.findOne({email: req.body.email}, function(err, user) {
 		if(!err) {
 			if(user) {
