@@ -5,6 +5,8 @@ const path = require('path')
 const app = express()
 const md5 = require('md5');
 
+global.url = 'http://127.0.0.1:3000/'
+
 
 //*************Manejo de sesiones
 //MongoStore connect-mongo
@@ -52,17 +54,15 @@ app.get("/signUp", function(req, res) {
 
 
 app.post("/newUser", function(req, res) {
-	var user = new User({
-		name: {first: req.body.name, last: req.body.lastName},
-		password: req.body.password,
-		dateOfBirth: req.body.dateOfBirth,
-		email: req.body.email,
-		passwordConfirmation: req.body.passwordConfirmation
-	});
+	const userReq = req.body
+	const user = new User({userReq});
 
 	user.save().then(function(userSaved) {
 		//Lo logue si sí se pudo guardar el usuario
-		res.redirect(307, "/signIn");
+		// res.redirect(307, "/signIn");
+		console.log(userSaved)
+		req.session.user_id = userSaved.id
+		res.redirect('/app')
 
 	}).catch(function(err) {
 		console.log(err.message);
@@ -81,7 +81,6 @@ app.post("/signIn", function(req, res) {
 			if(user) {
 				if(user.password == md5(req.body.password)) {
 					req.session.user_id = user._id;
-					console.log(req.session);
 					res.json({success: "success"});
 				} 
 				else {
@@ -122,5 +121,5 @@ app.use(express.static(path.join(__dirname,'/views')))
 app.use('/bulma', express.static(path.join(__dirname,'/node_modules/bulma/css')))
 app.use('/bulma-extensions', express.static(path.join(__dirname,'/node_modules/bulma-extensions/dist/')))
 app.use('/bulma-carousel', express.static(path.join(__dirname,'/node_modules/bulma-extensions/bulma-carousel/dist/')))
+app.use('/vue', express.static(path.join(__dirname, '/node_modules/vue/dist/')))
 app.use('/', api)
-

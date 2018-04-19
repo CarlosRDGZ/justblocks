@@ -1,15 +1,26 @@
 doctype html
 html(lang="en")
-	head
-		include ../header.pug
-		link(rel="stylesheet", href="../css/index.css")
-		title JustBlocks
-	body
-		include ../navbar.pug
-		h1.title Iniciaste sesión 
-		h1.title #{user.name.first} #{user.name.last}
-		h1.title #{user.email}
-		a(href="/app/logout") Salir
-		include ../loginModal.pug
-		include ../footer.pug
-		script(src="../bulma-carousel/bulma-carousel.min.js")
+  head
+    include ../header.pug
+    link(rel="stylesheet", href="../css/index.css")
+    title JustBlocks
+  body
+    include ../navbar.pug
+    main#app.section
+      .container-fluid
+        .columns
+          .column.is-one-quarter
+            nav.panel                                                                                 
+              p.panel-heading Menu
+              a.panel-block
+                span.panel-icon
+                  i.fas.fa-plus-square
+                span Agregar Convocatoria
+          .column
+            .notification.is-primary
+              h1.title {{ title }}
+              h2.subtitle name
+    include ../footer.pug
+    script(src="/vue/vue.min.js")
+    // script(src="../../vue/components/tabs.vue")
+    script(src="../../vue/controllers/home.js")
