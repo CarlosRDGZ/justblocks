@@ -1,0 +1,10 @@
+.card-picture {
+    width: 256px;
+    height: 256px;
+}
+.card-picture .picture {
+    border: 2px #fff solid;
+    border-radius: 50%;
+    background: url() #fff no-repeat center;
+    background-size: contain;
+}   

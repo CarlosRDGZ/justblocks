@@ -10,6 +10,22 @@ html(lang="en")
       .container-fluid
         .columns
           .column.is-one-quarter
+            // figure.image.is-5by4(style='background: url("images/Porg.png") #fff no-repeat; background-size: contain;')
+            figure.image.is-5by4
+              image(src='images/Porg.png' style='border-radius: 0%')
+            .card
+              .card-content
+                p.title #{user.name.first} #{user.name.last}
+                p.subtitle #{user.email}
+                ul
+                  li
+                    span.icon
+                      i.fas.fa-briefcase
+                    span ocupation
+                  li
+                    span.icon
+                      i.fas.fa-graduation-cap
+                    span education
             nav.panel                                                                                 
               p.panel-heading Menu
               a.panel-block
