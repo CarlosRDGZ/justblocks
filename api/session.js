@@ -12,6 +12,8 @@ session.post("/signIn", function(req, res) {
 	//El email es único
 	User.findOne({email: req.body.email}, function(err, user) {
 		if(!err) {
+			console.log(req.body.email);
+			console.log(user);
 			if(user) {
 				if(user.password == md5(req.body.password)) {
 					req.session.user_id = user._id;

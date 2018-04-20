@@ -23,24 +23,27 @@ app.use(sessionRedisMiddleware)
 //*************Middlewares
 const routerApp = require("./routeApp");
 const sessionMiddleware = require('./middlewares/session');//Para validar los usuarios
-const sessions = require("./api/session");
-const users = require("./api/users");
+
 
 //*************Modelos
 const User = require('./models/User').User;
+
 
 //*************Para poder acceder a los parámetros del cuerpo de las peticiones
 const bodyParser = require('body-parser');
 app.use(bodyParser.json()); //Para peticiones aplication/json
 app.use(bodyParser.urlencoded({extended: true}));
 
+
 //*************Usaremos pug para el renderizado de las vistas
 app.set("view engine", "pug");
+
 
 mongoose.connection.once('open', function() {
   console.log('open')
   app.listen(3000, () => console.log('Runnig...'))
 })
+
 
 app.get("/", function(req, res) {
 	res.render("index.pug");
@@ -49,7 +52,10 @@ app.get("/", function(req, res) {
 // *************Use middlewares
 app.use("/app", sessionMiddleware);
 app.use("/app", routerApp);
+
+
 app.use('/', api)
+
 
 app.use(express.static(path.join(__dirname,'/public')))
 app.use(express.static(path.join(__dirname,'/views')))
