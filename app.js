@@ -44,11 +44,6 @@ mongoose.connection.once('open', function() {
   app.listen(3000, () => console.log('Runnig...'))
 })
 
-
-app.get("/", function(req, res) {
-	res.render("index.pug");
-})
-
 // *************Use middlewares
 app.use("/app", sessionMiddleware);
 app.use("/app", routerApp);

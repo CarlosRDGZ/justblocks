@@ -1,0 +1,23 @@
+doctype html
+html(lang="en")
+	head
+		include ./header.pug
+		link(rel="stylesheet", href="../css/index.css")
+		title JustBlocks
+	body
+		include ./navbar.pug
+		h1.title Announcement delete
+
+		.container
+			form#announcementDelete.is-centered(action="#", method="POST")
+				.column.is-two-fifths
+					.field
+						label(for="id" class="title is-5") Id a borrar
+						.control
+							input.input(type="text" id="idDelete" name="idDelete" placeholder="id a borrar")
+					.control
+						input.button.is-primary(type="submit" value="Borrar")
+		include ./loginModal.pug
+		include ./footer.pug
+		script(src="../bulma-carousel/bulma-carousel.min.js")
+		script(src="../js/announcementDelete.js")

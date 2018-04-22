@@ -1,0 +1,17 @@
+doctype html
+html(lang="en")
+	head
+		include ./header.pug
+		link(rel="stylesheet", href="../css/index.css")
+		title JustBlocks
+	body
+		include ./navbar.pug
+		h1.title Announcement
+		h1.title #{announcement}
+		//No funciona esto de abajo, no lee las propiedades
+		h1.title #{announcement.creationDate}
+		h1.title #{announcement.content}
+		br
+		include ./loginModal.pug
+		include ./footer.pug
+		script(src="../bulma-carousel/bulma-carousel.min.js")

@@ -17,7 +17,6 @@ session.post("/signIn", function(req, res) {
 			if(user) {
 				if(user.password == md5(req.body.password)) {
 					req.session.user_id = user._id;
-					console.log(req.session);
 					res.json({success: "success"});
 				} 
 				else {

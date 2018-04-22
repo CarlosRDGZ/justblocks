@@ -1,5 +1,5 @@
 //Middleware para establecer si un usuario tiene permisos sobre una announcement
-var Announcement = require('../models/Announcement');
+// var Announcement = require('../models/Announcement');
 
 const announcementPermission = function(announcement, req, res) {
 	if(typeof announcement == "undefined") return false;
