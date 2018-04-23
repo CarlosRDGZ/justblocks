@@ -6,6 +6,7 @@ const app = express()
 const md5 = require('md5');
 
 global.url = 'http://127.0.0.1:3000/'
+global.openSession = false
 
 
 //*************Manejo de sesiones
