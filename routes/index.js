@@ -4,7 +4,7 @@ const announ = require('./announcement')
 const api = require('../api')
 
 routes.use('/api', api)
-api.use('/session', session)
+routes.use('/session', session)
 routes.use('/announcement', announ)
 
 routes.get('/convocatoria', (req, res) => {
