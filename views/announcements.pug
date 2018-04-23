@@ -1,0 +1,18 @@
+doctype html
+html(lang="en")
+	head
+		include ./header.pug
+		link(rel="stylesheet", href="../css/index.css")
+		title JustBlocks
+	body
+		include ./navbar.pug
+		a(href="/announcement/newAnnouncement") NEW
+		br
+		a(href="/announcement/all") ALL
+		br
+		a(href="/announcement/announcement") MY ANNOUNCEMENTS
+		br
+		a(href="/announcement/delete") DELETE
+		include ./loginModal.pug
+		include ./footer.pug
+		script(src="../bulma-carousel/bulma-carousel.min.js")

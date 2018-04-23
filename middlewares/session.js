@@ -1,8 +1,11 @@
 var User = require("../models/User").User;
 
 module.exports = function(req, res, next) {
+	console.log("session middleware");
 	//Si no se ha logueado se regresa al index
 	if(!req.session.user_id) {
+		// console.log("DENTRO SESSION MIDDLEWARE");
+		// res.status(200).render('index.pug');
 		res.redirect("/");
 	}
 	else {

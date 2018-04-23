@@ -1,0 +1,41 @@
+doctype html
+html(lang="en")
+	head
+		include ./header.pug
+		link(rel="stylesheet", href="../css/index.css")
+		title JustBlocks
+	body
+		include ./navbar.pug
+		.container
+			form#newAnnouncement.is-centered(action="#", method="POST")
+				.column.is-two-fifths
+					.field
+						label(for="creationDate" class="title is-5") Fecha de creación
+						.control
+							input.input(type="date" id="creationDate" name="creationDate" min="1900-01-01" max="2000-31-31")
+					.field
+						label(for="evaluationDate" class="title is-5") Fecha de evaluación
+						.control
+							input.input(type="date" id="evaluationDate" name="evaluationDate" min="1900-01-01" max="2000-31-31")
+					.field
+						label(for="deadLineDate" class="title is-5") Fecha de cierre
+						.control
+							input.input(type="date" id="deadLineDate" name="deadLineDate" min="1900-01-01" max="2000-31-31")
+					.field
+						label(for="evaluatorsAmount" class="title is-5") Cantidad de evaluadores
+						.control
+							input.input(type="number" id="evaluatorsAmount" name="evaluatorsAmount")
+					.field
+						label(for="projectsByEvaluator" class="title is-5") Proyectos por evaluador
+						.control
+							input.input(type="number" id="projectsByEvaluator" name="projectsByEvaluator")
+					.field
+						label(for="content" class="title is-5") Contenido
+						.control
+							input.input(type="textarea" id="content" name="content")
+					.control
+						input.button.is-primary(type="submit" value="Registrar")
+		include ./loginModal.pug
+		include ./footer.pug
+		script(src="../bulma-carousel/bulma-carousel.min.js")
+		script(src="../js/newAnnouncement.js")

@@ -19,7 +19,7 @@ function toSignUp()
 
 function openSignUp()
 {
-	window.location='/signUp';
+	window.location='/session/signUp';
 }
 
 
@@ -31,7 +31,7 @@ const passwordInput = document.getElementById('password');
 loginForm.addEventListener('submit', function(ev) {
 	ev.preventDefault();
 
-	window.axios.post('signIn', { email: emailInput.value, password: md5(passwordInput.value) })
+	window.axios.post('/session/signIn', { email: emailInput.value, password: md5(passwordInput.value) })
 		.then(({data})=>{
 			if(data['err'])
 			{
