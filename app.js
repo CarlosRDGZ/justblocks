@@ -1,6 +1,6 @@
 const express = require('express')
 const mongoose = require('./database/config')
-const api = require('./api')
+const routes = require('./routes')
 const path = require('path')
 const app = express()
 const md5 = require('md5');
@@ -50,17 +50,11 @@ mongoose.connection.once('open', function() {
 app.use("/app", sessionMiddleware);
 app.use("/app", routerApp);
 
-
-app.use('/', api)
-
-
 app.use(express.static(path.join(__dirname,'/public')))
 app.use(express.static(path.join(__dirname,'/views')))
 app.use('/bulma', express.static(path.join(__dirname,'/node_modules/bulma/css')))
 app.use('/bulma-extensions', express.static(path.join(__dirname,'/node_modules/bulma-extensions/dist/')))
-app.use('/bulma-carousel', express.static(path.join(__dirname,'/node_modules/bulma-extensions/bulma-carousel/dist
-                                                    
-/*
+app.use('/bulma-carousel', express.static(path.join(__dirname,'/node_modules/bulma-extensions/bulma-carousel/dist')))
+
 app.use('/vue', express.static(path.join(__dirname, '/node_modules/vue/dist/')))
-app.use('/', api)
-*/
+app.use('/', routes)
