@@ -1,0 +1,113 @@
+doctype html
+html(lang="en")
+  head
+    include ../header.pug
+    title Crear
+  body
+    include ../navbar.pug
+    section.hero.is-success
+      .hero-body
+        .container.has-text-centered
+          h1.title Crear Convocatoria
+    main#app.section
+      .container-fluid
+        .columns.is-centered
+          .column.is-half.is-narrow
+            .notification.is-white
+              .field
+                label.label Titulo
+                .control
+                  input.input(type='text' placeholder='Titulo' v-model='title')
+              .field.is-horizontal
+                .field-body
+                  .field
+                    label.label Lanzamiento
+                      span.icon(@click='helpper(0)')
+                        i.far.fa-question-circle
+                    p.control.is-expanded.has-icons-left
+                      input.input(type='date' v-model='dateLaunching')
+                      span.icon.is-small.is-left
+                        i.far.fa-calendar-alt
+                  .field
+                    label.label Cierre de Registro
+                      span.icon(@click='helpper(1)')
+                        i.far.fa-question-circle
+                    p.control.is-expanded.has-icons-left
+                      input.input(type='date' v-model='dateEndEnrollments')
+                      span.icon.is-small.is-left
+                        i.far.fa-calendar-alt
+              article.message.is-info(v-show='ui.helpper0')
+                .message-header
+                  p Lanzamiento
+                  button.delete(@click='helpper(0)')
+                .message-body La fecha de lanzamiento es en la que la convocatoria ya es visible para el publico. Desde ese dia los usuarios podran inscribirse  o enviar su solicitud para participar como evaluadores de la misma.
+              article.message.is-info(v-show='ui.helpper1')
+                .message-header
+                  p Cierre de Registro
+                  button.delete(@click='helpper(1)')
+                .message-body It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English
+              .field.is-horizontal
+                .field-body                        
+                  .field
+                    label.label Evaluaciones
+                      span.icon(@click='helpper(2)')
+                        i.far.fa-question-circle
+                    p.control.is-expanded.has-icons-left
+                      input.input(type='date' v-model='dateEvaluations')
+                      span.icon.is-small.is-left
+                        i.far.fa-calendar-alt
+                  .field
+                    label.label Resultados
+                      span.icon(@click='helpper(3)')
+                        i.far.fa-question-circle
+                    p.control.is-expanded.has-icons-left
+                      input.input(type='date' v-model='dateResults')
+                      span.icon.is-small.is-left
+                        i.far.fa-calendar-alt
+              article.message.is-info(v-show='ui.helpper2')
+                .message-header
+                  p Evaluaciones
+                  button.delete(@click='helpper(2)')
+                .message-body It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English
+              article.message.is-info(v-show='ui.helpper3')
+                .message-header
+                  p Resultados
+                  button.delete(@click='helpper(3)')
+                .message-body It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English
+              article.message.is-info(v-show='ui.helpper4')
+                .message-header
+                  p Descripci&oacute;n
+                  button.delete(@click='helpper(4)')
+                .message-body It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English
+              .field
+                label.label Descripci&oacute;n
+                  span.icon(@click='helpper(4)')
+                    i.far.fa-question-circle
+                .control
+                  textarea#description.textarea
+              .field.is-horizontal
+                .field-body
+                  .field
+                    label.label N&uacute;mero de Evaluadores
+                    p.control.is-expanded.has-icons-left
+                      input(type='number' class='input' :class="{ 'is-danger': ui.error0 }" v-model='evaluators')
+                      span.icon.is-small.is-left
+                        i.fas.fa-users
+                  .field
+                    label.label Proyectos por Evaluador
+                    p.control.is-expanded.has-icons-left
+                      input(type='number' class='input' :class="{ 'is-danger': ui.error1 }" v-model='projectsPerEvaluator')
+                      span.icon.is-small.is-left
+                        i.fas.fa-boxes        
+    script(src='../vue/vue.min.js')
+    script(src='../../vue/controllers/announcement/create.js')
+    script(src='../ckeditor/ckeditor.js')
+    include ../footer.pug
+script.
+  /*ClassicEditor.create(document.querySelector('#description'), {
+    toolbar: ['heading','|','bold','italic','link','bulletedList','numberedList','blockQuote','undo','redo'],
+  }).then(editor => window.editor = editor )*/
+style.
+  .ck-editor__editable {
+    min-height: 250px;
+  }

@@ -1,6 +1,7 @@
+- const location = 'app/'
 nav#mainNavbar.navbar.is-info(role='navigation')
   .navbar-brand
-    a.navbar-item(href='#')
+    a.navbar-item(href=url)
       span
         i.fab.fa-rebel.fa-3x
       span(hidden='')
@@ -22,17 +23,41 @@ nav#mainNavbar.navbar.is-info(role='navigation')
       a.navbar-item(href='#')
         b Método Evaluación
     .navbar-end
-      .navbar-item
-        .field.is-grouped
-          p.control
-            button.button.is-primary.is-outlined(href='#' onclick="launchSignInModal()")
+      if (!user)
+        .navbar-item
+          .field.is-grouped
+              p.control
+                button.button.is-primary.is-outlined(href='#' onclick="launchSignInModal()")
+                  span.icon
+                    i.fas.fa-sign-in-alt
+                  span Sign in
+              p.control
+                span or
+              p.control
+                button.button.is-info.is-outlined(href='#' onclick="openSignUp()")
+                  span.icon
+                    i.fas.fa-user-plus
+                  span Sign up
+      else
+        .navbar-item.has-dropdown.is-hoverable
+          a.navbar-link(href=url + location)
+            figure.image.is-48x48(style='background-image: url("images/Porg.png"); background-size:cover; border-radius: 50%;' href=`${url}app`)
+            p &nbsp #{user.name.first.split(' ')[0]}
+          .navbar-dropdown.is-boxed
+            a.navbar-item(href='#')
               span.icon
-                i.fas.fa-sign-in-alt
-              span Sign in
-          p.control
-            span or
-          p.control
-            button.button.is-info.is-outlined(href='#' onclick="openSignUp()")
+                i.fas.fa-edit
+              span Editar perfil
+            a.navbar-item(href=url + location + 'logout')
               span.icon
-                i.fas.fa-user-plus
-              span Sign up
+                i.fas.fa-sign-out-alt
+              span Salir
+        a.navbar-item(href='#')
+          span.icon
+            i.far.fa-bell
+        a.navbar-item(href="#")
+          span.icon
+            i.fas.fa-tasks
+        a.navbar-item(href="#")
+          span.icon
+            i.far.fa-calendar-alt

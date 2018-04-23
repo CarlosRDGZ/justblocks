@@ -1,16 +1,42 @@
 doctype html
 html(lang="en")
-	head
-		include ../header.pug
-		link(rel="stylesheet", href="../css/index.css")
-		title JustBlocks
-	body
-		include ../navbar.pug
-		h1.title Iniciaste sesión 
-		h1.title #{user.name.first} #{user.name.last}
-		h1.title #{user.email}
-		a(href="/session/logout") Salir
-		a(href="/announcement") Convocatorias
-		include ../loginModal.pug
-		include ../footer.pug
-		script(src="../bulma-carousel/bulma-carousel.min.js")
+  head
+    include ../header.pug
+    link(rel="stylesheet", href="../css/index.css")
+    title JustBlocks
+  body
+    include ../navbar.pug
+    main#app.section
+      .container-fluid
+        .columns
+          .column.is-one-quarter
+            // figure.image.is-5by4(style='background: url("images/Porg.png") #fff no-repeat; background-size: contain;')
+            figure.image.is-5by4
+              image(src='images/Porg.png' style='border-radius: 0%')
+            .card
+              .card-content
+                p.title #{user.name.first} #{user.name.last}
+                p.subtitle #{user.email}
+                ul
+                  li
+                    span.icon
+                      i.fas.fa-briefcase
+                    span ocupation
+                  li
+                    span.icon
+                      i.fas.fa-graduation-cap
+                    span education
+            nav.panel                                                                                 
+              p.panel-heading Menu
+              a.panel-block
+                span.panel-icon
+                  i.fas.fa-plus-square
+                span Agregar Convocatoria
+          .column
+            .notification.is-primary
+              h1.title {{ title }}
+              h2.subtitle name
+    include ../footer.pug
+    script(src="/vue/vue.min.js")
+    // script(src="../../vue/components/tabs.vue")
+    script(src="../../vue/controllers/home.js")
