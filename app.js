@@ -43,7 +43,7 @@ app.set("view engine", "pug");
 
 mongoose.connection.once('open', function() {
   console.log('open')
-  app.listen(3000, () => console.log('Runnig...'))
+  app.listen(3000, () => console.log('Listening...'))
 })
 
 // *************Use middlewares
