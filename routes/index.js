@@ -1,8 +1,10 @@
 const routes = require('express').Router()
+const session = require('./session')
 const announ = require('./announcement')
 const api = require('../api')
 
 routes.use('/api', api)
+api.use('/session', session)
 routes.use('/announcement', announ)
 
 routes.get('/convocatoria', (req, res) => {
