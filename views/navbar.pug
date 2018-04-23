@@ -1,4 +1,3 @@
-- const location = 'app/'
 nav#mainNavbar.navbar.is-info(role='navigation')
   .navbar-brand
     a.navbar-item(href=url)
@@ -42,13 +41,14 @@ nav#mainNavbar.navbar.is-info(role='navigation')
         .navbar-item.has-dropdown.is-hoverable
           a.navbar-link(href=url + location)
             figure.image.is-48x48(style='background-image: url("images/Porg.png"); background-size:cover; border-radius: 50%;' href=`${url}app`)
-            p &nbsp #{user.name.first.split(' ')[0]}
+            p &nbsp #{userSession.name.first.split(' ')[0]}
           .navbar-dropdown.is-boxed
             a.navbar-item(href='#')
               span.icon
                 i.fas.fa-edit
               span Editar perfil
-            a.navbar-item(href=url + location + 'logout')
+            - const route = 'session'
+            a.navbar-item(href=url + route + 'logout')
               span.icon
                 i.fas.fa-sign-out-alt
               span Salir
