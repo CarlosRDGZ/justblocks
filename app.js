@@ -7,7 +7,7 @@ const md5 = require('md5');
 
 global.url = 'http://127.0.0.1:3000/'
 global.openSession = false
-global.userSession = { }
+global.userSession = { _id: '5ad7b0e28380150835d775bf' }
 
 //*************Manejo de sesiones
 //MongoStore connect-mongo

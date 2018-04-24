@@ -25,7 +25,7 @@ html(lang="en")
                       span.icon(@click='helpper(0)')
                         i.far.fa-question-circle
                     p.control.is-expanded.has-icons-left
-                      input.input(type='date' v-model='dateLaunching')
+                      input.input(type='date' v-model='creationDate')
                       span.icon.is-small.is-left
                         i.far.fa-calendar-alt
                   .field
@@ -33,7 +33,7 @@ html(lang="en")
                       span.icon(@click='helpper(1)')
                         i.far.fa-question-circle
                     p.control.is-expanded.has-icons-left
-                      input.input(type='date' v-model='dateEndEnrollments')
+                      input.input(type='date' v-model='endEnrollmentsDate')
                       span.icon.is-small.is-left
                         i.far.fa-calendar-alt
               article.message.is-info(v-show='ui.helpper0')
@@ -53,7 +53,7 @@ html(lang="en")
                       span.icon(@click='helpper(2)')
                         i.far.fa-question-circle
                     p.control.is-expanded.has-icons-left
-                      input.input(type='date' v-model='dateEvaluations')
+                      input.input(type='date' v-model='evaluationDate')
                       span.icon.is-small.is-left
                         i.far.fa-calendar-alt
                   .field
@@ -61,7 +61,7 @@ html(lang="en")
                       span.icon(@click='helpper(3)')
                         i.far.fa-question-circle
                     p.control.is-expanded.has-icons-left
-                      input.input(type='date' v-model='dateResults')
+                      input.input(type='date' v-model='deadlineDate')
                       span.icon.is-small.is-left
                         i.far.fa-calendar-alt
               article.message.is-info(v-show='ui.helpper2')
@@ -84,7 +84,7 @@ html(lang="en")
                   span.icon(@click='helpper(4)')
                     i.far.fa-question-circle
                 .control
-                  textarea#description.textarea
+                  textarea#description.textarea(v-model='content')
               .field.is-horizontal
                 .field-body
                   .field
@@ -98,10 +98,12 @@ html(lang="en")
                     p.control.is-expanded.has-icons-left
                       input(type='number' class='input' :class="{ 'is-danger': ui.error1 }" v-model='projectsPerEvaluator')
                       span.icon.is-small.is-left
-                        i.fas.fa-boxes        
+                        i.fas.fa-boxes
+              .content
+                pre {{ $data | json }}
     script(src='../vue/vue.min.js')
     script(src='../../vue/controllers/announcement/create.js')
-    script(src='../ckeditor/ckeditor.js')
+    // script(src='../ckeditor/ckeditor.js')
     include ../footer.pug
 script.
   /*ClassicEditor.create(document.querySelector('#description'), {
