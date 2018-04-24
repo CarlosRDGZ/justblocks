@@ -1,3 +1,4 @@
+- const pathToRoot = '../../'
 doctype html
 html(lang="en")
   head
@@ -100,7 +101,7 @@ html(lang="en")
                       span.icon.is-small.is-left
                         i.fas.fa-boxes
               .content
-                pre {{ $data | json }}
+                pre {{ $data }}
     script(src='../vue/vue.min.js')
     script(src='../../vue/controllers/announcement/create.js')
     // script(src='../ckeditor/ckeditor.js')
