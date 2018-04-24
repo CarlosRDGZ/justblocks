@@ -13,7 +13,7 @@ announcements.use(bodyParser.json())
 announcements.route('/')
   .get((req,res) => { //Le regresa todas sus convocatorias (las que el dio de alta)
     console.log("GET announcement");
-    Announcement.find({idCreator: res.locals.user._id}, function(err, announcementsGot) {
+    Announcement.find({idCreator: userSession._id}, function(err, announcementsGot) {
       if(err){res.json(err)}
       res.json(announcementsGot);//Todas las comvocatorias del usuario
     })
