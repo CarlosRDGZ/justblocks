@@ -28,6 +28,7 @@ announcements.route('/')
       announcement.save()
         .then((data) => res.json(data))
         .catch((err) => res.json({err: err.message}))
+
   })
 
 announcements.route('/:id')
@@ -65,32 +66,8 @@ announcements.route('/:id')
     // Mongoose Remove Docs: http://mongoosejs.com/docs/api.html#findbyidandremove_findByIdAndRemove
   })
 
-  module.exports = announcements;
-
-/** NO CRUD
-announcements.get("/", function(req, res) {
-  res.render("announcements");
-})
-
-announcements.get("/newAnnouncement", function(req, res) {
-  res.render("newAnnouncement");
-})
-
-announcements.get("/delete", function(req, res) {
-  res.render("announcementDelete");
-})
-
-announcements.get("/all", function(req, res) {
-    Announcement.find({}, function(err, announcementsGot) {
-        if (err)
-        res.sendStatus(500)
-        else
-          res.status(200).json(announcementsGot)
-      })
-})
-
 announcements.get("/view/:id", function(req, res) {
-  Announcement.find({_id: req.params.id}, function(err, announcementGot) {
+Announcement.find({_id: req.params.id}, function(err, announcementGot) {
     if(err)
       res.sendStatus(500)
     else
@@ -99,5 +76,17 @@ announcements.get("/view/:id", function(req, res) {
       res.status(200).render("announcementView", {announcement: announcementGot});
     }
   })
+})
+  
+  module.exports = announcements;
+
+/** NO CRUD
+announcements.get("/all", function(req, res) {
+    Announcement.find({}, function(err, announcementsGot) {
+        if (err)
+        res.sendStatus(500)
+        else
+          res.status(200).json(announcementsGot)
+      })
 })
 */
