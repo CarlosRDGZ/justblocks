@@ -1,9 +1,10 @@
 const announcements = require('express').Router()
 const Announcement = require('../models/Announcement').Announcement;
 const bodyParser = require('body-parser')
+/*
 const sessionMiddleware = require('../middlewares/session');//Para validar los usuarios
 const announcementFindMiddleware = require("../middlewares/findAnnouncement");
-
+*/
 announcements.use(bodyParser.urlencoded({ extended: true }))
 announcements.use(bodyParser.json())
 
