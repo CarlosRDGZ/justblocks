@@ -1,0 +1,33 @@
+idCreator:
+creationDate: 
+endEnrollmentsDate
+evaluationDate: 
+deadlineDate: 
+evaluators: 
+projectsPerEvaluator: 
+content: 
+
+{
+  "title": "title123",
+  "creationDate": "2018-04-23",
+  "endEnrollmentsDate": "2018-04-24",
+  "evaluationDate": "2018-04-25",
+  "deadlineDate": "2018-04-26",
+  "evaluators": "1",
+  "projectsPerEvaluator": "1",
+  "content": "Content text"
+}
+
+{
+  idAnnouncement: '5adea0d63ef0481d5c92f011'
+  idCreator: '5ad7b0e28380150835d775bf'
+  description: 'Projecto Carlos'
+  score: '0'
+}
+
+{
+  "idAnnouncement": "5adea0d63ef0481d5c92f011",
+  "idCreator": "5ad7b0e28380150835d775bf",
+  "description": "Projecto Carlos",
+  "score": "0"
+}

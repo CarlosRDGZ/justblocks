@@ -15,13 +15,13 @@ footer.footer
           li
             a(href='#') Aviso de Privacidad
           li
-            a(href='/faq') FAQ
+            a(href=url + 'faq') FAQ
           li
             a(href='#') Términos y condiciones
 
 include loginModal.pug
-script(defer='', src='../js/fontawesome-all.js')
-script(defer='', src="../js/axios.js")
-script(src="../js/loginModal.js")
-script(src="../js/md5.js")
+script(defer='', src=pathToRoot + 'js/fontawesome-all.js')
+script(defer='', src=pathToRoot + "js/axios.js")
+script(src=pathToRoot + "js/loginModal.js")
+script(src=pathToRoot + "js/md5.js")
 

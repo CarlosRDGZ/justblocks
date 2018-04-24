@@ -1,0 +1,67 @@
+const projects = require('express').Router()
+const Project = require('../models/Project').Project
+const bodyParser = require('body-parser')
+
+projects.use(bodyParser.urlencoded({ extended: true }))
+projects.use(bodyParser.json())
+
+projects.route('/')
+  .get((req,res) => {
+    Project.find({}, (err,projects) => {
+      if (err)
+        res.json(err)
+      res.status(200).json(projects)
+    })
+  })
+  .post((req,res) => {
+    console.log(req.body)
+    const project = new Project(req.body)
+    project.save()
+      .then(data => res.status(200).json(data))
+      .catch(err => res.json(err))
+  })
+
+projects.route('/:id')
+  .put((req,res) => {
+    Project.findByIdAndUpdate(
+      req.params.id,
+      {
+        $set:
+        {
+          description: body.description,
+          score: body.score
+        }
+      },
+      { new: true },
+      (err,data) => {
+        if (err) res.json(err)
+        res.status(200).json(data)
+      }
+    )
+  })
+  .delete((req,res) => {
+    Project.findByIdAndRemove(req.params.id, (err,data) => {
+      if (err) res.json(err)
+      res.status(200).json(data)
+    })
+  })
+
+projects.route('/announcement/:id')
+  .get((req,res) => {
+    Project.find({ idAnnouncement: req.params.id }, (err,projects) => {
+      if (err)
+        res.json(err)
+      res.status(200).json(projects)
+    })
+  })
+
+projects.route('/user/:id')
+  .get((req,res) => {
+    Project.find({ idCreator: req.params.id }, (err,projects) => {
+      if (err)
+        res.json(err)
+      res.status(200).json(projects)
+    })
+  })
+
+module.exports = projects

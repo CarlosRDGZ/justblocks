@@ -3,13 +3,15 @@ var Schema = mongoose.Schema;
 
 const announcementSchema = new Schema({
 	idCreator: {type: Schema.Types.ObjectId, ref: "User"},
+	title: {type: String, required: true},
 	creationDate: {type: Date, required: true},
+	endEnrollmentsDate: {type: Date, required: true}, // agregue este
 	evaluationDate: {type: Date, required: true},
 	deadlineDate: {type: Date, required: true},
-	evaluatorsAmount: {type: Number, default: 0},
-	projectsByEvaluator: {type: Number, default: 0},
+	evaluators: {type: Number, default: 0},
+	projectsPerEvaluator: {type: Number, default: 0},
 	content: {type: String}
 })
 
-var Announcement = mongoose.model('Announcement', announcementSchema);
+const Announcement = mongoose.model('Announcement', announcementSchema);
 module.exports.Announcement = Announcement;

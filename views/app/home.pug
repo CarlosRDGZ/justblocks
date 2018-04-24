@@ -1,3 +1,4 @@
+- const pathToRoot = '../../'
 doctype html
 html(lang="en")
   head
@@ -12,7 +13,7 @@ html(lang="en")
           .column.is-one-quarter
             // figure.image.is-5by4(style='background: url("images/Porg.png") #fff no-repeat; background-size: contain;')
             figure.image.is-5by4
-              image(src='images/Porg.png' style='border-radius: 0%')
+              image(src=pathToRoot + 'images/Porg.png' style='border-radius: 0%')
             .card
               .card-content
                 p.title #{user.name.first} #{user.name.last}
@@ -37,6 +38,6 @@ html(lang="en")
               h1.title {{ title }}
               h2.subtitle name
     include ../footer.pug
-    script(src="/vue/vue.min.js")
+    script(src=pathToRoot + "vue/vue.min.js")
+    script(src=pathToRoot + "../../vue/controllers/home.js")
     // script(src="../../vue/components/tabs.vue")
-    script(src="../../vue/controllers/home.js")
