@@ -1,3 +1,4 @@
+- const pathToRoot = '../'
 doctype html
 html(lang="en")
   head
@@ -11,13 +12,13 @@ html(lang="en")
       .hero-carousel.carousel-animated.carousel-animate-fade(data-autoplay="true")
         .carousel-container
           .carousel-item.has-background.is-active
-            img.is-background(src="images/image1.jpg")
+            img.is-background(src=pathToRoot + "images/image1.jpg")
           .carousel-item.has-background.is-active
-            img.is-background(src="images/image2.jpg")        
+            img.is-background(src=pathToRoot + "images/image2.jpg")        
           .carousel-item.has-background.is-active
-            img.is-background(src="images/image3.jpg ")
+            img.is-background(src=pathToRoot + "images/image3.jpg ")
           .carousel-item.has-background.is-active
-            img.is-background(src="images/image4.jpg")
+            img.is-background(src=pathToRoot + "images/image4.jpg")
         .carousel-navigation.is-overlay
           .carousel-nav-left
             i.fa.fa-chevron-left(aria-hidden="true")
@@ -152,4 +153,4 @@ html(lang="en")
                 a(href='#')
                   i.fab.fa-empire.fa-7x
     include footer.pug
-    script(src="/bulma-carousel/bulma-carousel.min.js")
+    script(src=pathToRoot + "bulma-carousel/bulma-carousel.min.js")

@@ -102,11 +102,11 @@ html(lang="en")
                         i.fas.fa-boxes
               .content
                 pre {{ $data }}
-    script(src='../vue/vue.min.js')
-    script(src='../../vue/controllers/announcement/create.js')
-    // script(src='../ckeditor/ckeditor.js')
+    script(src=pathToRoot + 'vue/vue.min.js')
+    script(src=pathToRoot + 'vue/controllers/announcement/create.js')
     include ../footer.pug
 script.
+    // script(src='../ckeditor/ckeditor.js')
   /*ClassicEditor.create(document.querySelector('#description'), {
     toolbar: ['heading','|','bold','italic','link','bulletedList','numberedList','blockQuote','undo','redo'],
   }).then(editor => window.editor = editor )*/
