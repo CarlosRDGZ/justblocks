@@ -39,8 +39,8 @@ nav#mainNavbar.navbar.is-info(role='navigation')
                   span Sign up
       else
         .navbar-item.has-dropdown.is-hoverable
-          a.navbar-link(href=url + location)
-            figure.image.is-48x48(style='background-image: url("images/Porg.png"); background-size:cover; border-radius: 50%;' href=`${url}app`)
+          a.navbar-link(href=url + 'app')
+            figure.image.is-48x48(style='background-image: url("images/Porg.png"); background-size:cover; border-radius: 50%;' href=url + 'app')
             p &nbsp #{userSession.name.first.split(' ')[0]}
           .navbar-dropdown.is-boxed
             a.navbar-item(href='#')
