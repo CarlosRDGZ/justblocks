@@ -8,8 +8,8 @@ const announcementSchema = new Schema({
 	endEnrollmentsDate: {type: Date, required: true}, // agregue este
 	evaluationDate: {type: Date, required: true},
 	deadlineDate: {type: Date, required: true},
-	evaluatorsAmount: {type: Number, default: 0},
-	projectsByEvaluator: {type: Number, default: 0},
+	evaluators: {type: Number, default: 0},
+	projectsPerEvaluator: {type: Number, default: 0},
 	content: {type: String}
 })
 

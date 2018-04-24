@@ -20,9 +20,9 @@ announcements.route('/')
   })
   .post((req,res) => {
       console.log("POST announcement");
-      var body = req.body;
-      body.idCreator = userSession._id
-      var announcement = new Announcement(body);
+      const data = req.body;
+      data.idCreator = userSession._id
+      const announcement = new Announcement(data);
 
       announcement.save()
         .then((data) => res.json(data))
@@ -30,38 +30,38 @@ announcements.route('/')
   })
 
 announcements.route('/:id')
-  .put(function(req, res) {
-    var announcement = new Announcement({
-        _id: req.params.id,
-        idCreator: /*"5ad745e966e45e2f9c0df8ec"*/req.locals.user._id,
-        creationDate: body.creationDate,
-        evaluationDate: body.evaluationDate,
-        deadlineDate: body.deadlineDate,
-        evaluatorsAmount: body.evaluatorsAmount,
-        projectsByEvaluator: body.projectsByEvaluator,
-        content: body.content
-      });
-
-    announcement.save().then(function(announcementsaved) {
-        //Lo logue si sí se pudo guardar el usuario
-        res.json(announcementsaved);
-      }).catch(function(err) {
-        console.log(err.message);
-          res.json({err: err.message/*"Hubo un problema al guardar el usuario"*/});
-      })
+  .put((req, res) => {
+    const data = req.body
+    Announcement.findByIdAndUpdate(
+      req.params.id, // id
+      {
+        $set:
+        {
+          title: data.title,
+          creationDate: data.creationDate,
+          endEnrollmentsDate: data.endEnrollmentsDate,
+          evaluationDate: data.evaluationDate,
+          deadlineDate: data.deadlineDate,
+          evaluators: data.evaluators,
+          projectsPerEvaluator: data.projectsPerEvaluator,
+          content: data.content
+        }
+      },
+      { new: true },
+      (err,data) => {
+        if (err) res.json(err)
+        res.status(200).json(data)
+      }
+    )
+    // Mongoose Update Docs: http://mongoosejs.com/docs/documents.html
   })
-  .delete(function(req, res) {
+  .delete((req,res) => {
     console.log("DELETE announcement");
-    console.log(req.params.id);
-    Announcement.findOneAndRemove({_id: req.params.id}, function(err) {
-      if(!err) {
-        res.json(req.params.id);
-      }
-      else {
-        console.log(err);
-        res.json({err: err});
-      }
+    Announcement.findByIdAndRemove(req.params.id, (err,data) => {
+      if (err) res.json(err)
+      res.status(200).json(data)
     })
+    // Mongoose Remove Docs: http://mongoosejs.com/docs/api.html#findbyidandremove_findByIdAndRemove
   })
 
   module.exports = announcements;
