@@ -33,11 +33,10 @@ announcements.route('/')
       });
 
       announcement.save().then(function(announcementsaved) {
-        //Lo logue si sí se pudo guardar el usuario
         res.json(announcementsaved);
       }).catch(function(err) {
         console.log(err.message);
-          res.json({err: err.message/*"Hubo un problema al guardar el usuario"*/});
+          res.json({err: err.message/*"Hubo un problema al guardar la convocatoria"*/});
       })
   })
 
@@ -76,32 +75,8 @@ announcements.route('/:id')
     })
   })
 
-  module.exports = announcements;
-
-/** NO CRUD
-announcements.get("/", function(req, res) {
-  res.render("announcements");
-})
-
-announcements.get("/newAnnouncement", function(req, res) {
-  res.render("newAnnouncement");
-})
-
-announcements.get("/delete", function(req, res) {
-  res.render("announcementDelete");
-})
-
-announcements.get("/all", function(req, res) {
-    Announcement.find({}, function(err, announcementsGot) {
-        if (err)
-        res.sendStatus(500)
-        else
-          res.status(200).json(announcementsGot)
-      })
-})
-
 announcements.get("/view/:id", function(req, res) {
-  Announcement.find({_id: req.params.id}, function(err, announcementGot) {
+Announcement.find({_id: req.params.id}, function(err, announcementGot) {
     if(err)
       res.sendStatus(500)
     else
@@ -110,5 +85,17 @@ announcements.get("/view/:id", function(req, res) {
       res.status(200).render("announcementView", {announcement: announcementGot});
     }
   })
+})
+  
+  module.exports = announcements;
+
+/** NO CRUD
+announcements.get("/all", function(req, res) {
+    Announcement.find({}, function(err, announcementsGot) {
+        if (err)
+        res.sendStatus(500)
+        else
+          res.status(200).json(announcementsGot)
+      })
 })
 */

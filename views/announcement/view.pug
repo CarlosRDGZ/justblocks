@@ -1,0 +1,21 @@
+doctype html
+html(lang="en")
+	head
+		include ../header.pug
+		link(rel="stylesheet", href="../css/index.css")
+		title JustBlocks
+	body
+		include ../navbar.pug
+		#container
+			h1.title Announcement
+			p#creationDate {}
+			p#evaluationDate 
+			p#deadlineDate 
+			p#content 
+
+		include ../loginModal.pug
+		include ../footer.pug
+		script(src="../bulma-carousel/bulma-carousel.min.js")
+		script(src="../../js/announcement/view.js")
+		script.
+			const id = "#{id}"
