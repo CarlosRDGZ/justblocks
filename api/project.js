@@ -39,7 +39,7 @@ projects.route('/:id')
       }
     )
   })
-  .delte((req,res) => {
+  .delete((req,res) => {
     Project.findByIdAndRemove(req.params.id, (err,data) => {
       if (err) res.json(err)
       res.status(200).json(data)
