@@ -1,15 +1,38 @@
 const announcements = require('express').Router()
 const Announcement = require('../models/Announcement').Announcement;
 const bodyParser = require('body-parser')
-/*
+
 const sessionMiddleware = require('../middlewares/session');//Para validar los usuarios
 const announcementFindMiddleware = require("../middlewares/findAnnouncement");
-*/
+
 announcements.use(bodyParser.urlencoded({ extended: true }))
 announcements.use(bodyParser.json())
 
-// announcements.use('/', sessionMiddleware);
-// announcements.use('/:id*', sessionMiddleware);
+//********************* NO CRUD
+announcements.get("/view/:id", function(req, res) {
+  Announcement.find({_id: req.params.id}, function(err, announcementGot) {
+      if(err)
+        res.sendStatus(500);
+      else
+      {
+        res.status(200).json(announcementGot);
+      }
+    })
+})
+  
+announcements.get("/all", function(req, res) {
+    Announcement.find({}, function(err, announcementsGot) {
+        if (err)
+        res.sendStatus(500)
+        else
+          res.status(200).json(announcementsGot)
+      })
+})
+///******************************
+
+
+announcements.use('/', sessionMiddleware);
+announcements.use('/:id*', sessionMiddleware);
 
 announcements.route('/')
   .get((req,res) => { //Le regresa todas sus convocatorias (las que el dio de alta)
@@ -66,27 +89,5 @@ announcements.route('/:id')
     // Mongoose Remove Docs: http://mongoosejs.com/docs/api.html#findbyidandremove_findByIdAndRemove
   })
 
-announcements.get("/view/:id", function(req, res) {
-Announcement.find({_id: req.params.id}, function(err, announcementGot) {
-    if(err)
-      res.sendStatus(500)
-    else
-    {
-      console.log(announcementGot);
-      res.status(200).render("announcementView", {announcement: announcementGot});
-    }
-  })
-})
-  
-  module.exports = announcements;
 
-/** NO CRUD
-announcements.get("/all", function(req, res) {
-    Announcement.find({}, function(err, announcementsGot) {
-        if (err)
-        res.sendStatus(500)
-        else
-          res.status(200).json(announcementsGot)
-      })
-})
-*/
+module.exports = announcements;

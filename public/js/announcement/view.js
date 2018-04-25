@@ -3,16 +3,17 @@ const evaluationDate = document.getElementById("evaluationDate");
 const deadlineDate = document.getElementById("deadlineDate");
 const content = document.getElementById("content");
 
-
 window.onload = () => {
-	window.axios.get("api/announcement/view/" + id).
+			console.log("announ");
+	window.axios.get("http://127.0.0.1:3000/api/announcement/view/" + id).
 		then(({data})=> {
-			console.log(data);
-			if(!data['err']) {
-				creationDate.innerHTML = data.creationDate;
-				evaluationDate.innerHTML = data.evaluationDate;
-				deadlineDate.innerHTML = data.deadlineDate;
-				content.innerHTML = data.content;
+			var announ = data[0];
+			console.log(announ);
+			if(!announ['err']) {
+				creationDate.innerHTML = announ["creationDate"];
+				evaluationDate.innerHTML = announ["evaluationDate"];
+				deadlineDate.innerHTML = announ["deadlineDate"];
+				content.innerHTML = announ["content"];
 			}
 			else
 			{

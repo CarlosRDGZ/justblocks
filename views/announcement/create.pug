@@ -100,6 +100,10 @@ html(lang="en")
                       input(type='number' class='input' :class="{ 'is-danger': ui.error1 }" v-model='projectsPerEvaluator')
                       span.icon.is-small.is-left
                         i.fas.fa-boxes
+                  br
+                  .container
+                    .field
+                      button#Crear.button.is-link(onclick="createAnnoun()") Crear
               .content
                 pre {{ $data }}
     script(src=pathToRoot + 'vue/vue.min.js')
@@ -114,3 +118,5 @@ style.
   .ck-editor__editable {
     min-height: 250px;
   }
+
+script(src=pathToRoot + "js/announcement/create.js")

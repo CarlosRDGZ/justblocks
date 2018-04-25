@@ -1,4 +1,7 @@
 const announ = require('express').Router()
+const sessionMiddleware = require('../middlewares/session');//Para validar los usuarios
+
+announ.use("/create", sessionMiddleware);
 
 announ.get('/create', (req, res) => res.render('announcement/create.pug'))
 
