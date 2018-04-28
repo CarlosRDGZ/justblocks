@@ -10,32 +10,43 @@ partakers.route('/')
     const partaker = new Partaker(req.body)
     partaker.save()
       .then(data => res.status(200).json(data))
-      .catch(err => res.json(err))
+      .catch(err => res.status(400).json(err))
   })
 
 partakers.route('/project/:id')
   .get((req,res) => {
     let id = req.params.id
-    Partaker.findOne({ idProject: id }, (err,data) => {
-      if (err) res.json(err)
+    Partaker.find({ idProject: id }, (err,data) => {
+      if (err) res.status(400).json(err)
       res.status(200).json(data)
     })
   })
 
-  partakers.route('/user/:id')
-    .get((req,res) => {
-      let id = req.params.id
-      Partaker.findOne({ idUser: id }, (err,data) => {
-        if (err) res.json(data)
-        res.status(200).json(data)
-      })
+partakers.route('/project/:id/rol/:rol')
+  .get((req,res) => {
+    let id = req.params.id, rol = req.params.rol
+    Partaker.find({ idProject: id, rol: rol }, (err,data) => {
+      if (err) res.json(data)
+      res.status(200).json(data)
     })
-  
-  partakers.route('/:id')
-    .delete((req,res) => {
-      let id = req.params.id
-      Partaker.findByIdAndRemove(id, (err,data) => {
-        if (err) res.json(err)
-        res.status(200).json(data)
-      })
+  })
+
+partakers.route('/user/:id')
+  .get((req,res) => {
+    let id = req.params.id
+    Partaker.findOne({ idUser: id }, (err,data) => {
+      if (err) res.status(400).json(data)
+      res.status(200).json(data)
     })
+  })
+
+partakers.route('/:id')
+  .delete((req,res) => {
+    let id = req.params.id
+    Partaker.findByIdAndRemove(id, (err,data) => {
+      if (err) res.status(400).json(err)
+      res.status(200).json(data)
+    })
+  })
+
+module.exports = partakers

@@ -15,7 +15,7 @@ announcements.route('/')
   .get((req,res) => { //Le regresa todas sus convocatorias (las que el dio de alta)
     console.log("GET announcement");
     Announcement.find({idCreator: userSession._id}, function(err, announcementsGot) {
-      if(err){res.json(err)}
+      if(err){res.status(400).json(err)}
       res.json(announcementsGot);//Todas las comvocatorias del usuario
     })
   })
@@ -50,7 +50,7 @@ announcements.route('/:id')
       },
       { new: true },
       (err,data) => {
-        if (err) res.json(err)
+        if (err) res.status(400).json(err)
         res.status(200).json(data)
       }
     )
@@ -59,7 +59,7 @@ announcements.route('/:id')
   .delete((req,res) => {
     console.log("DELETE announcement");
     Announcement.findByIdAndRemove(req.params.id, (err,data) => {
-      if (err) res.json(err)
+      if (err) res.status(400).json(err)
       res.status(200).json(data)
     })
     // Mongoose Remove Docs: http://mongoosejs.com/docs/api.html#findbyidandremove_findByIdAndRemove
