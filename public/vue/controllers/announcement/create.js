@@ -1,14 +1,16 @@
 const vm = new Vue({
   el: '#app',
   data: {
-    title: '',
-    creationDate: Date,
-    endEnrollmentsDate: Date,
-    evaluationDate: Date,
-    deadlineDate: Date,
-    evaluators: 0,
-    projectsPerEvaluator: 0,
-    content: '',
+    announcement: {
+      title: '',
+      creationDate: Date,
+      endEnrollmentsDate: Date,
+      evaluationDate: Date,
+      deadlineDate: Date,
+      evaluators: 0,
+      projectsPerEvaluator: 0,
+      content: ''
+    },
     ui: {
       helpper0: false,
       helpper1: false,
