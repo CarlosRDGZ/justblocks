@@ -7,7 +7,7 @@ const vm = new Vue({
     pagination: {
       current: 0,
       pags: 0,
-      itemsPerPage: 6,
+      itemsPerPage: 9,
       shown: {
         first: -1,
         last: -1,
@@ -59,24 +59,20 @@ const vm = new Vue({
             self.items.slice(self.content.index.top, self.content.index.bottom)
         },
         first: function() {
-          self.pagination.current = 1
           self.pagination.shown.first = 1
           self.pagination.shown.last = 10
           self.pagination.shown.pages = []
-          for(let i = self.pagination.shown.first; i <= self.pagination.shown.last; i++)
+          for (let i = self.pagination.shown.first; i <= self.pagination.shown.last; i++)
             self.pagination.shown.pages.push(i)
-          self.content.data =
-            self.items.slice(self.content.index.top = 0, self.content.index.bottom = self.pagination.itemsPerPage)
+            this.goto(1)
         },
         last: function() {
-          self.pagination.current = self.pagination.pags
           self.pagination.shown.first = self.pagination.pags - 9
           self.pagination.shown.last = self.pagination.pags
           self.pagination.shown.pages = []
-          for(let i = self.pagination.shown.first; i <= self.pagination.shown.last; i++)
+          for (let i = self.pagination.shown.first; i <= self.pagination.shown.last; i++)
             self.pagination.shown.pages.push(i)
-          self.content.data =
-            self.items.slice(self.content.index.top = (self.items.length - (self.items.length % self.pagination.itemsPerPage)), self.content.index.bottom = self.items.length)
+          this.goto(self.pagination.pags)
         }
       }
     }
