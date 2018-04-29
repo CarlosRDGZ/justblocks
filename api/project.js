@@ -10,14 +10,14 @@ projects.route('/')
     Project.find({}, (err,projects) => {
       if (err)
         res.status(400).json(err)
-      res.status(200).json(projects)
+      res.json(projects)
     })
   })
   .post((req,res) => {
     console.log(req.body)
     const project = new Project(req.body)
     project.save()
-      .then(data => res.status(200).json(data))
+      .then(data => res.json(data))
       .catch(err => res.status(400).json(err))
   })
 
@@ -35,14 +35,14 @@ projects.route('/:id')
       { new: true },
       (err,data) => {
         if (err) res.status(400).json(err)
-        res.status(200).json(data)
+        res.json(data)
       }
     )
   })
   .delete((req,res) => {
     Project.findByIdAndRemove(req.params.id, (err,data) => {
       if (err) res.status(400).json(err)
-      res.status(200).json(data)
+      res.json(data)
     })
   })
 
@@ -51,7 +51,7 @@ projects.route('/announcement/:id')
     Project.find({ idAnnouncement: req.params.id }, (err,projects) => {
       if (err)
         res.status(400).json(err)
-      res.status(200).json(projects)
+      res.json(projects)
     })
   })
 
@@ -60,7 +60,7 @@ projects.route('/user/:id')
     Project.find({ idCreator: req.params.id }, (err,projects) => {
       if (err)
         res.status(400).json(err)
-      res.status(200).json(projects)
+      res.json(projects)
     })
   })
 

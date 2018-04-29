@@ -9,7 +9,7 @@ partakers.route('/')
   .post((req,res) => {
     const partaker = new Partaker(req.body)
     partaker.save()
-      .then(data => res.status(200).json(data))
+      .then(data => res.json(data))
       .catch(err => res.status(400).json(err))
   })
 
@@ -18,7 +18,7 @@ partakers.route('/project/:id')
     let id = req.params.id
     Partaker.find({ idProject: id }, (err,data) => {
       if (err) res.status(400).json(err)
-      res.status(200).json(data)
+      res.json(data)
     })
   })
 
@@ -27,7 +27,7 @@ partakers.route('/project/:id/rol/:rol')
     let id = req.params.id, rol = req.params.rol
     Partaker.find({ idProject: id, rol: rol }, (err,data) => {
       if (err) res.json(data)
-      res.status(200).json(data)
+      res.json(data)
     })
   })
 
@@ -36,7 +36,7 @@ partakers.route('/user/:id')
     let id = req.params.id
     Partaker.findOne({ idUser: id }, (err,data) => {
       if (err) res.status(400).json(data)
-      res.status(200).json(data)
+      res.json(data)
     })
   })
 
@@ -45,7 +45,7 @@ partakers.route('/:id')
     let id = req.params.id
     Partaker.findByIdAndRemove(id, (err,data) => {
       if (err) res.status(400).json(err)
-      res.status(200).json(data)
+      res.json(data)
     })
   })
 

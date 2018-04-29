@@ -31,3 +31,9 @@ content:
   "description": "Projecto Carlos",
   "score": "0"
 }
+
+{
+  "idUser": "5ad7b0e28380150835d775bf",
+  "idProject": "5adeb103a5be862eba200a1d",
+  "rol": "contestant"
+}

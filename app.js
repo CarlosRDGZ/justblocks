@@ -5,7 +5,7 @@ const path = require('path')
 const app = express()
 const md5 = require('md5');
 
-global.url = 'http://127.0.0.1:3000/'
+global.gUrl = 'http://127.0.0.1:3000/'
 global.openSession = false
 global.userSession = { _id: '5ad7b0e28380150835d775bf' }
 
@@ -58,4 +58,5 @@ app.use('/bulma-extensions', express.static(path.join(__dirname,'/node_modules/b
 app.use('/bulma-carousel', express.static(path.join(__dirname,'/node_modules/bulma-extensions/bulma-carousel/dist')))
 
 app.use('/vue', express.static(path.join(__dirname, '/node_modules/vue/dist/')))
+app.use('/axios', express.static(path.join(__dirname, '/node_modules/axios/dist/')))
 app.use('/', routes)

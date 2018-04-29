@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import axios from 'axios'
 
 new Vue({
   el: '#app',
@@ -6,6 +7,9 @@ new Vue({
     helpper0: false
   },
   methods: {
-    helpper(data) { this[data] = !this[data] }
+    helpper(data) { this[data] = !this[data] },
+    send() {
+      axios.post('')
+    }
   }
 })
