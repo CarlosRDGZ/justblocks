@@ -1,0 +1,43 @@
+- const pathToRoot = '../../'
+doctype html
+html(lang="en")
+  head
+    include ../header.pug
+    title Convocatorias
+    style.
+      .title-hero {
+        font-size: 4rem
+      }
+  body
+    section.hero.is-primary.is-medium
+      .hero-head 
+        include ../navbar.pug
+      .hero-body
+        .container.has-text-centered
+          h1.title.title-hero Convocatorias
+    main.section#app
+      .container
+        .notification.is-white
+          .content
+            p {{ content.data }}
+          div(v-if='pagination.pags > 0')
+            nav.pagination.is-centered(role='navigation', aria-label='pagination')
+              a.pagination-previous(@click='paginations().previous()') Anterior
+              a.pagination-next(@click='paginations().next()') Siguiente
+              ul.pagination-list
+                li(v-if='pagination.shown.last > 10')
+                  a.pagination-link(@click='paginations().first()') 1
+                li(v-if='pagination.shown.last > 10')
+                  span.pagination-ellipsis …
+                li(v-for='i in pagination.shown.pages')
+                  a.pagination-link(:class="{ 'is-current' : pagination.current === i }" @click='paginations().goto(i)') {{ i }}
+                li(v-if='pagination.shown.last !== pagination.pags')
+                  span.pagination-ellipsis …
+                li(v-if='pagination.shown.last !== pagination.pags')
+                  a.pagination-link(@click='paginations().last()') {{ pagination.pags }}
+          div(v-else)
+            p No Announcements
+  include ../footer.pug
+script(src=pathToRoot + 'vue/vue.min.js')
+script(src=pathToRoot + 'vue/controllers/test.js')
+script(src=pathToRoot + 'vue/controllers/announcement/index.js')

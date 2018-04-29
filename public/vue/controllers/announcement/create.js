@@ -44,7 +44,7 @@ const vm = new Vue({
         const url = 'http://127.0.0.1:3000/'
         window.axios
           .post(`${url}api/announcement/`, this.announ)
-          .then(data => console.log(data))
+          .then(res => console.log(res.data))
           .catch(err => console.log(err))
       }
     },
