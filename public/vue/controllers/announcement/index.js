@@ -178,10 +178,6 @@ const vm = new Vue({
   'item93',
   'item94',
   'item95',
-  'item96',
-  'item97',
-  'item98',
-  'item99',
         ]
         // announs = res.data
         this.items = announs

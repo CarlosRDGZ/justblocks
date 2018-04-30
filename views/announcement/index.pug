@@ -16,7 +16,35 @@ html(lang="en")
         .container.has-text-centered
           h1.title.title-hero Convocatorias
     main.section#app
-      .container
+      .container-fluid
+        .columns(v-for='i in Math.ceil(pagination.itemsPerPage / 3)')
+          .column.is-4(v-for='j in 3')
+            .card(v-if='content.data[(j + (3 * (i - 1))) - 1] !== undefined')
+              .card-image
+                figure.image.is-4by3
+                  img(src='https://www.iagua.es/sites/default/files/styles/thumbnail-830x455/public/glaciar_perito_moreno_0.jpg?itok=9a_iNcsz', alt='Placeholder image')
+              .card-content
+                .columns.is-gapless.is-multiline
+                  .column.is-full
+                    .notification.is-success
+                      p.title.is-4 {{ content.data[(j + (3 * (i - 1))) - 1] }}
+                      p.subtitle.is-6 SEMARNAT
+                  .column.is-three-fifths
+                    .notification.has-text-centered.is-success.is-inverted
+                      p
+                        b Etapa: Lanzamiento
+                      progress.progress.is-success(value='33', max='100') 33%
+                  .column.is-two-fifths
+                    .notification.has-text-centered
+                      p
+                        b {{ (j + (3 * (i - 1))) - 1 }}
+                      p Participates
+                .content
+                  p(hidden='')
+                    | Desarrollar una app web que permita a la población conocer sobre el Cambio Climático y colaborar con acciones
+                    | para su mitigación.
+                  p
+                    a(href='http://127.0.0.1:3000/announcement/464646464646') ver más...
         .notification.is-white
           .content
             p {{ content.data }}
