@@ -100,16 +100,15 @@ html(lang="en")
                       input(type='number' class='input' :class="{ 'is-danger': errors[6] }" v-model='announ.projectsPerEvaluator' required)
                       span.icon.is-small.is-left
                         i.fas.fa-boxes
-              br
-              .field
-                .control
-                  button.button.is-success.is-fullwidth(@click="send") Enviar
-              .content(hidden)
-                pre {{ $data.announ }}
-                pre {{ $data.errors }}
-  script(src=pathToRoot + 'vue/vue.min.js')
-  script(src=pathToRoot + 'vue/controllers/announcement/create.js')
-  include ../footer.pug
+                  br
+                  .container
+                    .field
+                      button#Crear.button.is-link(onclick="createAnnoun()") Crear
+              .content
+                pre {{ $data }}
+    script(src=pathToRoot + 'vue/vue.min.js')
+    script(src=pathToRoot + 'vue/controllers/announcement/create.js')
+    include ../footer.pug
 script.
     // script(src='../ckeditor/ckeditor.js')
   /*ClassicEditor.create(document.querySelector('#description'), {
@@ -119,3 +118,5 @@ style.
   .ck-editor__editable {
     min-height: 250px;
   }
+
+script(src=pathToRoot + "js/announcement/create.js")
