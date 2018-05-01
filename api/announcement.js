@@ -8,7 +8,7 @@ const announcementFindMiddleware = require("../middlewares/findAnnouncement");
 announcements.use(bodyParser.urlencoded({ extended: true }))
 announcements.use(bodyParser.json())
 
-//********************* NO CRUD
+//********************* NO CRUD, no es necesario logguearte para acceder a esto
 announcements.get("/view/:id", function(req, res) {
   Announcement.find({_id: req.params.id}, function(err, announcementGot) {
       if(err)
