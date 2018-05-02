@@ -3,6 +3,7 @@ const sessionMiddleware = require('../middlewares/session');//Para validar los u
 
 announ.use("/create", sessionMiddleware);
 
+announ.get('/', (req, res) => res.render('announcement/index.pug'))
 announ.get('/create', (req, res) => res.render('announcement/create.pug'))
 
 announ.get('/view/:id', function(req, res) {
