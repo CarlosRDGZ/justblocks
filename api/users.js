@@ -9,9 +9,9 @@ users.route('/')
   .get((req,res) => {
     User.find({}, (err, users) => {
       if (err)
-        res.sendStatus(500)
+        res.sendStatus(400)
       else
-        res.status(200).json(users)
+        res.json(users)
     })
   })
   .post((req,res) => {
