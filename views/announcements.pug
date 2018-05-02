@@ -1,8 +1,9 @@
+-const pathToRoot = "../"
 doctype html
 html(lang="en")
 	head
 		include ./header.pug
-		link(rel="stylesheet", href="../css/index.css")
+		link(rel="stylesheet", href=pathToRoot + "css/index.css")
 		title JustBlocks
 	body
 		include ./navbar.pug
@@ -15,4 +16,4 @@ html(lang="en")
 		a(href="/announcement/delete") DELETE
 		include ./loginModal.pug
 		include ./footer.pug
-		script(src="../bulma-carousel/bulma-carousel.min.js")
+		script(src=pathToRoot + "bulma-carousel/bulma-carousel.min.js")

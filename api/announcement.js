@@ -3,18 +3,23 @@ const Announcement = require('../models/Announcement').Announcement;
 const bodyParser = require('body-parser')
 
 const sessionMiddleware = require('../middlewares/session');//Para validar los usuarios
-const announcementFindMiddleware = require("../middlewares/findAnnouncement");
+const announFindMiddleware = require("../middlewares/findAnnouncement");
 
 announcements.use(bodyParser.urlencoded({ extended: true }))
 announcements.use(bodyParser.json())
 
+// announcements.use('/view', announFindMiddleware);
+
 //********************* NO CRUD, no es necesario logguearte para acceder a esto
 announcements.get("/view/:id", function(req, res) {
+  console.log("GET announ");
+
   Announcement.find({_id: req.params.id}, function(err, announcementGot) {
       if(err)
         res.sendStatus(500);
       else
       {
+        console.log(announcementGot);
         res.status(200).json(announcementGot);
       }
     })
@@ -34,6 +39,8 @@ announcements.get("/all", function(req, res) {
 announcements.use('/', sessionMiddleware);
 announcements.use('/:id*', sessionMiddleware);
 
+announcements.use('/:id*', announFindMiddleware);
+  
 announcements.route('/')
   .get((req,res) => { //Le regresa todas sus convocatorias (las que el dio de alta)
     console.log("GET announcement");
@@ -45,7 +52,7 @@ announcements.route('/')
   .post((req,res) => {
       console.log("POST announcement");
       const data = req.body;
-      data.idCreator = userSession._id
+      data.idCreator = req.session.user_id;
       const announcement = new Announcement(data);
 
       announcement.save()
@@ -83,7 +90,7 @@ announcements.route('/:id')
   .delete((req,res) => {
     console.log("DELETE announcement");
     Announcement.findByIdAndRemove(req.params.id, (err,data) => {
-      if (err) res.json(err)
+      if (err) res.json({err: err})
       res.status(200).json(data)
     })
     // Mongoose Remove Docs: http://mongoosejs.com/docs/api.html#findbyidandremove_findByIdAndRemove

@@ -1,17 +1,15 @@
 //Middleware para establecer si un usuario tiene permisos sobre una announcement
-// var Announcement = require('../models/Announcement');
+var Announcement = require('../models/Announcement').Announcement;
 
-const announcementPermission = function(announcement, req, res) {
+const ownerCheck = function(announcement, req, res) {
 	if(typeof announcement == "undefined") return false;
-	//TRUE = tienes permisos
-	//False = no tiene permisos
-	//Si es GET y no tiene edit en la URL
-	if(req.method === 'GET' && req.path.indexOf("edit") < 0) {
+	//Todos pueden verla
+	if(req.method === 'GET') {
 		//Ver la announcement, cualquier persona puede ver cualquier announcement
 		return true;		
 	}
-
-	if(announcement.idCreator._id.toString() == res.locals.user._id) {
+	//PUT y DELETE sólo los que la crearon
+	if(announcement.idCreator.toString() == res.locals.user._id) {
 		//Esta convocatoria la subió el usuario
 		return true;
 	}
@@ -20,13 +18,13 @@ const announcementPermission = function(announcement, req, res) {
 }
 
 module.exports = function(req, res, next) {
+    console.log("FIND announcement middleware");
 	Announcement.findById(req.params.id)
 		//Algo así como la condicón WHERE de SQL
 		.populate("creator")
 		.exec(function(err, announcement) {
 			//Si la announcement existe y se pasaron los permisos necesarios
 			if(announcement != null && ownerCheck(announcement, req, res)) {
-				console.log("Se encontró la announcement " + announcement.idCreator);
 				res.locals.announcement = announcement;
 				next();
 			}
