@@ -1,15 +1,38 @@
 const announcements = require('express').Router()
 const Announcement = require('../models/Announcement').Announcement;
 const bodyParser = require('body-parser')
-/*
+
 const sessionMiddleware = require('../middlewares/session');//Para validar los usuarios
 const announcementFindMiddleware = require("../middlewares/findAnnouncement");
-*/
+
 announcements.use(bodyParser.urlencoded({ extended: true }))
 announcements.use(bodyParser.json())
 
-// announcements.use('/', sessionMiddleware);
-// announcements.use('/:id*', sessionMiddleware);
+//********************* NO CRUD, no es necesario logguearte para acceder a esto
+announcements.get("/view/:id", function(req, res) {
+  Announcement.find({_id: req.params.id}, function(err, announcementGot) {
+      if(err)
+        res.sendStatus(500);
+      else
+      {
+        res.status(200).json(announcementGot);
+      }
+    })
+})
+  
+announcements.get("/all", function(req, res) {
+    Announcement.find({}, function(err, announcementsGot) {
+        if (err)
+        res.sendStatus(500)
+        else
+          res.status(200).json(announcementsGot)
+      })
+})
+///******************************
+
+
+announcements.use('/', sessionMiddleware);
+announcements.use('/:id*', sessionMiddleware);
 
 announcements.route('/')
   .get((req,res) => { //Le regresa todas sus convocatorias (las que el dio de alta)
@@ -65,39 +88,4 @@ announcements.route('/:id')
     // Mongoose Remove Docs: http://mongoosejs.com/docs/api.html#findbyidandremove_findByIdAndRemove
   })
 
-  module.exports = announcements;
-
-/** NO CRUD
-announcements.get("/", function(req, res) {
-  res.render("announcements");
-})
-
-announcements.get("/newAnnouncement", function(req, res) {
-  res.render("newAnnouncement");
-})
-
-announcements.get("/delete", function(req, res) {
-  res.render("announcementDelete");
-})
-
-announcements.get("/all", function(req, res) {
-    Announcement.find({}, function(err, announcementsGot) {
-        if (err)
-        res.sendStatus(500)
-        else
-          res.json(announcementsGot)
-      })
-})
-
-announcements.get("/view/:id", function(req, res) {
-  Announcement.find({_id: req.params.id}, function(err, announcementGot) {
-    if(err)
-      res.sendStatus(500)
-    else
-    {
-      console.log(announcementGot);
-      res.render("announcementView", {announcement: announcementGot});
-    }
-  })
-})
-*/
+module.exports = announcements;

@@ -1,3 +1,4 @@
+- const pathToRoot = "../"
 doctype html
 html(lang="en")
 	head
@@ -36,5 +37,5 @@ html(lang="en")
 						input.button.is-primary(type="submit" value="Registrarse")
 		include loginModal.pug
 		include footer.pug
-		script(src="../js/signUp.js")
+		script(src= pathToRoot + "js/signUp.js")
 		script(src="/bulma-carousel/bulma-carousel.min.js")
