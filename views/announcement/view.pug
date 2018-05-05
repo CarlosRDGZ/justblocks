@@ -4,18 +4,26 @@ html(lang="en")
 	head
 		include ../header.pug
 		link(rel="stylesheet", href=pathToRoot + "css/index.css")
-		title JustBlocks
+		style.
+			.title-hero {
+				font-size: 4rem
+			}
+		title Convocatoria #{title}
 	body
-		include ../navbar.pug
+		section.hero.is-primary.is-medium
+			.hero-head 
+				include ../navbar.pug
+			.hero-body
+				.container.has-text-centered
+					h1.title.title-hero #{title}
 		#container
-			h1.title Announcement
-			p#creationDate 
-			p#evaluationDate 
-			p#deadlineDate 
-			p#content 
+			p#creationDate Fecha de postulaci&oacuten: #{creationDate}
+			p#evaluationDate Fecha de evaluaci&oacuten: #{evaluationDate}
+			p#deadlineDate Fecha de cierre: #{deadlineDate} 
+			p#content Descripci&oacuten: #{content}
 
 		include ../footer.pug
 		script(src=pathToRoot + "bulma-carousel/bulma-carousel.min.js")
 		script(src=pathToRoot + "js/announcement/view.js")
 		script.
-			const id = "#{id}"
+			//- const id = "#{id}"
