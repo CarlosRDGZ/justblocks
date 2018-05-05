@@ -43,6 +43,7 @@ session.route("/logout").get(function(req, res){
 		openSession = false
 		userSession = { }
     req.session.destroy();
+    req.session = null;
 		res.redirect("/");
 });	
 

@@ -36,6 +36,24 @@ users.route('/')
       })
   })
 
+users.route('/:id')
+  .get((req,res) => {
+    User.find({_id: req.params.id}, function (err, user) {
+      if(err) {res.sendStatus(500).json({err: err.message});}
+      else
+        res.status(200).json(user);
+    })
+  })
+
+users.route('/:id/name')
+  .get((req, res) => {
+    User.find({_id: req.params.id}, 'name', function (err, user) {
+      if(err) {res.sendStatus(500).json({err: err.message});}
+      else
+        res.status(200).json(user);
+    })
+  })
+
 //*************Sólo para fines de pruebas
 users.get("/deleteAllUsers", function(req, res) {
     console.log("deleteAllUsers");

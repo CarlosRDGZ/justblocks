@@ -7,6 +7,7 @@ const announFindMiddleware = require("../middlewares/findAnnouncement");
 announcements.use(bodyParser.urlencoded({ extended: true }))
 announcements.use(bodyParser.json())
 
+// announcements.use('/user', announFindMiddleware);
 announcements.use('/:id*', announFindMiddleware);
   
 announcements.route('/')
@@ -29,6 +30,16 @@ announcements.route('/')
           console.log(err.message);
           res.status(400).json({err: err.message});
         })
+  })
+
+announcements.route('/user')
+  .get((req, res) => {
+    console.log("GET user's announcements");
+    console.log(req.session.user_id);
+    Announcement.find({idCreator: req.session.user_id}, function(err, announcementsGot) {
+      if(err){res.status(400).json({err: err})}
+      res.json(announcementsGot);//Todas las comvocatorias del usuario
+    })
   })
 
 announcements.route('/:id')
@@ -83,15 +94,6 @@ announcements.route('/:id')
     else
       res.status(403).json({err: "Acceso denegado"});
     // Mongoose Remove Docs: http://mongoosejs.com/docs/api.html#findbyidandremove_findByIdAndRemove
-  })
-
-announcements.route('/user')
-  .get((req, res) => {
-    console.log("GET user's announcements");
-    Announcement.find({idCreator: req.session.user_id}, function(err, announcementsGot) {
-      if(err){res.status(400).json(err)}
-      res.json(announcementsGot);//Todas las comvocatorias del usuario
-    })
   })
 
 module.exports = announcements;
