@@ -5,7 +5,7 @@ const content = document.getElementById("content");
 
 window.onload = () => {
 	console.log("announ");
-	window.axios.get("http://localhost:3000/api/announcement/view/" + id).
+	window.axios.get("/api/announcement/" + id).
 		then(({data})=> {
 			console.log(data[0]);
 			if(!data['err']) {

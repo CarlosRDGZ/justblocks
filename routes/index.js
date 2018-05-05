@@ -2,6 +2,9 @@ const routes = require('express').Router()
 const session = require('./session')
 const announ = require('./announcement')
 const api = require('../api')
+const navBarMiddleware = require('../middlewares/navBarMiddleware');//Para validar los usuarios
+
+routes.use("/", navBarMiddleware);
 
 routes.use('/api', api)
 routes.use('/session', session)

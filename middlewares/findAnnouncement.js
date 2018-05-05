@@ -26,10 +26,12 @@ module.exports = function(req, res, next) {
 			//Si la announcement existe y se pasaron los permisos necesarios
 			if(announcement != null && ownerCheck(announcement, req, res)) {
 				res.locals.announcement = announcement;
+				res.locals.permission = true;
 				next();
 			}
 			else {
-				res.redirect("/app");
+				res.locals.permission = false;
+				next();
 			}
 		})
 } 

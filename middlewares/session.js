@@ -18,6 +18,7 @@ module.exports = function(req, res, next) {
 			}
 			else {
 				res.locals = {user: user};
+				console.log(res.locals)
 				next();
 			}
 		})
