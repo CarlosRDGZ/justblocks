@@ -1,6 +1,6 @@
 - const pathToRoot = '../../'
 doctype html
-html(lang="en")
+html(lang="en") 
   head
     include ../header.pug
     link(rel="stylesheet", href="../css/index.css")
@@ -46,7 +46,7 @@ html(lang="en")
                       .card
                         .card-image
                           figure.image.is-4by3
-                            img(src='https://www.iagua.es/sites/default/files/styles/thumbnail-830x455/public/glaciar_perito_moreno_0.jpg?itok=9a_iNcsz', alt='Placeholder image')
+                            img(:src="`/files/announcement/images/${announ.image._id}.${announ.image.extension}`", alt='Placeholder image')
                         .card-content
                           .columns.is-gapless.is-multiline
                             .column.is-full

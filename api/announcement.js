@@ -1,8 +1,14 @@
 const announcements = require('express').Router()
 const Announcement = require('../models/Announcement').Announcement;
+const FileAnnouncement = require('../models/FileAnnouncement').FileAnnouncement;
 const bodyParser = require('body-parser')
+const fs = require('fs');
+const formidable = require("express-form-data");
 
 const announFindMiddleware = require("../middlewares/findAnnouncement");
+
+//npm install --save express-form-data
+announcements.use(formidable.parse({keepExtensions: true}));
 
 announcements.use(bodyParser.urlencoded({ extended: true }))
 announcements.use(bodyParser.json())
@@ -39,6 +45,45 @@ announcements.route('/user')
     Announcement.find({idCreator: req.session.user_id}, function(err, announcementsGot) {
       if(err){res.status(400).json({err: err})}
       res.json(announcementsGot);//Todas las comvocatorias del usuario
+    })
+  })
+
+//Subir la imagen de presentación de la convocatoria
+announcements.route('/image/:idAnnoun')
+  .post((req, res) => {
+    console.log("POST image announcement");
+    var extension = req.files.image.name.split(".").pop();
+    var image = new FileAnnouncement({
+      owner: req.params.idAnnoun,
+      extension: extension,
+      typeFile: req.files.image.type
+    });
+
+    console.log(image);
+
+    image.save(function(err) {
+      if(!err) {
+        fs.rename(req.files.image.path, "public/files/announcement/images/" + image._id + "." + extension );
+        res.sendStatus(200);
+      }
+      else {
+        console.log(err);
+        res.status(500).json({err: err});
+      }
+    })
+  })
+  .get((req, res) => {
+    console.log("GET IMAGE");
+    FileAnnouncement.find({owner: req.params.idAnnoun}, function(err, image) {
+      if(!err) {
+        res.status(200).json(image[0]);
+        console.log(image[0]);
+      }
+      else {
+        console.log(err);
+        res.sendStatus(500);
+      }
+
     })
   })
 

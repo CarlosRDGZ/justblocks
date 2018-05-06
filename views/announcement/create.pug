@@ -100,6 +100,8 @@ html(lang="en")
                       input(type='number' class='input' :class="{ 'is-danger': errors[6] }" v-model='announ.projectsPerEvaluator' required)
                       span.icon.is-small.is-left
                         i.fas.fa-boxes
+                  .field
+                    input#file(type="file" name="image")
                   br
                   .container
                     .field

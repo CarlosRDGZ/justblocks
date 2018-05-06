@@ -15,15 +15,27 @@ function getUserName(id, object) {
 		.catch(({err}) => { console.log(err);})
 }
 
+function getImage(id, object) {
+	window.axios.get('/api/announcement/image/' + id)
+		.then(({data}) => {
+			object.image = data;
+			console.log(data);
+		})
+		.catch(({err}) => { console.log(err);})
+}
+
 window.onload = () => {
 	window.axios.get('/api/announcement/user')
 		.then(({data}) => {
 			//Si no establecemos esta propiedad así no lo actualiza cuando carga la página
-			for(var i = 0; i < data.length; i++)
+			for(var i = 0; i < data.length; i++) {
 				data[i].userName = "";
+				data[i].image = "";
+			}
 
 			for(var i = 0; i < data.length; i++) {
 				getUserName(data[i]['idCreator'], data[i]);
+				getImage(data[i]['_id'], data[i]);
 			}
 			vm.$data.myAnnouns = data;
 		})
