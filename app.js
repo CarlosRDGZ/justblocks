@@ -28,6 +28,7 @@ app.use(sessionRedisMiddleware)
 //*************Middlewares
 const routerApp = require("./routeApp");
 const sessionMiddleware = require('./middlewares/session');//Para validar los usuarios
+const navBarMiddleware = require('./middlewares/navBarMiddleware');//Para validar los usuarios
 
 //*************Modelos
 const User = require('./models/User').User;
@@ -50,6 +51,7 @@ mongoose.connection.once('open', function() {
 
 // *************Use middlewares
 app.use("/app", sessionMiddleware);
+app.use("/app", navBarMiddleware);
 app.use("/app", routerApp);
 
 app.use(express.static(path.join(__dirname,'/public')))

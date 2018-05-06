@@ -1,6 +1,11 @@
 const users = require('express').Router()
 const User = require('../models/User').User;
+const ImageUser = require('../models/ImageUser').ImageUser;
 const bodyParser = require('body-parser')
+const fs = require('fs');
+const formidable = require("express-form-data");
+
+users.use(formidable.parse({keepExtensions: true}));
 
 users.use(bodyParser.urlencoded({ extended: true }))
 users.use(bodyParser.json())
@@ -25,8 +30,8 @@ users.route('/')
 
       user.save().then(function(userSaved) {
         //Lo logue si sí se pudo guardar el usuario
-        res.redirect(307, "/session/signIn");
-
+        // res.redirect(307, "/session/signIn");
+        res.json(userSaved);
       }).catch(function(err) {
         console.log(err.message);
         if(err.message.includes("E11000 duplicate key error collection"))
@@ -34,6 +39,44 @@ users.route('/')
         else
           res.json({err: err.message/*"Hubo un problema al guardar el usuario"*/});
       })
+  })
+
+users.route('/image/:idUser')
+  .post((req, res) => {
+    console.log("POST image user");
+    var extension = req.files.image.name.split(".").pop();
+    var image = new ImageUser({
+      owner: req.params.idUser,
+      extension: extension,
+      typeFile: req.files.image.type
+    });
+
+    console.log(image);
+
+    image.save(function(err) {
+      if(!err) {
+        fs.rename(req.files.image.path, "public/files/users/" + image._id + "." + extension );
+        res.sendStatus(200);
+      }
+      else {
+        console.log(err);
+        res.status(500).json({err: err});
+      }
+    })
+  })
+  .get((req, res) => {
+    console.log("GET IMAGE users");
+    ImageUser.find({owner: req.params.idUser}, function(err, image) {
+      if(!err) {
+        res.status(200).json(image[0]);
+        console.log(image[0]);
+      }
+      else {
+        console.log(err);
+        res.sendStatus(500);
+      }
+
+    })
   })
 
 users.route('/:id')
@@ -53,6 +96,7 @@ users.route('/:id/name')
         res.status(200).json(user);
     })
   })
+
 
 //*************Sólo para fines de pruebas
 users.get("/deleteAllUsers", function(req, res) {

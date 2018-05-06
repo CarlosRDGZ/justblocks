@@ -13,7 +13,10 @@ html(lang="en")
           .column.is-one-quarter
             // figure.image.is-5by4(style='background: url("images/Porg.png") #fff no-repeat; background-size: contain;')
             figure.image.is-5by4
-              image(src=pathToRoot + 'images/Porg.png' style='border-radius: 0%')
+              if (user.image)
+                image(src='files/users/'+ user.image._id + "." + user.image.extension style='border-radius: 0%')
+              else
+                image(src=pathToRoot + 'images/Porg.png' style='border-radius: 0%')
             .card
               .card-content
                 p.title #{user.name.first} #{user.name.last}
