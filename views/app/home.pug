@@ -1,5 +1,6 @@
 - const pathToRoot = '../../'
-doctype html
+- var i = 0
+doctype html 
 html(lang="en") 
   head
     include ../header.pug
@@ -39,40 +40,38 @@ html(lang="en")
           .column
             .notification.is-primary
               h1.title {{ title }}
-              //- h2.subtitle name
-              br
-            .colum.is-two-quarter      
+            .columns.is-variable.is-4
               div(v-for="announ in myAnnouns")
-                .colum.is-one-quarter      
-                  .columns.is-variable.is-2
-                    .column
-                      .card
-                        .card-image
-                          figure.image.is-4by3
-                            img(:src="`/files/announcement/images/${announ.image._id}.${announ.image.extension}`", alt='Placeholder image')
-                        .card-content
-                          .columns.is-gapless.is-multiline
-                            .column.is-full
-                              .notification.is-success
-                                p.title.is-4 {{announ.title}}
-                                p.subtitle.is-6 {{announ.userName}}
-                            .column.is-three-fifths
-                              .notification.has-text-centered.is-success.is-inverted
-                                p
-                                  b Etapa: Lanzamiento
-                                progress.progress.is-success(value='33', max='100') 33%
-                            .column.is-two-fifths
-                              .notification.has-text-centered
-                                p
-                                  b 183
-                                p Participates
-                          .content
-                            p(hidden='')
-                              | Desarrollar una app web que permita a la población conocer sobre el Cambio Climático y colaborar con acciones
-                              | para su mitigación.
+                .column
+                  .card
+                    .card-image
+                      figure.image.is-4by3
+                        div(v-if="announ.image._id")
+                          img(:src="`/files/announcement/images/${announ.image._id}.${announ.image.extension}`", alt='{{announ.title}}')
+                        div(v-else)
+                          img(src="/images/Porg.png", alt='{{announ.title}}')
+                    .card-content
+                      .columns.is-gapless.is-multiline
+                        .column.is-full
+                          .notification.is-success
+                            p.title.is-4 {{announ.title}}
+                            p.subtitle.is-6 {{announ.userName}}
+                        .column.is-three-fifths
+                          .notification.has-text-centered.is-success.is-inverted
                             p
-                              a(:href="`/announcement/view/${announ._id}`") ver más...
-
+                              b Etapa: Lanzamiento
+                            progress.progress.is-success(value='33', max='100') 33%
+                        .column.is-two-fifths
+                          .notification.has-text-centered
+                            p
+                              b 183
+                            p Participates
+                      .content
+                        p(hidden='')
+                          | Desarrollar una app web que permita a la población conocer sobre el Cambio Climático y colaborar con acciones
+                          | para su mitigación.
+                        p
+                          a(:href="`/announcement/view/${announ._id}`") ver más...
                   
     include ../footer.pug
     script(src=pathToRoot + "vue/vue.min.js")
