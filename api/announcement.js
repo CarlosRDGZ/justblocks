@@ -5,6 +5,9 @@ const bodyParser = require('body-parser')
 const fs = require('fs');
 const formidable = require("express-form-data");
 
+const mongoose = require('../database/config')
+
+
 const announFindMiddleware = require("../middlewares/findAnnouncement");
 
 //npm install --save express-form-data
@@ -45,6 +48,25 @@ announcements.route('/user')
     Announcement.find({idCreator: req.session.user_id}, function(err, announcementsGot) {
       if(err){res.status(400).json({err: err})}
       res.json(announcementsGot);//Todas las comvocatorias del usuario
+    })
+  })
+
+//Devuelve las 9 convocatorias más recientes
+announcements.route('/newest')
+  .get((req, res) => {
+    Announcement.count({}, function(err, c) {
+      if(err){res.status(500).json({err: err});}
+      else
+      {
+        //Cuando haya menos de 9 convocatorias las va a regresar todas
+        if(c < 9)
+          c = 9; 
+        Announcement.find({}, null, {skip: c - 9}, function(err, announs) {
+          if(err){res.status(500).json({err: err});}
+          else
+            res.status(200).json(announs);
+        })
+      }
     })
   })
 
