@@ -2,12 +2,11 @@ const express = require('express')
 const mongoose = require('./database/config')
 const routes = require('./routes')
 const path = require('path')
-const app = express()
 const md5 = require('md5');
+const app = express()
 
 global.gUrl = 'http://127.0.0.1:3000/'
 global.openSession = false
-global.userSession = { _id: '5ad7b0e28380150835d775bf' }
 
 //*************Manejo de sesiones
 //MongoStore connect-mongo
@@ -21,7 +20,6 @@ const sessionRedisMiddleware = session({
 	secret: "super ultra secret word"
 })
 app.use(sessionRedisMiddleware)
-
 
 //*************Middlewares
 const routerApp = require("./routeApp");
@@ -46,6 +44,11 @@ mongoose.connection.once('open', function() {
   console.log('open')
   app.listen(3000, () => console.log('Listening...'))
 })
+
+app.get('/convocatoria', (req, res) => {
+  res.status(200).sendFile('convocatoria.html', { root: './public' })
+})
+
 
 // *************Use middlewares
 app.use("/app", sessionMiddleware);

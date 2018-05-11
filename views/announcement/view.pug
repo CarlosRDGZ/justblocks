@@ -1,22 +1,130 @@
 - const pathToRoot = "../../"
+script.
+  window.id = !{JSON.stringify(id)}
 doctype html
 html(lang="en")
-	head
-		include ../header.pug
-		link(rel="stylesheet", href=pathToRoot + "css/index.css")
-		title JustBlocks
-	body
-		include ../navbar.pug
-		#container
-			h1.title Announcement
-			p#creationDate 
-			p#evaluationDate 
-			p#deadlineDate 
-			p#content 
-
-		include ../loginModal.pug
-		include ../footer.pug
-		script(src=pathToRoot + "bulma-carousel/bulma-carousel.min.js")
-		script(src=pathToRoot + "js/announcement/view.js")
-		script.
-			const id = "#{id}"
+  head
+    include ../header.pug
+    link(rel="stylesheet", href=pathToRoot + "css/index.css")
+    link(rel="stylesheet", href=pathToRoot + "css/social-buttons.css")
+    link(rel="stylesheet", href=pathToRoot + "bulma-extensions/bulma-extensions.min.css")
+  body
+    include ../navbar.pug
+    #app
+      section.hero.has-carousel
+        .hero-carousel.carousel-animated.carousel-animate-fade
+          .carousel-container
+            .carousel-item.has-background.is-active
+              img.is-background(src='https://wikiki.github.io/images/merry-christmas.jpg', alt='')
+        .hero-body.has-text-centered
+          .columns.is-mobile.is-centered
+            .column.is-half.is-narrow
+              p.title.is-1 {{ announ.title }}
+        .hero-foot
+          nav.tabs.is-boxed.is-fullwidth
+            .container
+              ul
+                li(:class="{ 'is-active': ui.content.overview }" @click='changeContent("overview")')
+                  a(:class="{ 'has-text-white': !ui.content.overview }") Overview
+                li(:class="{ 'is-active': ui.content.contestant }" @click='changeContent("contestant")')
+                  a(:class="{ 'has-text-white': !ui.content.contestant }") Participantes
+                li(:class="{ 'is-active': ui.content.evaluator }" @click='changeContent("evaluator")')
+                  a(:class="{ 'has-text-white': !ui.content.evaluator }") Evaluadores
+      main.section
+        .container(v-show='ui.content.overview')
+          .tile.is-antecesor.is-full
+            .tile.is-parent.is-vertical
+              .tile.is-child.notification.is-primary
+                p.title.is-1 {{ announ.title }}
+                p.subtitle.is-pulled-right {{ announ.author }}
+          .tile.is-antecesor
+            .tile.is-parent
+              .tile.is-child.notification.is-white
+                .content(v-html='announ.content')
+            .tile.is-parent
+              .tile.is-child.notification.is-white
+                .timeline
+                  header.timeline-header
+                    span.tag.is-medium.is-success Inicio
+                  .timeline-item(:class="{ 'is-primary': ui.timeline[0], 'is-success': ui.timeline[1]}")
+                    .timeline-marker.is-icon(:class="{ 'is-primary': ui.timeline[0], 'is-success': ui.timeline[1]}")
+                      i.fas.fa-hourglass-start
+                    .timeline-content
+                      p.heading {{ announ.creationDate.toDateString() }}
+                      p Fecha de lanzamieto
+                      p Participantes y Evaluadores se inscriben
+                  header.timeline-header
+                    span.tag(:class="{ 'is-primary': ui.timeline[0], 'is-success': ui.timeline[1]}")
+                      b Registros
+                  .timeline-item(:class="{ 'is-primary': ui.timeline[2], 'is-success': ui.timeline[3]}")
+                    .timeline-marker.is-icon(:class="{ 'is-primary': ui.timeline[2], 'is-success': ui.timeline[3]}")
+                      i.fas.fa-clipboard-check
+                    .timeline-content
+                      p.heading {{ announ.endEnrollmentsDate.toDateString() }}
+                      p Cierre de inscripciones
+                      p Se incia el proceso de evaluaci&oacute;n por proyecto
+                  header.timeline-header
+                    span.tag(:class="{ 'is-primary': ui.timeline[2], 'is-success': ui.timeline[3]}")
+                      b Evaluaciones
+                  .timeline-item(:class="{ 'is-primary': ui.timeline[4], 'is-success': ui.timeline[5] }")
+                    .timeline-marker.is-icon(:class="{ 'is-primary': ui.timeline[4], 'is-success': ui.timeline[5] }")
+                      i.fas.fa-cogs
+                    .timeline-content
+                      p.heading {{ announ.evaluationDate.toDateString() }}
+                      p D&iacute;a de evaluacion
+                      p Se aplica el metodo 
+                        b 
+                          a BIDB ANOVA
+                  .timeline-item(:class="{ 'is-primary': ui.timeline[6], 'is-success': ui.timeline[7] }")
+                    .timeline-marker.is-icon(:class="{ 'is-primary': ui.timeline[6], 'is-success': ui.timeline[7] }")
+                      i.fas.fa-trophy
+                    .timeline-content
+                      p.heading {{ announ.deadlineDate.toDateString() }}
+                      p Entrega de Resultados
+                  header.timeline-header
+                    span.tag.is-medium(:class="{ 'is-primary': ui.timeline[6], 'is-success': ui.timeline[7] }") Fin
+          .tile.is-antecesor.is-full
+            .tile.is-parent
+              .tile.is-child.notification.is-primary
+                p.title.is-1
+                  span.icon.is-large
+                    i.fas.fa-trophy
+                  span  Premio
+                .content(v-html='announ.prize')
+        .container(v-show='ui.content.contestant')
+          article.message.is-danger(v-if='ui.enrolled')
+            .message-body
+              p Ya te has inscrito a esta convocatoria
+          .tile.is-antecesor.is-full
+            .tile.is-parent.is-vertical
+              .tile.is-child.notification.is-info.has-text-centered
+                p.title.is-4 Participantes
+          .tile.is-antecesor.is-full
+            .tile.is-parent.is-vertical
+              .tile.is-child.notification.is-white
+                .content(v-html='announ.content')
+                .tile.is-parent.is-vertical
+                  .tile.is-child
+                    .content.has-text-centered
+                      button.button.is-info.is-large(:disabled='ui.enrolled' @click='enrollAsContestant') Inscribirse
+        .container(v-show='ui.content.evaluator')
+          article.message.is-danger(v-if='ui.enrolled')
+            .message-body
+              p Ya te has inscrito a esta convocatoria
+          .tile.is-antecesor.is-full
+            .tile.is-parent.is-vertical
+              .tile.is-child.notification.is-link.has-text-centered
+                p.title.is-4 Evaluadores
+          .tile.is-antecesor.is-full
+            .tile.is-parent.is-vertical
+              .tile.is-child.notification.is-white
+                .content(v-html='announ.content')
+                .tile.is-parent.is-vertical
+                  .tile.is-child
+                    .content.has-text-centered
+                      button.button.is-link.is-large(:disabled='ui.enrolled' @click='enrollAsEvaluator' v-if='!ui.evaluatorsFull') Inscribirse
+                      p.is-size-4(v-else) Cantidad de evaluadores completa
+                
+  include ../footer.pug
+script(src=pathToRoot + 'vue/vue.min.js')
+script(src=pathToRoot + 'vue/controllers/announcement/view.js')

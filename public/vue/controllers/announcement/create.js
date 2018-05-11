@@ -3,13 +3,15 @@ const vm = new Vue({
   data: {
     announ: {
       title: undefined,
+      author: undefined,
       creationDate: undefined,
       endEnrollmentsDate: undefined,
       evaluationDate: undefined,
       deadlineDate: undefined,
       evaluators: undefined,
       projectsPerEvaluator: undefined,
-      content: undefined
+      content: undefined,
+      prize: undefined,
     },
     ui: {
       helpper0: false,
@@ -26,11 +28,30 @@ const vm = new Vue({
       false, // 4 dead line
       false, // 5 evaluator
       false, // 6 projects per evaluator
-      false  // 7 content
+      false, // 7 author
     ]
+  },
+  mounted: function() {
+    let config = {
+      language: 'es',
+      extraplugins: '',
+      toolbar: [
+        ['Undo', 'Redo'],
+        ['Cut', 'Copy', 'Paste'],
+        ['Scayt'],
+        ['Link', 'Unlink'],
+        ['Bold', 'Italic', 'Strike'],
+        ['NumberedList', 'BulletedList','-','Outdent','Indent','-','Blockquote'],
+        ['Styles', 'Format']
+      ]
+    }
+    CKEDITOR.replace('content', config)
+    CKEDITOR.replace('prize', config)
   },
   methods: {
     send: function() {
+      this.announ.content = CKEDITOR.instances.content.getData()
+      this.announ.prize = CKEDITOR.instances.prize.getData()
       let i = 0, empty = false;
       for (let prop in this.announ) {
         if (this.announ[prop] === undefined) {
@@ -38,8 +59,6 @@ const vm = new Vue({
           empty = true
         }i++
       }
-      console.log(this)
-      console.log(this.errors)
       if (!empty && this.errors.indexOf(true) === -1) {
         const url = 'http://127.0.0.1:3000/'
         window.axios
@@ -67,6 +86,9 @@ const vm = new Vue({
     },
     'announ.title': function(val) {
       this.errors[0] = val === "" ? true : false
+    },
+    'announ.author': function(val) {
+      this.errors[7] = val === "" ? true : false
     },
     'announ.creationDate': function(val) {
       this.errors[1] = false
@@ -128,8 +150,5 @@ const vm = new Vue({
         }
       })
     },
-    'announ.content': function(val) {
-      this.errors[7] = val === "" ? true : false
-    }
   }
 })

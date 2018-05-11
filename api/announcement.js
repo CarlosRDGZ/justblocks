@@ -9,6 +9,7 @@ announcements.use(bodyParser.urlencoded({ extended: true }))
 announcements.use(bodyParser.json())
 
 //********************* NO CRUD, no es necesario logguearte para acceder a esto
+/*
 announcements.get("/view/:id", function(req, res) {
   Announcement.find({_id: req.params.id}, function(err, announcementGot) {
       if(err)
@@ -19,6 +20,7 @@ announcements.get("/view/:id", function(req, res) {
       }
     })
 })
+*/
   
 announcements.get("/all", function(req, res) {
     Announcement.find({}, function(err, announcementsGot) {
@@ -30,9 +32,10 @@ announcements.get("/all", function(req, res) {
 })
 ///******************************
 
-
+/*
 announcements.use('/', sessionMiddleware);
 announcements.use('/:id*', sessionMiddleware);
+*/
 
 announcements.route('/')
   .get((req,res) => { //Le regresa todas sus convocatorias (las que el dio de alta)
@@ -54,6 +57,12 @@ announcements.route('/')
   })
 
 announcements.route('/:id')
+  .get((req,res) => {
+    Announcement.findById(req.params.id, (err,data) => {
+      if(err){res.status(400).json(err)}
+      res.json(data);
+    })
+  })
   .put((req, res) => {
     const data = req.body
     Announcement.findByIdAndUpdate(

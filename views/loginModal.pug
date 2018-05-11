@@ -6,7 +6,7 @@
       p.modal-card-title Iniciar sesión
       button.delete(aria-label='close', onclick='closeSignInModal()', style='background: red;')
     section.modal-card-body
-      img.image.is-128x128(src='../images/user.png', alt='Foto de perfil', style='display: block; margin: 0 auto; border-radius: 50%')
+      img.image.is-128x128(src=pathToRoot + 'images/user.png', alt='Foto de perfil', style='display: block; margin: 0 auto; border-radius: 50%')
       .is-centered
         form#login(action='#', method='POST', name="login")
             .colum.is-two-fifths

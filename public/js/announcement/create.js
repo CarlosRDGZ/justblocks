@@ -1,9 +1,5 @@
-function createAnnoun()
-{
-	var announ = JSON.parse(JSON.stringify(vm.$data));
-	delete announ.ui;
-	window.axios.post('/api/announcement', announ).
-		then(({data})=> {
-			window.location = "/announcement/view/" + data["_id"];
-		})
-}
+
+ClassicEditor.create(document.querySelector('#description'), {
+	plugins: [ Essentials, Paragraph, Bold, Italic ],
+	toolbar: ['heading','|','bold','italic','link','bulletedList','numberedList','blockQuote','undo','redo'],
+}).then(editor => window.editor = editor)
