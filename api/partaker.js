@@ -13,6 +13,15 @@ partakers.route('/')
       .catch(err => res.status(400).json(err))
   })
 
+partakers.route('/count/:rol')
+  .get((req,res) => {
+    let rol = req.params.rol
+    Partaker.count({ rol: rol }, (err,total) => {
+      if (err) res.status(400).json(err)
+      res.json(total)
+    })
+  })
+
 partakers.route('/project/:id')
   .get((req,res) => {
     let id = req.params.id

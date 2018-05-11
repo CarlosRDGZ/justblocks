@@ -17,6 +17,7 @@ session.post("/signIn", function(req, res) {
 			if(user) {
 				if(user.password == md5(req.body.password)) {
 					req.session.user_id = user._id;
+					res.cookie('session', user.id, { path: '/' }).status(200).json({success: "success"});
 					req.session.save();
 					res.json({success: "success"});
 					// userSession = user
@@ -40,11 +41,9 @@ session.post("/signIn", function(req, res) {
 })
 
 session.route("/logout").get(function(req, res){
-		openSession = false
-		userSession = { }
-    req.session.destroy();
+		req.session.destroy();
     req.session = null;
-		res.redirect("/");
+		res.clearCookie('session', { path: '/' }).status(200).redirect("/");
 });	
 
 module.exports = session;

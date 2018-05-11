@@ -6,8 +6,6 @@ const fs = require('fs');
 const formidable = require("express-form-data");
 
 const mongoose = require('../database/config')
-
-
 const announFindMiddleware = require("../middlewares/findAnnouncement");
 
 //npm install --save express-form-data

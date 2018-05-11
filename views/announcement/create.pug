@@ -1,4 +1,5 @@
 - const pathToRoot = '../../'
+- const lUser = user
 doctype html
 html(lang="en")
   head
@@ -19,6 +20,10 @@ html(lang="en")
                 label.label Titulo
                 .control
                   input.input(type='text' :class="{ 'is-danger' : errors[0] }" placeholder='Titulo' v-model='announ.title' required)
+              .field
+                label.label Organizador
+                .control
+                  input.input(type='text' :class="{ 'is-danger' : errors[7] }" placeholder='Organizador' v-model='announ.author' required)
               .field.is-horizontal
                 .field-body
                   .field
@@ -80,12 +85,6 @@ html(lang="en")
                   p Descripci&oacute;n
                   button.delete(@click='helpper(4)')
                 .message-body It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English
-              .field
-                label.label Descripci&oacute;n
-                  span.icon(@click='helpper(4)')
-                    i.far.fa-question-circle
-                .control
-                  textarea#description.textarea(:class="{ 'is-danger' : errors[7] }" v-model='announ.content')
               .field.is-horizontal
                 .field-body
                   .field
@@ -100,6 +99,18 @@ html(lang="en")
                       input(type='number' class='input' :class="{ 'is-danger': errors[6] }" v-model='announ.projectsPerEvaluator' required)
                       span.icon.is-small.is-left
                         i.fas.fa-boxes
+              .field
+                label.label Descripci&oacute;n
+                  span.icon(@click='helpper(4)')
+                    i.far.fa-question-circle
+                .control
+                  textarea#content.textarea
+              .field
+                label.label Premio
+                .control
+                  textarea#prize.textarea
+              br
+              button.button.is-success.is-fullwidth(@click='send') Crear
                   .field
                     input#file(type="file" name="image")
                   br
@@ -107,18 +118,12 @@ html(lang="en")
                     .field
                       button#Crear.button.is-link(onclick="createAnnoun()") Crear
               .content
-                pre {{ $data }}
-    script(src=pathToRoot + 'vue/vue.min.js')
-    script(src=pathToRoot + 'vue/controllers/announcement/create.js')
+              pre {{ $data }}
     include ../footer.pug
-script.
-    // script(src='../ckeditor/ckeditor.js')
-  /*ClassicEditor.create(document.querySelector('#description'), {
-    toolbar: ['heading','|','bold','italic','link','bulletedList','numberedList','blockQuote','undo','redo'],
-  }).then(editor => window.editor = editor )*/
-style.
-  .ck-editor__editable {
-    min-height: 250px;
-  }
-
-script(src=pathToRoot + "js/announcement/create.js")
+  script(src=pathToRoot + 'vue/vue.js')
+  script(src=pathToRoot + 'ckeditor/ckeditor.js')
+  script(src=pathToRoot + 'vue/controllers/announcement/create.js')
+  script.
+    let name = !{JSON.stringify(lUser.name)}
+    vm.announ.author = `${name.first} ${name.last}`
+    console.log(vm.announ.author)

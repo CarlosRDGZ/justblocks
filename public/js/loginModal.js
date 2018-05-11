@@ -48,9 +48,8 @@ loginForm.addEventListener('submit', function(ev) {
 						break;
 				}*/
 			}
-			else if(data['success'])
-			{
-				window.location = "/app";
+			else if(data['success']) {
+				location.reload()
 			}
 		})
 })
