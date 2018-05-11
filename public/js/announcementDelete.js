@@ -3,10 +3,11 @@ const idInput = document.getElementById('idDelete');
 
 formDelete.addEventListener('submit', function(ev) {
 	ev.preventDefault();
-	window.axios.delete("announcement/" + idInput.value).
+	console.log("AXIOS");
+	window.axios.delete("/api/announcement/" + idInput.value).
 		then(({data})=> {
 			if(!data['err']) {
-				//Problemas
+				alert("Se eliminó correctamente");
 				window.location = "/app";
 			}
 			else

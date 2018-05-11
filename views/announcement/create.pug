@@ -111,6 +111,12 @@ html(lang="en")
                   textarea#prize.textarea
               br
               button.button.is-success.is-fullwidth(@click='send') Crear
+                  .field
+                    input#file(type="file" name="image")
+                  br
+                  .container
+                    .field
+                      button#Crear.button.is-link(onclick="createAnnoun()") Crear
               .content
               pre {{ $data }}
     include ../footer.pug

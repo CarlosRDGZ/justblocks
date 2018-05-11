@@ -1,5 +1,5 @@
 nav#mainNavbar.navbar.is-info(role='navigation')
-  .navbar-brand
+  .navbar-brand 
     a.navbar-item(href=gUrl)
       span
         i.fab.fa-rebel.fa-3x
@@ -15,14 +15,14 @@ nav#mainNavbar.navbar.is-info(role='navigation')
         a.navbar-link(href='#')
           b Convocatorias
         .navbar-dropdown.is-boxed
-          a.navbar-item(href='/api/announcement/all') Abiertas
+          a.navbar-item(href='/announcement') Abiertas
           a.navbar-item(href='#') Resultados
       a.navbar-item(href='#')
         b Servicios
       a.navbar-item(href='#')
         b Método Evaluación
     .navbar-end
-      if (!openSession)
+      if (!user)
         .navbar-item
           .field.is-grouped
               p.control
@@ -40,8 +40,11 @@ nav#mainNavbar.navbar.is-info(role='navigation')
       else
         .navbar-item.has-dropdown.is-hoverable
           a.navbar-link(href=gUrl + 'app')
-            figure.image.is-48x48(style=`background-image: url("${pathToRoot}images/Porg.png"); background-size:cover; border-radius: 50%;' href=gUrl + 'app`)
-            p &nbsp #{userSession.name.first.split(' ')[0]}
+            if (user.image)
+              figure.image.is-48x48(style=`background-image: url("${pathToRoot}files/users/${user.image._id}.${user.image.extension}"); background-size:cover; border-radius: 50%;' href=gUrl + 'app`)
+            else
+              figure.image.is-48x48(style=`background-image: url("${pathToRoot}images/Porg.png"); background-size:cover; border-radius: 50%;' href=gUrl + 'app`)
+            p &nbsp #{user.name.first.split(' ')[0]}
           .navbar-dropdown.is-boxed
             a.navbar-item(href='#')
               span.icon

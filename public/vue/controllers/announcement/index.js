@@ -80,7 +80,8 @@ const vm = new Vue({
   created: function() {
     console.log('Before Mount')
     const url = 'http://127.0.0.1:3000/'
-    window.axios(`${url}api/announcement/`)
+    //Con la url no funcionaba
+    window.axios(`/api/announcement`)
       .then(res => {
         let announs = [
           'item1',

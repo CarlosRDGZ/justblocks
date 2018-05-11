@@ -18,8 +18,10 @@ session.post("/signIn", function(req, res) {
 				if(user.password == md5(req.body.password)) {
 					req.session.user_id = user._id;
 					res.cookie('session', user.id, { path: '/' }).status(200).json({success: "success"});
-					openSession = true
-					userSession = user
+					req.session.save();
+					res.json({success: "success"});
+					// userSession = user
+					// openSession = true
 				} 
 				else {
 					console.log("Las contraseñas no coinciden");
@@ -39,9 +41,8 @@ session.post("/signIn", function(req, res) {
 })
 
 session.route("/logout").get(function(req, res){
-		openSession = false
-		userSession = { }
 		req.session.destroy();
+    req.session = null;
 		res.clearCookie('session', { path: '/' }).status(200).redirect("/");
 });	
 

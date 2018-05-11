@@ -12,27 +12,31 @@ html(lang="en")
 					.field
 						label(for="name" class="title is-5") Nombre
 						.control
-							input.input(type="text" id="name" name="name" placeholder="Nombre")
+							input.input(type="text" id="name" name="name" placeholder="Nombre" required)
 					.field
 						label(for="lastName" class="title is-5") Apellido
 						.control
-							input.input(type="text" id="lastName" name="lastName" placeholder="Apellido(s)")
+							input.input(type="text" id="lastName" name="lastName" placeholder="Apellido(s)" required)
 					.field
 						label(for="email" class="title is-5") Correo electrónico
 						.control
-							input.input(type="email" id="email" name="email" placeholder="Correo elctrónico")
+							input.input(type="email" id="email" name="email" placeholder="Correo elctrónico" required)
 					.field
 						label(for="password" class="title is-5") Contraseña
 						.control
-							input.input(type="password" id="password" name="password" placeholder="Password" class="form-control")
+							input.input(type="password" id="password" name="password" placeholder="Password" class="form-control" required)
 					.field
 						label(for="passwordConfirmation" class="title is-5") Confirmación de contraseña
 						.control
-							input.input(type="password" id="passwordConfirmation" name="passwordConfirmation" placeholder="Confirmación de contraseña")
+							input.input(type="password" id="passwordConfirmation" name="passwordConfirmation" placeholder="Confirmación de contraseña" required)
 					.field
 						label(for="dateOfBirth" class="title is-5") Fecha de nacimiento
 						.control
-							input.input(type="date" id="dateOfBirth" name="dateOfBirth" min="1900-01-01" max="2000-31-31")
+							input.input(type="date" id="dateOfBirth" name="dateOfBirth" min="1900-01-01" max="2000-31-31" required)
+					.field
+						label(for="image" class="title is-5") Foto de perfil (opcional)
+						.control
+							input#file(type="file" name="image")
 					.control
 						input.button.is-primary(type="submit" value="Registrarse")
 		include loginModal.pug

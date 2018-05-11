@@ -6,7 +6,8 @@ const md5 = require('md5');
 const app = express()
 
 global.gUrl = 'http://127.0.0.1:3000/'
-global.openSession = false
+// global.openSession = false
+// global.userSession = { _id: '5ad7b0e28380150835d775bf' }
 
 //*************Manejo de sesiones
 //MongoStore connect-mongo
@@ -17,14 +18,16 @@ const sessionRedisMiddleware = session({
 	//Pero como se manejan valores por default no se pasa nada
 	store: new RedisStore({}),
 	//Para encriptar la información
-	secret: "super ultra secret word"
+	secret: "super ultra secret word",
+	resave: false,
+	saveUninitialized: true
 })
 app.use(sessionRedisMiddleware)
 
 //*************Middlewares
 const routerApp = require("./routeApp");
 const sessionMiddleware = require('./middlewares/session');//Para validar los usuarios
-
+const navBarMiddleware = require('./middlewares/navBarMiddleware');//Para validar los usuarios
 
 //*************Modelos
 const User = require('./models/User').User;
@@ -52,6 +55,7 @@ app.get('/convocatoria', (req, res) => {
 
 // *************Use middlewares
 app.use("/app", sessionMiddleware);
+app.use("/app", navBarMiddleware);
 app.use("/app", routerApp);
 
 app.use(express.static(path.join(__dirname,'/public')))

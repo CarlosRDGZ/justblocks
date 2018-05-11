@@ -36,103 +36,47 @@ html(lang="en")
               .control
                 a.button.is-info Buscar
 
-    main.section
+    main#app.section
       .container-fluid
         h1.title.has-text-centered Más Recientes
         .columns.is-variable.is-6
-          .column
-            .card
-              .card-image
-                figure.image.is-4by3
-                  img(src='https://www.iagua.es/sites/default/files/styles/thumbnail-830x455/public/glaciar_perito_moreno_0.jpg?itok=9a_iNcsz', alt='Placeholder image')
-              .card-content
-                .columns.is-gapless.is-multiline
-                  .column.is-full
-                    .notification.is-success
-                      p.title.is-4 App Cambio Climático
-                      p.subtitle.is-6 SEMARNAT
-                  .column.is-three-fifths
-                    .notification.has-text-centered.is-success.is-inverted
+          div(v-for="i in 3")
+            div(v-for="j in 3")
+              .column
+                .card
+                  .card-image
+                    figure.image.is-4by3
+                        div(v-if="announs[(j + (3 * (i - 1))) - 1].image._id")
+                          img(:src="`/files/announcement/images/${announs[(j + (3 * (i - 1))) - 1].image._id}.${announs[(j + (3 * (i - 1))) - 1].image.extension}`", alt='{{announs[(j + (3 * (i - 1))) - 1].title}}')
+                        div(v-else)
+                          img(src="/images/Porg.png", alt='{{announs[(j + (3 * (i - 1))) - 1].title}}')
+                  .card-content
+                    .columns.is-gapless.is-multiline
+                      .column.is-full
+                        .notification.is-success
+                          p.title.is-4 {{announs[(j + (3 * (i - 1))) - 1].title}}
+                          p.subtitle.is-6 {{announs[(j + (3 * (i - 1))) - 1].userName}}
+                      .column.is-three-fifths
+                        .notification.has-text-centered.is-success.is-inverted
+                          p
+                            b Etapa: Lanzamiento
+                          progress.progress.is-success(value='33', max='100') 33%
+                      .column.is-two-fifths
+                        .notification.has-text-centered
+                          p
+                            b 183
+                          p Participates
+                    .content
+                      p(hidden='')
+                        | Desarrollar una app web que permita a la población conocer sobre el Cambio Climático y colaborar con acciones
+                        | para su mitigación.
                       p
-                        b Etapa: Lanzamiento
-                      progress.progress.is-success(value='33', max='100') 33%
-                  .column.is-two-fifths
-                    .notification.has-text-centered
-                      p
-                        b 183
-                      p Participates
-                .content
-                  p(hidden='')
-                    | Desarrollar una app web que permita a la población conocer sobre el Cambio Climático y colaborar con acciones
-                    | para su mitigación.
-                  p
-                    a(href='/convocarias/464646464646') ver más...
-          .column
-            .card
-              .card-image
-                figure.image.is-4by3
-                  img(src='https://cdn4.educacion2.com/wp-content/uploads/nene-dibujando1.jpg', alt='Placeholder image')
-              .card-content
-                .columns.is-gapless.is-multiline
-                  .column.is-full
-                    .notification.is-info
-                      p.title.is-4 Concurso de Dibujo
-                      p.subtitle.is-6 SEP
-                  .column.is-three-fifths
-                    .notification.has-text-centered.is-info.is-inverted
-                      p
-                        b Etapa: Lanzamiento
-                      progress.progress.is-info(value='33', max='100') 33%
-                  .column.is-two-fifths
-                    .notification.has-text-centered
-                      p
-                        b 5483
-                      p Participantes
-                .content
-                  p(hidden='')
-                    | La Secretaría de Educación Pública (SEP) y el Colegio de Ingenieros Civiles de México (CICM) invitan a participar
-                    | en el Primer Concurso Nacional de Dibujo ¿Cómo imaginas tu comunidad cuando seas grande?, mediante la realización
-                    | de un dibujo con la técnica que prefieran y explicar por qué imaginan así la comunidad.
-                  p
-                    a(href='#') ver más...
-          .column
-            .card
-              .card-image
-                figure.image.is-4by3
-                  img(src='http://www.radiotele.com.mx/wp-content/uploads/2016/03/conacyt-1.jpg', alt='Placeholder image')
-              .card-content
-                .columns.is-gapless.is-multiline
-                  .column.is-full
-                    .costume.notification.is-primary
-                      p.title.is-4 Desarrollo Científico
-                      p.subtitle.is-6 CONACYT
-                  .column.is-three-fifths
-                    .notification.has-text-centered.is-primary.is-inverted.costume
-                      p
-                        b Etapa: Lanzamiento
-                      progress.progress.is-primary.costume(value='33', max='100') 33%
-                  .column.is-two-fifths
-                    .notification.has-text-centered
-                      p
-                        b 978
-                      p Participantes
-                .content
-                  p(hidden='')
-                    | Desarrollar una app web que permita a la población conocer sobre el Cambio Climático y colaborar con acciones
-                    | para su mitigación.
-                  p
-                    a(href='#') ver más...
-        nav.breadcrumb(aria-label='breadcrumbs')
-          ul
-            li
-              a(href='#')
-                span.icon.is-small
-                  i.fas.fa-plus
-                span ver más...
+                        a(:href="`/announcement/view/${announs[(j + (3 * (i - 1))) - 1]._id}`") ver más...
+
     section.section
       .container
         h1.title.has-text-centered About
-        .columns
+        .columns  
           .column
             article.tile.is-child.notification.is-primary(style='background-color: rgb(66, 110, 160)')
               .content
@@ -154,3 +98,5 @@ html(lang="en")
                   i.fab.fa-empire.fa-7x
     include footer.pug
     script(src=pathToRoot + "bulma-carousel/bulma-carousel.min.js")
+    script(src=pathToRoot + "vue/vue.min.js")
+    script(src=pathToRoot + "js/index.js")

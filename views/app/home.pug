@@ -1,6 +1,7 @@
 - const pathToRoot = '../../'
-doctype html
-html(lang="en")
+- var i = 0
+doctype html 
+html(lang="en") 
   head
     include ../header.pug
     link(rel="stylesheet", href="../css/index.css")
@@ -13,7 +14,10 @@ html(lang="en")
           .column.is-one-quarter
             // figure.image.is-5by4(style='background: url("images/Porg.png") #fff no-repeat; background-size: contain;')
             figure.image.is-5by4
-              image(src=pathToRoot + 'images/Porg.png' style='border-radius: 0%')
+              if (user.image)
+                image(src='files/users/'+ user.image._id + "." + user.image.extension style='border-radius: 0%')
+              else
+                image(src=pathToRoot + 'images/Porg.png' style='border-radius: 0%')
             .card
               .card-content
                 p.title #{user.name.first} #{user.name.last}
@@ -36,8 +40,40 @@ html(lang="en")
           .column
             .notification.is-primary
               h1.title {{ title }}
-              h2.subtitle name
+            .columns.is-variable.is-4
+              div(v-for="announ in myAnnouns")
+                .column
+                  .card
+                    .card-image
+                      figure.image.is-4by3
+                        div(v-if="announ.image._id")
+                          img(:src="`/files/announcement/images/${announ.image._id}.${announ.image.extension}`", alt='{{announ.title}}')
+                        div(v-else)
+                          img(src="/images/Porg.png", alt='{{announ.title}}')
+                    .card-content
+                      .columns.is-gapless.is-multiline
+                        .column.is-full
+                          .notification.is-success
+                            p.title.is-4 {{announ.title}}
+                            p.subtitle.is-6 {{announ.userName}}
+                        .column.is-three-fifths
+                          .notification.has-text-centered.is-success.is-inverted
+                            p
+                              b Etapa: Lanzamiento
+                            progress.progress.is-success(value='33', max='100') 33%
+                        .column.is-two-fifths
+                          .notification.has-text-centered
+                            p
+                              b 183
+                            p Participates
+                      .content
+                        p(hidden='')
+                          | Desarrollar una app web que permita a la población conocer sobre el Cambio Climático y colaborar con acciones
+                          | para su mitigación.
+                        p
+                          a(:href="`/announcement/view/${announ._id}`") ver más...
+                  
     include ../footer.pug
     script(src=pathToRoot + "vue/vue.min.js")
     script(src=pathToRoot + "../../vue/controllers/home.js")
-    // script(src="../../vue/components/tabs.vue")
+    // script(src="../x../vue/components/tabs.vue")
