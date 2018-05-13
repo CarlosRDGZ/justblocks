@@ -30,7 +30,7 @@ const vm = new Vue({
             this.ui.timeline.push(today >= res.data[prop])
             this.ui.timeline.push(today > res.data[prop])
           }
-        this.announ = res.data
+        this.announ = res.data[0]
         document.title = res.data.title
       })
     window.axios.get(`${url}api/partaker/count/Evaluator`)

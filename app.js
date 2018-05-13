@@ -4,7 +4,6 @@ const routes = require('./routes')
 const path = require('path')
 const md5 = require('md5');
 const app = express()
-
 global.gUrl = 'http://127.0.0.1:3000/'
 // global.openSession = false
 // global.userSession = { _id: '5ad7b0e28380150835d775bf' }
@@ -23,6 +22,24 @@ const sessionRedisMiddleware = session({
 	saveUninitialized: true
 })
 app.use(sessionRedisMiddleware)
+
+// Add headers
+app.use(function (req, res, next) {
+	//A veces el servidor tenía problemas con los recursos y no te dejaba entrar, éste middleware es la solución
+	//Documentación: https://developer.mozilla.org/es/docs/Web/HTTP/Access_control_CORS
+	//Solución: https://stackoverflow.com/questions/18310394/no-access-control-allow-origin-node-apache-port-issue
+    // Website you wish to allow to connect
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    // Request headers you wish to allow
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    // Set to true if you need the website to include cookies in the requests sent
+    // to the API (e.g. in case you use sessions)
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    // Pass to next layer of middleware
+    next();
+});
 
 //*************Middlewares
 const routerApp = require("./routeApp");
@@ -52,6 +69,33 @@ app.get('/convocatoria', (req, res) => {
   res.status(200).sendFile('convocatoria.html', { root: './public' })
 })
 
+//Pruebas de R
+app.get('/R', (req, res) => {
+  const { spawn } = require('child_process');
+  let trt = 10
+  let b = 5
+  let k = 4
+  const child = spawn('Rscript', ['projectsAssign.R',String(trt),String(b),String(k)])
+
+  let out = ''
+  let err = ''
+  child.stdout.on('data', (chunk) => {
+    out += chunk
+  });
+
+  child.stderr.on('data', (chunk) => {
+    err += chunk
+  })
+
+  child.on('close', (code) => {
+    if (err) console.log('STDERR:\n', err)
+    res.json(JSON.parse(out.toString()))
+    // res.send(out.toString())
+    console.log(out.toString())
+    console.log(`child process exited with code ${code}`);
+  })
+})
+//Pruebas de R
 
 // *************Use middlewares
 app.use("/app", sessionMiddleware);

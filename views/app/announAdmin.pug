@@ -1,16 +1,17 @@
-- const pathToRoot = '../../'
+- const pathToRoot = '../../../'
 - const lUser = user
+- const today = new Date()
 doctype html
 html(lang="en")
   head
     include ../header.pug
-    title Crear
+    title #{announ.title}
   body
     include ../navbar.pug
     section.hero.is-success
       .hero-body
         .container.has-text-centered
-          h1.title Crear Convocatoria
+          h1.title #{announ.title}
     main#app.section
       .container-fluid
         .columns.is-centered
@@ -24,6 +25,8 @@ html(lang="en")
                 label.label Organizador
                 .control
                   input.input(type='text' :class="{ 'is-danger' : errors[7] }" placeholder='Organizador' v-model='announ.author' required)
+              .field
+                label.label *Los campos en color amarillo no pueden modificarse
               .field.is-horizontal
                 .field-body
                   .field
@@ -31,15 +34,15 @@ html(lang="en")
                       span.icon(@click='helpper(0)')
                         i.far.fa-question-circle
                     p.control.is-expanded.has-icons-left
-                      input.input(type='date' :class="{ 'is-danger' : errors[1] }" v-model='announ.creationDate' required)
+                      input#creationDate.input(type='date' class="is-warning" v-model='announ.creationDate' required readonly)
                       span.icon.is-small.is-left
                         i.far.fa-calendar-alt
                   .field
-                    label.label Cierre de Registro
+                    label#closing.label Cierre de Registro
                       span.icon(@click='helpper(1)')
                         i.far.fa-question-circle
                     p.control.is-expanded.has-icons-left
-                      input.input(type='date' :class="{ 'is-danger' : errors[2] }" v-model='announ.endEnrollmentsDate' required)
+                      input#endEnrollmentsDate.input(type='date' :class="{ 'is-danger' : errors[2] }" v-model='announ.endEnrollmentsDate' required)
                       span.icon.is-small.is-left
                         i.far.fa-calendar-alt
               article.message.is-info(v-show='ui.helpper0')
@@ -55,19 +58,19 @@ html(lang="en")
               .field.is-horizontal
                 .field-body                        
                   .field
-                    label.label Evaluaciones
+                    label#evaluations.label Evaluaciones
                       span.icon(@click='helpper(2)')
                         i.far.fa-question-circle
                     p.control.is-expanded.has-icons-left
-                      input.input(type='date' :class="{ 'is-danger' : errors[3] }" v-model='announ.evaluationDate')
+                      input#evaluationDate.input(type='date' :class="{ 'is-danger' : errors[3] }" v-model='announ.evaluationDate')
                       span.icon.is-small.is-left
                         i.far.fa-calendar-alt
                   .field
-                    label.label Resultados
+                    label#results.label Resultados
                       span.icon(@click='helpper(3)')
                         i.far.fa-question-circle
                     p.control.is-expanded.has-icons-left
-                      input.input(type='date' :class="{ 'is-danger' : errors[4] }" v-model='announ.deadlineDate')
+                      input#deadlineDate.input(type='date' :class="{ 'is-danger' : errors[4] }" v-model='announ.deadlineDate')
                       span.icon.is-small.is-left
                         i.far.fa-calendar-alt
               article.message.is-info(v-show='ui.helpper2')
@@ -110,20 +113,32 @@ html(lang="en")
                 .control
                   textarea#prize.textarea
               br
-              button.button.is-success.is-fullwidth(@click='send') Crear
-              .field
-                input#file(type="file" name="image")
+              figure(class="image is-square")
+                img(id="image" src="/images/Porg.png" placeholder="a")
               br
-              // .container
-                // .field
-                  // button#Crear.button.is-link(onclick="createAnnoun()") Crear
+              .field
+                h3 Cambiar la imagen:   
+                  input#file(type="file" name="image")
+              br
+              button.button.is-success.is-fullwidth(@click='send') Actualizar información
+              br
               .content
               pre {{ $data }}
     include ../footer.pug
   script(src=pathToRoot + 'vue/vue.js')
   script(src=pathToRoot + 'ckeditor/ckeditor.js')
-  script(src=pathToRoot + 'vue/controllers/announcement/create.js')
+  script(src=pathToRoot + 'vue/controllers/announcement/admin.js')
   script.
-    let name = !{JSON.stringify(lUser.name)}
-    vm.announ.author = `${name.first} ${name.last}`
-    console.log(vm.announ.author)
+    let announcement = {};
+    announcement._id = `#{announ._id}`;
+    announcement.title = `#{announ.title}`;
+    announcement.endEnrollmentsDate = `#{announ.endEnrollmentsDate.toISOString()}`;
+    announcement.creationDate = `#{announ.creationDate.toISOString()}`;
+    announcement.evaluationDate = `#{announ.evaluationDate.toISOString()}`;
+    announcement.deadlineDate = `#{announ.deadlineDate.toISOString()}`;
+    announcement.evaluators = `#{announ.evaluators}`;
+    announcement.projectsPerEvaluator = `#{announ.projectsPerEvaluator}`;
+    announcement.content = `#{announ.content}`;
+    announcement.idCreator = `#{announ.idCreator}`;
+    announcement.author = `#{announ.author}`;
+    announcement.prize = `#{announ.prize}`;

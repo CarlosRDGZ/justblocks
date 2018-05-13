@@ -27,7 +27,7 @@ announcements.route('/')
   })
   .post((req,res) => {
       console.log("POST announcement: " + req.session.user_id);
-      const data = req.body.announ;
+      const data = req.body;
       data.idCreator = req.session.user_id;
       const announcement = new Announcement(data);
 
