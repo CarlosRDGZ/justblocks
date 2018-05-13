@@ -3,7 +3,7 @@ const evaluationDate = document.getElementById("evaluationDate");
 const deadlineDate = document.getElementById("deadlineDate");
 const content = document.getElementById("content");
 
-window.onload = () => {
+/*window.onload = () => {
 	console.log("announ");
 	window.axios.get("/api/announcement/" + id).
 		then(({data})=> {
@@ -19,4 +19,4 @@ window.onload = () => {
 				alert(data['err']);
 			}
 		})
-}
+}*/

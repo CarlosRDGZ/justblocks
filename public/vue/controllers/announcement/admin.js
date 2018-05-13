@@ -1,3 +1,52 @@
+function get(id) {return document.getElementById(id);}
+const creaDate = get('creationDate');
+const enrollDate = get('endEnrollmentsDate');
+const evaDate = get('evaluationDate');
+const deadDate = get('deadlineDate');
+const image = get('image');
+const today = new Date();
+
+function getImage(announ) {
+  window.axios.get('/api/announcement/image/' + announ._id)
+    .then(({data}) => {
+      announ.image = data;
+      let path = '/files/announcement/images/' + data['_id'] + "." + data['extension'];
+      image.src = path;
+      console.log(data);
+      console.log(path);
+    })
+    .catch(({err}) => { console.log("Err: " + err);})
+}
+
+window.onload = () => {
+  announcement.endEnrollmentsDate =new Date(announcement.endEnrollmentsDate);
+  announcement.creationDate = new Date(announcement.creationDate);
+  announcement.evaluationDate = new Date(announcement.evaluationDate);
+  announcement.deadlineDate = new Date(announcement.deadlineDate);
+
+  if(announcement.endEnrollmentsDate < today) {
+    enrollDate.setAttribute('readonly', true); 
+    // enrollDate.readOnly = true; 
+  }
+  if(announcement.evaluationDate < today) {
+    evaDate.setAttribute('readonly', 'true');
+  }
+  if(announcement.deadlineDate < today) {
+    deadDate.setAttribute('readonly', 'true');
+  }
+  getImage(announcement);
+
+  announcement.creationDate = announcement.creationDate.toISOString().substring(0, 10);
+  announcement.endEnrollmentsDate = announcement.endEnrollmentsDate.toISOString().substring(0, 10);
+  announcement.evaluationDate = announcement.evaluationDate.toISOString().substring(0, 10);
+  announcement.deadlineDate = announcement.deadlineDate.toISOString().substring(0, 10);   
+
+  // CKEDITOR.instances.content.editable().setHtml(announcement.content);
+  // CKEDITOR.instances.prize.editable().setHtml(announcement.prize);
+
+  vm.$data.announ = announcement;
+}
+
 const vm = new Vue({
   el: '#app',
   data: {
@@ -9,6 +58,7 @@ const vm = new Vue({
       evaluationDate: undefined,
       deadlineDate: undefined,
       evaluators: undefined,
+      image: 2,
       projectsPerEvaluator: undefined,
       content: undefined,
       prize: undefined,
@@ -31,7 +81,7 @@ const vm = new Vue({
       false, // 7 author
     ]
   },
-  mounted: function() { 
+  mounted: function() {
     let config = {
       language: 'es',
       extraplugins: '',
@@ -51,7 +101,6 @@ const vm = new Vue({
   methods: {
     send: function() {
       this.announ.content = CKEDITOR.instances.content.getData()
-      // console.log("DATA: " + CKEDITOR.instances.content.getData());
       this.announ.prize = CKEDITOR.instances.prize.getData()
       let i = 0, empty = false;
       for (let prop in this.announ) {
@@ -62,33 +111,9 @@ const vm = new Vue({
       }
       if (!empty && this.errors.indexOf(true) === -1) {
         const url = 'http://127.0.0.1:3000/'
-        console.log(this.announ);
         window.axios
           .post(`${url}api/announcement/`, this.announ)
-          .then(res => {
-              console.log(res.data); 
-              //Para enviar la imagen
-              let id = res.data['_id'];
-              if(file.files.length != 0) {
-                let formData = new FormData()
-                let imagefile = document.querySelector('#file')
-                console.log("ID: " + id);
-                formData.append('image', imagefile.files[0])
-
-                const config = { headers: { 'content-type': 'multipart/form-data' } }
-                window.axios.post('/api/announcement/image/' + id, formData, config)
-                  .then(({data}) => {
-                    console.log("DENTRO");
-                    console.log(data);
-                    window.location = "/announcement/view/" + id;
-                  })
-              }
-              else
-              {
-                console.log(res.data); 
-                window.location = "/announcement/view/" + id;
-              }
-            })
+          .then(res => console.log(res.data))
           .catch(err => console.log(err))
       }
     },

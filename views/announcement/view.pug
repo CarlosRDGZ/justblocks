@@ -50,7 +50,7 @@ html(lang="en")
                     .timeline-marker.is-icon(:class="{ 'is-primary': ui.timeline[0], 'is-success': ui.timeline[1]}")
                       i.fas.fa-hourglass-start
                     .timeline-content
-                      p.heading {{ announ.creationDate.toDateString() }}
+                      p.heading {{ announ.creationDate }}
                       p Fecha de lanzamieto
                       p Participantes y Evaluadores se inscriben
                   header.timeline-header
@@ -60,7 +60,7 @@ html(lang="en")
                     .timeline-marker.is-icon(:class="{ 'is-primary': ui.timeline[2], 'is-success': ui.timeline[3]}")
                       i.fas.fa-clipboard-check
                     .timeline-content
-                      p.heading {{ announ.endEnrollmentsDate.toDateString() }}
+                      p.heading {{ announ.endEnrollmentsDate }}
                       p Cierre de inscripciones
                       p Se incia el proceso de evaluaci&oacute;n por proyecto
                   header.timeline-header
@@ -70,7 +70,7 @@ html(lang="en")
                     .timeline-marker.is-icon(:class="{ 'is-primary': ui.timeline[4], 'is-success': ui.timeline[5] }")
                       i.fas.fa-cogs
                     .timeline-content
-                      p.heading {{ announ.evaluationDate.toDateString() }}
+                      p.heading {{ announ.evaluationDate }}
                       p D&iacute;a de evaluacion
                       p Se aplica el metodo 
                         b 
@@ -79,7 +79,7 @@ html(lang="en")
                     .timeline-marker.is-icon(:class="{ 'is-primary': ui.timeline[6], 'is-success': ui.timeline[7] }")
                       i.fas.fa-trophy
                     .timeline-content
-                      p.heading {{ announ.deadlineDate.toDateString() }}
+                      p.heading {{ announ.deadlineDate }}
                       p Entrega de Resultados
                   header.timeline-header
                     span.tag.is-medium(:class="{ 'is-primary': ui.timeline[6], 'is-success': ui.timeline[7] }") Fin

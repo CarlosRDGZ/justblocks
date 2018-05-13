@@ -64,4 +64,15 @@ projects.route('/user/:id')
     })
   })
 
+projects.route('/countProjects/:idAnnoun')
+  .get((req, res) => {
+      console.log("GET countProjects by idAnnoun");
+      Project.count({idAnnouncement: req.params.idAnnoun}, (err, projects) => {
+        if (err)
+          res.status(400).json(err)
+        else
+          res.json({projects: projects});
+      })
+  })
+
 module.exports = projects
