@@ -76,8 +76,14 @@
 evaludarores {
 	id_usuario:
 	ids_proyectos:
+	status: //0: Enviado, 1: Aceptado, 2: Rechazado
 }
-
+```
+##### Pendiente
+proyectosEvaluador {
+	idProyecto:
+	idUsuario:
+}
 administradores {
 	id_usuario:
 	convocatoria:
