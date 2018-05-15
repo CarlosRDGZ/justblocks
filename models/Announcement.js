@@ -12,8 +12,10 @@ const announcementSchema = new Schema({
 	evaluators: { type: Number, default: 0 },
 	projectsPerEvaluator: { type: Number, default: 0 },
 	content: { type: String },
-	prize: { type: String }
+	prize: { type: String },
+	image: {type: Schema.Types.ObjectId, ref: "FileAnnouncement" }
 })
 
+// delete mongoose.models.Announcement;
 const Announcement = mongoose.model('Announcement', announcementSchema);
 module.exports.Announcement = Announcement;

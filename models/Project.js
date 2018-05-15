@@ -6,8 +6,11 @@ const projectSchema = new Schema({
   idCreator: { type: Schema.Types.ObjectId, ref: 'User' },
   description: { type: String },
   title: { type: String },
-  score: Number
+  score: Number,
+  grade: { type: Number, default: -1},
+  adjustedGrade: Number
 })
 
+delete mongoose.models.Project;
 const Project = mongoose.model('Project', projectSchema)
 module.exports.Project = Project
