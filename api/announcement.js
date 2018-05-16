@@ -6,11 +6,81 @@ const Evaluator = require('../models/evaluator').Evaluator;
 const FileAnnouncement = require('../models/FileAnnouncement').FileAnnouncement;
 const bodyParser = require('body-parser')
 const fs = require('fs');
+const cron = require('node-cron');
 const formidable = require("express-form-data");
 const mongoose = require('../database/config')
 const announFindMiddleware = require("../middlewares/findAnnouncement");
 
+//will run every day at 01:00 AM
+cron.schedule('0 0 1 * * *', () => {
+  Announcement.find({}).then(announs => {
+    announs.forEach(announ => {
+      let today = new Date();
+      if(announ.evaluationDate == today) {
+        let idAnnoun = announ._id;
+        let treatments = [];
+        let treatmentsCount = 0;
+        let blocks = [];
+        let blocksCount = 0;
+        //Para este entonces ya debió de haberse definido una k válida
+        let trtPerBlockCount = announ.projectsPerEvaluator;
+        let trtPerBlock;
+
+        Project.find({idAnnouncement: idAnnoun})
+          .then(projects => {
+            Evaluator.find({idAnnouncement: idAnnoun})
+              .then(evaluators => {
+                treatments = projects;
+                treatmentsCount = projects.length;
+                blocks = evaluators;
+                blocksCount = evaluators.length;
+
+                const { spawn } = require('child_process');
+                const child = spawn('Rscript', ['C:/Users/brand/source/repos/justblocks/BIBANOVA/projectsAssign.R', treatmentsCount, blocksCount, trtPerBlockCount]);
+
+                let out = ''
+                let err = ''
+                child.stdout.on('data', (chunk) => {
+                  out += chunk
+                });
+
+                child.stderr.on('data', (chunk) => {
+                  err += chunk
+                })
+
+                child.on('close', (code) => {
+                  if (err) {console.log('STDERR:\n', err.toString()); console.log(Date.now());}
+                  let i = 0;
+                  trtPerBlock = JSON.parse(out.toString());
+                  trtPerBlock.forEach((current, index) => {
+                    current.forEach(trt => {
+                      let projectsEvaluator = new ProjectsEvaluator({
+                        idEvaluator: blocks[index]._id,
+                        idProject: treatments[trt - 1]._id,
+                        idAnnouncement: idAnnoun
+                      })
+
+                      projectsEvaluator.save()
+                        .then(data => {console.log(++i);})
+                        .catch(err => {console.log("Err projectsEvaluator"); console.log(err);})
+                    })
+                  })
+                  console.log(`child process exited with code ${code}`);
+                  console.log("Proyectos asignados a la convocatoria: " + idAnnoun);
+                });
+              })
+              .catch(err => {console.log("Evaluator error"); console.log(err); res.status(500).json({err: err})})
+          })
+          .catch(err => {console.log("Project error"); console.log(err); res.status(500).json({err: err})})
+      }
+    })
+  })
+  .catch(err => {console.log("Cron error"); console.log(Date.now());})
+})
+
+
 //npm install --save express-form-data
+//npm install --save node-cron
 announcements.use(formidable.parse({keepExtensions: true}));
 
 announcements.use(bodyParser.urlencoded({ extended: true }))
@@ -261,6 +331,7 @@ announcements.get('/R/projectsAssign/:idAnnoun', (req, res) => {
     .catch(err => {console.log("Announcement error"); console.log(err.message); res.status(500).json({err: err.message});})
 })
 
+//No funciona, en caso de encontrar la condición correcta, corregir
 //The necessary conditions for the existence are that bk/trt and bk(k−1)/(trt(trt−1)) positive integers.
 function getPossibleK(idAnnoun) {
   return new Promise((resolve, reject) => {
@@ -297,6 +368,47 @@ function getPossibleK(idAnnoun) {
     .catch(err => {console.log("Project error"); console.log(err.message); reject({err: err.message})})
   })
 }
+
+//Get all the possible values of r
+function getRsAnnouncement(idAnnoun) {
+  return new Promise((resolve, reject) => {
+    let trtCount = 0
+    let blocksCount = 0
+    let rs = []
+    let ks = []
+    Project.count({idAnnouncement: idAnnoun})
+      .then(projectNumber => {
+        trtCount = projectNumber; console.log("trtCount: " + trtCount);
+        Evaluator.count({idAnnouncement: idAnnoun})
+          .then(evaluatorNumber => {
+            blocksCount = evaluatorNumber; console.log("blocksCount: " + blocksCount);
+            
+            for(let i = 1; i < trtCount; i++) {
+              let tempK = i * trtCount / blocksCount;
+              if( tempK <= trtCount) {//K nunca puede ser mayor a t
+                rs.push(i);
+                ks.push(tempK);
+              }
+              else 
+                break;
+            }
+
+            console.log(rs);
+            console.log(ks);
+            resolve({
+              projects: trtCount,
+              evaluators: blocksCount,
+              possibleK: ks,
+              possibleR: rs
+            });
+          })
+          .catch(err => {console.log("Project error"); console.log(err.message); reject({err: err.message})})
+      })
+    .catch(err => {console.log("Project error"); console.log(err.message); reject({err: err.message})})
+  })
+}
+
+// getRsAnnouncement('5af8fdd8b3a4a5373494fa7d');
 
 announcements.get('/possibleK/:idAnnoun', (req, res) => {
   console.log('Get possibleK');
