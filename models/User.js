@@ -27,7 +27,8 @@ const userSchema = new Schema({
     },
     dateOfBirth: {type: Date, required: true},
 	email: {type: String, required: "The email is required", unique: [true, "This email is already registered"], match: emailMatch},
-	token: String
+	token: String,
+    image: {type: Schema.Types.ObjectId, ref: "ImageUser" }
 })
 
 userSchema.virtual("passwordConfirmation").get(function() {

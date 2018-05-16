@@ -157,7 +157,14 @@ announcements.route('/image/:idAnnoun')
     image.save(function(err) {
       if(!err) {
         fs.rename(req.files.image.path, "public/files/announcement/images/" + image._id + "." + extension );
-        res.sendStatus(200);
+
+        Announcement.findByIdAndUpdate(req.params.idAnnoun, {$set: {image: image._id } },
+          (err,data) => {
+            if (err) res.status(400).json({err: err.message});
+            else
+              res.json(data);
+          }
+        )
       }
       else {
         console.log(err);
@@ -178,6 +185,44 @@ announcements.route('/image/:idAnnoun')
       }
 
     })
+  })
+  .put((req, res) => {
+    console.log("PUT image announcement");
+    Announcement.findById(req.params.idAnnoun)
+      .populate('image')
+      .then(announ => {
+        if(announ.image) {
+          var newExtension = req.files.image.name.split(".").pop();
+          
+          let beforeName = announ.image._id + '.' + announ.image.extension;
+          announ.image.extension = newExtension;
+          announ.image.save(function(err, image) {
+            if(!err) {
+              if(fs.existsSync("public/files/announcement/images/" + image._id + "." + newExtension)) {
+                fs.rename(req.files.image.path, "public/files/announcement/images/" + image._id + "." + newExtension);
+                console.log("Tenía la misma extension");
+              }
+              else {
+                console.log("Tenía diferente extension");
+                fs.rename(req.files.image.path, "public/files/announcement/images/" + image._id + "." + newExtension);
+                //Borrar la imagen anterior
+                fs.unlink("public/files/announcement/images/" + beforeName, (err) => {
+                  if(err){console.log(err.message); res.status(500).json({err: err.message});}
+                })
+                res.sendStatus(200);
+              }
+            }
+            else {
+              console.log(err);
+              res.status(500).json({err: err});
+            }
+          })
+        }
+        else {
+          res.status(404).json({err: 'La convocatoria actualemente no tiene imagen'});
+        }
+      })
+      .catch(err => {console.log(err.message); res.status(500).json({err: err.message});})  
   })
 
 announcements.route('/:id')
@@ -233,18 +278,6 @@ announcements.route('/:id')
     else
       res.status(403).json({err: "Acceso denegado"});
     // Mongoose Remove Docs: http://mongoosejs.com/docs/api.html#findbyidandremove_findByIdAndRemove
-  })
-
-announcements.route('/setK/:idAnnoun')
-  .get((req, res) => {
-    Announcement.findById(req.params.idAnnoun)
-      .then(announ => {
-        //if(función para Validar K) announ.projectsPerEvaluator
-          //function projectsAssign(idAnnoun)
-        //else
-          //Error
-      })
-      .catch(err => {console.log("Announcement error"); console.log(err.message); res.status(500).json({err: err.message});})
   })
 
 /*********************R section**********************/
@@ -324,12 +357,24 @@ announcements.get('/R/projectsAssign/:idAnnoun', (req, res) => {
           .catch(err => {console.log("Project error"); console.log(err); res.status(500).json({err: err})})
       }
       else {
-        console.log("Fecha de evaluación menor a la actual"); 
+        console.log("Fecha de evaluación mayor a la actual"); 
         res.status(403).json({err: 'La fecha de evaluación todavía no ha llegado'});
       }
     })
     .catch(err => {console.log("Announcement error"); console.log(err.message); res.status(500).json({err: err.message});})
 })
+
+announcements.route('/setK/:idAnnoun')
+  .get((req, res) => {
+    Announcement.findById(req.params.idAnnoun)
+      .then(announ => {
+        //if(función para Validar K) announ.projectsPerEvaluator
+          //function projectsAssign(idAnnoun)
+        //else
+          //Error
+      })
+      .catch(err => {console.log("Announcement error"); console.log(err.message); res.status(500).json({err: err.message});})
+  })
 
 //No funciona, en caso de encontrar la condición correcta, corregir
 //The necessary conditions for the existence are that bk/trt and bk(k−1)/(trt(trt−1)) positive integers.
@@ -415,8 +460,7 @@ announcements.get('/possibleK/:idAnnoun', (req, res) => {
   Announcement.findById(req.params.idAnnoun)
     .then(announ => {
       let today = new Date();
-      console.log(today)
-      console.log(announ.evaluationDate)
+      //ya no está en la etapa de registro
       if(announ.evaluationDate <= today) {
         getPossibleK(req.params.idAnnoun).
           then(result => {
@@ -425,7 +469,28 @@ announcements.get('/possibleK/:idAnnoun', (req, res) => {
           .catch(err => {console.log("Announcement error"); console.log(err.message); res.status(500).json({err: err.message});})
       }
       else {
-        console.log("Fecha de evaluación menor a la actual"); 
+        console.log("Fecha de evaluación mayor a la actual"); 
+        res.status(403).json({err: 'La fecha de evaluación todavía no ha llegado'});
+      }
+    })
+    .catch(err => {console.log("Announcement error"); console.log(err.message); res.status(500).json({err: err.message});})
+})
+
+announcements.get('/possibleRsAndKs/:idAnnoun', (req, res) => {
+  console.log('Get possibleRsAndKs');
+  Announcement.findById(req.params.idAnnoun)
+    .then(announ => {
+      let today = new Date();
+      //ya no está en la etapa de registro
+      if(announ.evaluationDate <= today) {
+        getRsAnnouncement(req.params.idAnnoun).
+          then(result => {
+            res.json(result); 
+          })
+          .catch(err => {console.log("Announcement error"); console.log(err.message); res.status(500).json({err: err.message});})
+      }
+      else {
+        console.log("Fecha de evaluación mayor a la actual"); 
         res.status(403).json({err: 'La fecha de evaluación todavía no ha llegado'});
       }
     })
