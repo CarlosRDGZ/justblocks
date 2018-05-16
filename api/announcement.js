@@ -13,71 +13,68 @@ const announFindMiddleware = require("../middlewares/findAnnouncement");
 
 //will run every day at 01:00 AM
 cron.schedule('0 0 1 * * *', () => {
-  Announcement.find({}).then(announs => {
+  let today = new Date();
+  Announcement.find({evaluationDate: today}).then(announs => {
     announs.forEach(announ => {
-      let today = new Date();
-      if(announ.evaluationDate == today) {
-        let idAnnoun = announ._id;
-        let treatments = [];
-        let treatmentsCount = 0;
-        let blocks = [];
-        let blocksCount = 0;
-        //Para este entonces ya debió de haberse definido una k válida
-        let trtPerBlockCount = announ.projectsPerEvaluator;
-        let trtPerBlock;
+      let idAnnoun = announ._id;
+      let treatments = [];
+      let treatmentsCount = 0;
+      let blocks = [];
+      let blocksCount = 0;
+      //Para este entonces ya debió de haberse definido una k válida
+      let trtPerBlockCount = announ.projectsPerEvaluator;
+      let trtPerBlock;
 
-        Project.find({idAnnouncement: idAnnoun})
-          .then(projects => {
-            Evaluator.find({idAnnouncement: idAnnoun})
-              .then(evaluators => {
-                treatments = projects;
-                treatmentsCount = projects.length;
-                blocks = evaluators;
-                blocksCount = evaluators.length;
+      Project.find({idAnnouncement: idAnnoun})
+        .then(projects => {
+          Evaluator.find({idAnnouncement: idAnnoun})
+            .then(evaluators => {
+              treatments = projects;
+              treatmentsCount = projects.length;
+              blocks = evaluators;
+              blocksCount = evaluators.length;
 
-                const { spawn } = require('child_process');
-                const child = spawn('Rscript', ['C:/Users/brand/source/repos/justblocks/BIBANOVA/projectsAssign.R', treatmentsCount, blocksCount, trtPerBlockCount]);
+              const { spawn } = require('child_process');
+              const child = spawn('Rscript', ['C:/Users/brand/source/repos/justblocks/BIBANOVA/projectsAssign.R', treatmentsCount, blocksCount, trtPerBlockCount]);
 
-                let out = ''
-                let err = ''
-                child.stdout.on('data', (chunk) => {
-                  out += chunk
-                });
+              let out = ''
+              let err = ''
+              child.stdout.on('data', (chunk) => {
+                out += chunk
+              });
 
-                child.stderr.on('data', (chunk) => {
-                  err += chunk
-                })
-
-                child.on('close', (code) => {
-                  if (err) {console.log('STDERR:\n', err.toString()); console.log(Date.now());}
-                  let i = 0;
-                  trtPerBlock = JSON.parse(out.toString());
-                  trtPerBlock.forEach((current, index) => {
-                    current.forEach(trt => {
-                      let projectsEvaluator = new ProjectsEvaluator({
-                        idEvaluator: blocks[index]._id,
-                        idProject: treatments[trt - 1]._id,
-                        idAnnouncement: idAnnoun
-                      })
-
-                      projectsEvaluator.save()
-                        .then(data => {console.log(++i);})
-                        .catch(err => {console.log("Err projectsEvaluator"); console.log(err);})
-                    })
-                  })
-                  console.log(`child process exited with code ${code}`);
-                  console.log("Proyectos asignados a la convocatoria: " + idAnnoun);
-                });
+              child.stderr.on('data', (chunk) => {
+                err += chunk
               })
-              .catch(err => {console.log("Evaluator error"); console.log(err); res.status(500).json({err: err})})
-          })
-          .catch(err => {console.log("Project error"); console.log(err); res.status(500).json({err: err})})
-      }
+
+              child.on('close', (code) => {
+                if (err) {console.log('STDERR:\n', err.toString()); console.log(Date.now());}
+                let i = 0;
+                trtPerBlock = JSON.parse(out.toString());
+                trtPerBlock.forEach((current, index) => {
+                  current.forEach(trt => {
+                    let projectsEvaluator = new ProjectsEvaluator({
+                      idEvaluator: blocks[index]._id,
+                      idProject: treatments[trt - 1]._id,
+                      idAnnouncement: idAnnoun
+                    })
+
+                    projectsEvaluator.save()
+                      .then(data => {console.log(++i);})
+                      .catch(err => {console.log("Err projectsEvaluator"); console.log(err);})
+                  })
+                })
+                console.log(`child process exited with code ${code}`);
+                console.log("Proyectos asignados a la convocatoria: " + idAnnoun);
+              });
+            })
+            .catch(err => {console.log("Evaluator error"); console.log(err); res.status(500).json({err: err})})
+        })
+        .catch(err => {console.log("Project error"); console.log(err); res.status(500).json({err: err})})
     })
   })
   .catch(err => {console.log("Cron error"); console.log(Date.now());})
 })
-
 
 //npm install --save express-form-data
 //npm install --save node-cron
@@ -268,11 +265,21 @@ announcements.route('/:id')
   })
   .delete((req,res) => {
     console.log("DELETE announcement");
-    if(res.locals.permission)
-    {
+    if(res.locals.permission) {
       Announcement.findByIdAndRemove(req.params.id, (err,data) => {
       if (err) res.status(400).json(err)
-        res.json(data)
+        //Borrar la imagen si existe
+        FileAnnouncement.find({owner: req.params.id})
+          .then(image => {
+            fs.unlink("public/files/announcement/images/" + image[0]._id + "." + image[0].extension, (err) => {
+              if(err){console.log("Tenía imagen pero hubo problema al eliminarla: " + err.message); res.status(500).json({announcement: data, err: "Tenía imagen pero hubo problema al eliminarla: " + err.message});}
+              image[0].remove(err => {
+                if(err){console.log("Problema al eliminar imagen de la DB: " + err.message); res.status(500).json({announcement: data, err: "Problema al eliminar imagen de la DB " + err.message});}
+                res.status(200).json({announcement: data, image: image});
+              })
+            })
+          })
+          .catch(err => {console.log("No tenía imagen"); res.json({announcement: data, err: "No tenía imagen: " + err.message });})
       })
     }
     else
