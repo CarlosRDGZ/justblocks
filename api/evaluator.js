@@ -5,7 +5,7 @@ const ProjectsEvaluator = require('../models/projectsEvaluator').ProjectsEvaluat
 const bodyParser = require('body-parser')
 
 evaluators.use(bodyParser.urlencoded({ extended: true }))
-evaluators.use(bodyParser.json())
+evaluators.use(bodyParser.json()) 
 
 evaluators.route('/')
   .post((req,res) => {
@@ -75,35 +75,111 @@ evaluators.route('/announcement/qualified/:idAnnoun')
         if(err) {console.log("Evaluators error"); console.log(err.message); res.status(500).json({err: err});}
         else {
           getAllEvaluators(evaluatorsAnnoun, idAnnoun)
-            .then(data => {res.json(data);} )
+            .then(data => {
+              for( let i = 0; i < data.length; i++ ) {
+                for( let j = 0; j < data.length - 1 - i; j++ ) {
+                  if( data[ j ].index > data[ j + 1 ].index ) {
+                    let aux = data[ j ];
+                    data[ j ] = data[ j + 1 ];
+                    data[ j + 1 ] = aux;
+                  }
+                }
+              }
+              res.json({evaluators: evaluatorsAnnoun, allEvaluatorsProjects: data});
+            })
             .catch(err => {console.log("Evaluators error"); console.log(err.message); res.status(500).json({err: err})})
         }
       })
   })
 
-function getAllEvaluators(evaluatorsAnnoun, idAnnoun) {
+evaluators.route('/announcement/asignedProject/:idAnnoun')
+  .get((req, res) => {
+    console.log("Evaluator api, asignedProject");
+    let idAnnoun = req.params.idAnnoun;
+    Evaluator.find({ idAnnouncement: idAnnoun })
+      .populate('idUser', ['_id', 'name', 'email'])
+      .exec((err, evaluatorsAnnoun) => {
+        if(err) {console.log("Evaluators error"); console.log(err.message); res.status(500).json({err: err});}
+        else {
+          getAllProjectsEvaluators(evaluatorsAnnoun, idAnnoun)
+            .then(data => {
+              for( let i = 0; i < data.projectsEvalutor.length; i++ ) {
+                for( let j = 0; j < data.projectsEvalutor.length - 1 - i; j++ ) {
+                  if( data.projectsEvalutor[ j ].index > data.projectsEvalutor[ j + 1 ].index ) {
+                    let aux = data.projectsEvalutor[ j ];
+                    data.projectsEvalutor[ j ] = data.projectsEvalutor[ j + 1 ];
+                    data.projectsEvalutor[ j + 1 ] = aux;
+                  }
+                }
+              }
+
+              let projectIndex = 1;
+              let currentPro = [];
+              let allEvaluatorProjects = []
+              data.projectsEvalutor.forEach(proj => {
+                currentPro.push(proj);
+                if(data.projectsPerEvaluator == projectIndex) {
+                    projectIndex = 0;
+                    allEvaluatorProjects.push(currentPro);
+                    currentPro = []; 
+                  } 
+                  projectIndex++;
+              })
+
+              res.json({evaluators: evaluatorsAnnoun, allEvaluatorProjects: allEvaluatorProjects});
+            })
+            .catch(err => {console.log("Evaluators error"); console.log(err.message); res.status(500).json({err: err})})
+        }
+      })
+  })
+
+function getAllProjectsEvaluators(evaluatorsAnnoun, idAnnoun) {
   return new Promise((resolve, reject) => {
-    console.log('getAllEvaluators');
-    let allEvaluators = []
+    console.log('getAllProjectsEvaluators');
     let allEvaluatorProjects = []
     let itemsProcessed = 0;
     evaluatorsAnnoun.forEach(evalu => {
-      ProjectsEvaluator.find({ idEvaluator: evalu._id, idAnnouncement: idAnnoun }, (err, projectsGot) => {
+      ProjectsEvaluator.find({ idEvaluator: evalu._id, idAnnouncement: idAnnoun })
+        .populate('idProject')
+        .exec((err, projectsGot) => {
+          if(err) {console.log("ProjectsEvaluator error"); console.log(err); reject({err: err});}
+          else {
+            projectsGot.forEach(currentPro => {
+              allEvaluatorProjects.push(currentPro);
+            })
+            itemsProcessed++;
+            console.log(itemsProcessed)
+            if(itemsProcessed == evaluatorsAnnoun.length)
+              resolve({projectsEvalutor: allEvaluatorProjects, projectsPerEvaluator: projectsGot.length});
+          }
+        })
+    })
+  })
+}
+
+function getAllEvaluators(evaluatorsAnnoun, idAnnoun) {
+  return new Promise((resolve, reject) => {
+    console.log('getAllEvaluators');
+    let allEvaluatorsProjects = []
+    let itemsProcessed = 0;
+    evaluatorsAnnoun.forEach(evalu => {
+      ProjectsEvaluator.find({ idEvaluator: evalu._id, idAnnouncement: idAnnoun })
+        .populate('idProject')
+        .exec((err, projectsGot) => {
         if(err) {console.log("ProjectsEvaluator error"); console.log(err); reject({err: err});}
         else {
           let total = 0;
           let qualified = 0;
           projectsGot.forEach(currentPro => {
-            if(currentPro.grade != -1)
-                qualified++;
-              total++;
+            if(currentPro.grade > -1) {
+              qualified++;
+            }
+            total++;
           })
-          allEvaluators.push(evaluatorsAnnoun[itemsProcessed]);
-          allEvaluatorsProjects.push({projects: total, qualified: qualified});
+          allEvaluatorsProjects.push({projects: total, qualified: qualified, index: projectsGot[0].index});
           itemsProcessed++;
-          console.log(itemsProcessed)
           if(itemsProcessed == evaluatorsAnnoun.length)
-            resolve({allEvaluators: allEvaluators, allEvaluatorsProjects: allEvaluatorsProjects})
+            resolve(allEvaluatorsProjects)
         }
       })
     })

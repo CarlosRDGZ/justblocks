@@ -135,11 +135,11 @@ app.get('/PRUEBAS/EVALUATOR', (req, res) => {
           .then(users => {
             users.forEach(current => {
               let evaluador = new Evaluator({
-                idAnnouncement: '5af8fdd8b3a4a5373494fa7d',
+                idAnnouncement: '5afcffe37a3a6d36b4204a4e',
                 idUser: current._id,
                 status: 1
               })
-              //localhost:3000/api/evaluator/announcement/qualified/5af8fdd8b3a4a5373494fa7d
+              //localhost:3000/api/evaluator/announcement/qualified/5afcffe37a3a6d36b4204a4e
               evaluador.save()
               .then(data => console.log("Evaluator create"))
               .catch(err => {console.log("EVALUATOR ERROR"); console.log(err); res.status(500).json({err: err});})
@@ -151,11 +151,11 @@ app.get('/PRUEBAS/EVALUATOR', (req, res) => {
 })
 
 app.get('/PRUEBAS/PROJECT', (req, res) => {
-  User.find({password: '12949e83a49a0989aa46ab7e249ca34d'}, (err, usersGot) => {
+  User.find({}, null, {skip: 1, limit: 10}, (err, usersGot) => {
     usersGot.forEach((user, index) => {
       console.log(user);
       let project = new Project({
-        idAnnouncement: '5af8fdd8b3a4a5373494fa7d',
+        idAnnouncement: '5afcffe37a3a6d36b4204a4e',
         idCreator: user._id,
         description: "Éste es el proyecto no." + index,
         title: "Proyecto No. " + index,

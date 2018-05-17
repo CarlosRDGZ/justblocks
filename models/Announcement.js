@@ -16,6 +16,6 @@ const announcementSchema = new Schema({
 	image: {type: Schema.Types.ObjectId, ref: "FileAnnouncement" }
 })
 
-// delete mongoose.models.Announcement;
+delete mongoose.models.Announcement;
 const Announcement = mongoose.model('Announcement', announcementSchema);
 module.exports.Announcement = Announcement;

@@ -2,7 +2,7 @@
 //Nota: Para acceder a todas las rutas hay que acceder como /api/[Nombre de la api]
 
 //Evaluator
-'/evaluator'
+'/evaluator' 
 	POST: Registrar un evaluator
 		params: idAnnoun, idUser, [status (inicia en 0 (enviado))]
 	GET: Devuelve todos los evaluadores en el sistema
@@ -38,8 +38,39 @@
 	GET: Devuelve el número de evaluadores en esa convocatoria
 		Ejemplo
 		{"evaluatorsAmount": 15}
+'/announcement/asignedProject/:idAnnoun'
+	GET: Devulve todos los evaluadores de la convocatoria con sus respectivos proyectos asignados,
+		en un array devuelve los evaluadores, en otros sus respectivos proyectos ya ordenados
+		{"evaluators": [
+			{"status":1,"_id":"5afd00f37ae72934f88294ba","idAnnouncement":"5afcffe37a3a6d36b4204a4e",
+				"idUser":{"name":{"first":"Oliver","last":"Thiele"},"_id":"5af8fe28b3a4a5373494fa8c","email":"Oliver@ucol.mx"},"__v":0}
+			,{"status":1,"_id":"5afd00f37ae72934f88294bb","idAnnouncement":"5afcffe37a3a6d36b4204a4e",
+				"idUser":{"name":{"first":"Linus","last":"Bergmann"},"_id":"5af8fe28b3a4a5373494fa8e","email":"Linus@ucol.mx"},"__v":0},
+		"allEvaluatorProjects":[
+			[{"index":0,"_id":"5afd01487ae72934f88294c9","idEvaluator":"5afd00f37ae72934f88294ba",
+				"idProject":{"grade":2.9100203348479448,"_id":"5afd01057ae72934f88294c3","idAnnouncement":"5afcffe37a3a6d36b4204a4e","idCreator":"5af8fe28b3a4a5373494fa83","description":"Éste es el proyecto no.4","title":"Proyecto No. 4","score":10,"__v":0},"idAnnouncement":"5afcffe37a3a6d36b4204a4e","__v":0},
+			{"index":1,"_id":"5afd01487ae72934f88294ca","idEvaluator":"5afd00f37ae72934f88294ba",
+				"idProject":{"grade":2.1039498117494726,"_id":"5afd01057ae72934f88294c2","idAnnouncement":"5afcffe37a3a6d36b4204a4e","idCreator":"5af8fe28b3a4a5373494fa82","description":"Éste es el proyecto no.3","title":"Proyecto No. 3","score":10,"__v":0},"idAnnouncement":"5afcffe37a3a6d36b4204a4e","__v":0} ]]
 //Announcement
 '/possibleK/:idAnnoun'
 	GET: Devulve todos los posibles valores de k para que el modelo funcione con el número de proyectos
 			registrados y el número de evaluadores registrados. Si la fecha de evaluación es menor a la 
 			fecha actual devolverá un error
+'/possibleRsAndKs/:idAnnoun'
+	GET: Devuelve todos los posibles valores de 'r' (Número de veces que un proyecto será evaluado), así
+		como el valor que tomaría 'k' (número de proyectos por evaluador) en cada caso de 'r'. Ejemplo:
+		{"projects":10,
+		"evaluators":5,
+		"possibleK":[2,4,6,8,10],
+		"possibleR":[1,2,3,4,5]}
+'/image/:idAnnoun'
+	GET: (Deprecated, la información de la imagen va en la convocatoria cuando se hace el get) Devuelve la información de la imagen de esa convocatoria. Ejemplo:
+		{"_id":"5af8fdd8b3a4a5373494fa7e",
+		"owner":"5af8fdd8b3a4a5373494fa7d",
+		"extension":"jpg",
+		"typeFile":"image/jpeg",
+		"__v":0}
+	POST: Dar de alta una nueva imagen, en el body de la petición debe de venir la imagen para que
+			pueda ser obtenida de la siguiente forma -> req.files.image
+
+//Project

@@ -7,7 +7,7 @@ const projectSchema = new Schema({
   description: { type: String },
   title: { type: String },
   score: Number,
-  grade: { type: Number, default: -1},
+  grade: { type: Number, default: -1},//El promedio de las calificaciones obtenidas de todos los evaluadores
   adjustedGrade: Number
 })
 

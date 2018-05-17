@@ -11,6 +11,13 @@ const formidable = require("express-form-data");
 const mongoose = require('../database/config')
 const announFindMiddleware = require("../middlewares/findAnnouncement");
 
+//npm install --save express-form-data
+//npm install --save node-cron
+announcements.use(formidable.parse({keepExtensions: true}));
+
+announcements.use(bodyParser.urlencoded({ extended: true }))
+announcements.use(bodyParser.json())
+
 //will run every day at 01:00 AM
 cron.schedule('0 0 1 * * *', () => {
   let today = new Date();
@@ -75,13 +82,6 @@ cron.schedule('0 0 1 * * *', () => {
   })
   .catch(err => {console.log("Cron error"); console.log(Date.now());})
 })
-
-//npm install --save express-form-data
-//npm install --save node-cron
-announcements.use(formidable.parse({keepExtensions: true}));
-
-announcements.use(bodyParser.urlencoded({ extended: true }))
-announcements.use(bodyParser.json())
 
 // announcements.use('/user', announFindMiddleware);
 announcements.use('/:id*', announFindMiddleware);
@@ -343,11 +343,13 @@ announcements.get('/R/projectsAssign/:idAnnoun', (req, res) => {
                       let projectsEvaluator = new ProjectsEvaluator({
                         idEvaluator: blocks[index]._id,
                         idProject: treatments[trt - 1]._id,
-                        idAnnouncement: idAnnoun
+                        idAnnouncement: idAnnoun,
+                        index: i++,
+                        grade: getRandomInt(5, 11)
                       })
 
                       projectsEvaluator.save()
-                        .then(data => {console.log(++i);})
+                        .then(data => {console.log(i);})
                         .catch(err => {console.log("Err projectsEvaluator"); console.log(err);})
                     })
                   })
@@ -356,7 +358,7 @@ announcements.get('/R/projectsAssign/:idAnnoun', (req, res) => {
                   console.log("**************");
                   // console.log(out.toString())
                   console.log(`child process exited with code ${code}`);
-                  res.send(out.toString())
+                  res.send(JSON.parse(out.toString()))
                 });
               })
               .catch(err => {console.log("Evaluator error"); console.log(err); res.status(500).json({err: err})})
@@ -370,6 +372,11 @@ announcements.get('/R/projectsAssign/:idAnnoun', (req, res) => {
     })
     .catch(err => {console.log("Announcement error"); console.log(err.message); res.status(500).json({err: err.message});})
 })
+
+// Retorna un entero aleatorio entre min (incluido) y max (excluido)
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min)) + min;
+}
 
 announcements.route('/setK/:idAnnoun')
   .get((req, res) => {
@@ -459,8 +466,6 @@ function getRsAnnouncement(idAnnoun) {
     .catch(err => {console.log("Project error"); console.log(err.message); reject({err: err.message})})
   })
 }
-
-// getRsAnnouncement('5af8fdd8b3a4a5373494fa7d');
 
 announcements.get('/possibleK/:idAnnoun', (req, res) => {
   console.log('Get possibleK');
