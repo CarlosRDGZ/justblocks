@@ -12,7 +12,8 @@ const announcementSchema = new Schema({
 	evaluators: { type: Number, default: 0 },
 	projectsPerEvaluator: { type: Number, default: 0 },
 	content: { type: String },
-	prize: { type: String }
+	prize: { type: String },
+	image: { type: String } //path
 })
 
 const Announcement = mongoose.model('Announcement', announcementSchema);

@@ -39,6 +39,19 @@ announcements.route('/')
         })
   })
 
+/**
+ *  Bajo el concepto de api de deberia hacer de las siguiente
+ * manera. Nada debe asumirse por datos del seridor, para que
+ * sea escalable.
+ */
+announcements.route('/user/:id')
+  .get((req, res) => {
+    Announcement.find({idCreator: req.params.id}, function(err, data) {
+      if(err) res.status(400).json({err: err})
+      res.json(data); //Todas las convocatorias del usuario
+    })
+  })
+/*
 announcements.route('/user')
   .get((req, res) => {
     console.log("GET user's announcements");
@@ -48,7 +61,7 @@ announcements.route('/user')
       res.json(announcementsGot);//Todas las comvocatorias del usuario
     })
   })
-
+*/
 //Devuelve las 9 convocatorias más recientes
 announcements.route('/newest')
   .get((req, res) => {
@@ -110,10 +123,10 @@ announcements.route('/image/:idAnnoun')
 announcements.route('/:id')
   .get((req, res) => {
       console.log("GET announcements by id");
-      Announcement.find({_id: req.params.id}, function(err, announcementGot) {
+      Announcement.findById(req.params.id, function(err, data) {
         if(err){res.status(404).json(err)}
         else
-          res.json(announcementGot);
+          res.json(data);
       })
   })
   .put((req, res) => {

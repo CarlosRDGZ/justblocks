@@ -8,14 +8,13 @@ router.use(bodyParser.json()); //Para peticiones aplication/json
 router.use(bodyParser.urlencoded({extended: true}));
 
 router.get("/", function(req, res) {
-	res.render("app/home");
+	res.render("app/home", { id: req.session.user_id });
 })
 
-router.get('/announcement/admin/:idAnnoun', (req, res) => {
-	Announcement.find({_id: req.params.idAnnoun}, (err, announ) => {
-		if(announ[0].idCreator == req.session.user_id) {
-			res.render('app/announAdmin', {announ: announ[0]});
-		}
+router.get('/announcement/admin/:id', (req, res) => {
+	Announcement.count({_id: req.params.id}, (err, count) => {
+		if (count === 1)
+			res.render('app/announcement/edit', { id: req.params.id });
 		else
 			res.status(403).send('Denegado');
 	})

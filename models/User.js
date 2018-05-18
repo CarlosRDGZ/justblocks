@@ -16,17 +16,20 @@ var passwordValidation = {
 
 const userSchema = new Schema({
     name: {
-        first: {type: String, required: true, maxlength: [35, "Name very large"]},
-        last: {type: String, required: true, maxlength: [35, "Last name very large"]}
+        first: { type: String, required: true, maxlength: [35, "Name very large"] },
+        last: { type: String, required: true, maxlength: [35, "Last name very large"] }
     },
     password: {
     	type: String,
     	required: true,
-    	minlength: [3, "The password must have at least 8 characters"],
+    	minlength: [ 3, "The password must have at least 8 characters" ],
     	validate: passwordValidation
     },
-    dateOfBirth: {type: Date, required: true},
-	email: {type: String, required: "The email is required", unique: [true, "This email is already registered"], match: emailMatch},
+    dateOfBirth: { type: Date, required: true },
+	email: { type: String, required: "The email is required", unique: [true, "This email is already registered"], match: emailMatch },
+	ocupation: String,
+	education: String,
+	bio: String,
 	token: String
 })
 

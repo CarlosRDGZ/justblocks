@@ -1,17 +1,24 @@
 - const pathToRoot = '../'
-doctype html 
+script.
+  window.id = !{JSON.stringify(id)}
+doctype html
+script.
+  window.id = !{JSON.stringify(id)}
 html(lang="en") 
   head
     include ../header.pug
     link(rel="stylesheet", href="../css/index.css")
     title JustBlocks
+  style.
+    a {
+      text-decoration: none;
+    }
   body
     include ../navbar.pug
     main#app.section
       .container-fluid
         .columns
           .column.is-one-quarter
-            // figure.image.is-5by4(style='background: url("images/Porg.png") #fff no-repeat; background-size: contain;')
             figure.image.is-5by4
               if (user.image)
                 image(src='files/users/'+ user.image._id + "." + user.image.extension style='border-radius: 0%')
@@ -25,11 +32,16 @@ html(lang="en")
                   li
                     span.icon
                       i.fas.fa-briefcase
-                    span ocupation
+                    span #{user.ocupation !== '' ? user.ocupation : 'ocupation'}
                   li
                     span.icon
                       i.fas.fa-graduation-cap
-                    span education
+                    span #{user.education !== '' ? user.education : 'education'}
+                  li
+                    span.icon
+                      i.fas.fa-user-astronaut
+                    span Bio
+                    article.notification #{user.bio !== '' ? user.bio : 'bio'}
             nav.panel                                                                                 
               p.panel-heading Menu
               a.panel-block(onclick="window.location='/announcement/create'") 
@@ -38,26 +50,84 @@ html(lang="en")
                 span Agregar Convocatoria
           .column.is-three-quarters
             .notification.is-primary
-              h1.title {{ title }}
-            table.table.is-striped.is-fullwidth
-              thead  
-                tr
-                  th Título
-                  th Fecha de lanzamiento
-                  th Fecha de evaluación
-                  th Fecha de cierre
-                  th Participantes
-                  th Evaluadores
-                  th Proyectos por evaluador
-                tr(v-for='announ in myAnnouns')
-                  td 
-                    a(:href="`app/announcement/admin/${announ._id}`") {{announ.title}}
-                  td {{announ.endEnrollmentsDate}}
-                  td {{announ.evaluationDate}}
-                  td {{announ.deadlineDate}}
-                  td 0
-                  td {{announ.evaluators}}
-                  td {{announ.projectsPerEvaluator}}
+              h1.title Mis Convocatorias
+            .notification.is-white
+              .tabs
+                ul
+                  li(:class="{ 'is-active' : tabs.announs }" @click='changeContent("announs")')
+                    a(style="text-decoration: none")
+                      // span.icon.is-small
+                      //   i.fas.fa-image(aria-hidden='true')    
+                      span Mis Convocatorias
+                  li(:class="{ 'is-active' : tabs.evaluation }" @click='changeContent("evaluation")')
+                    a(style="text-decoration: none")
+                      span.icon.is-small
+                        i.fas.fa-music(aria-hidden='true')    
+                      span Music
+                  li
+                    a(style="text-decoration: none")
+                      span.icon.is-small
+                        i.fas.fa-film(aria-hidden='true')    
+                      span Videos
+                  li
+                    a(style="text-decoration: none")
+                      span.icon.is-small
+                        i.far.fa-file-alt(aria-hidden='true')    
+                      span Documents
+              .tile.is-antecesor
+                .tile.is-vertical.parent(v-show='tabs.announs')
+                  .tile.is-child
+                    .tile.is-4
+                      .field
+                        p.control.has-icons-left
+                          input.input(type="text")
+                          span.icon.is-small.is-left
+                            i.fas.fa-search
+                  .tile.is-child
+                    table.table.is-striped.is-fullwidth
+                      thead
+                        tr
+                          th Título
+                          th Fecha de lanzamiento
+                          th Fecha de evaluación
+                          th Fecha de cierre
+                          th Participantes
+                          th Evaluadores
+                          th Proyectos por evaluador
+                      tbody(v-for='i in tableAnnouns.pagination.itemsPerPage')
+                        tr(v-if='tableAnnouns.data[i] !== undefined')
+                            td 
+                              a(:href="`app/announcement/admin/${tableAnnouns.data[i]._id}`") {{ tableAnnouns.data[i].title }}
+                            td {{ tableAnnouns.data[i].endEnrollmentsDate }}
+                            td {{ tableAnnouns.data[i].evaluationDate }}
+                            td {{ tableAnnouns.data[i].deadlineDate }}
+                            td 0
+                            td {{ tableAnnouns.data[i].evaluators }}
+                            td {{ tableAnnouns.data[i].projectsPerEvaluator }}
+                  .tile.is-child
+                    .field.is-grouped.is-grouped-right
+                      div(v-for='i in tableAnnouns.pagination.itemsPerPage')
+                      .control
+                        .select
+                          select
+                            option 10
+                            option 25
+                            option 50
+                      nav.pagination.is-centered(role='navigation')
+                        a.pagination-previous(@click='table().pagination().previous()' style="text-decoration: none") Anterior
+                        a.pagination-next(@click='table().pagination().next()' style="text-decoration: none") Siguiente
+                        ul.pagination-list
+                          li(v-if='tableAnnouns.pagination.shown.last > 10')
+                            a.pagination-link(@click='table().pagination().first()' style="text-decoration: none") 1
+                          li(v-if='tableAnnouns.pagination.shown.last > 10')
+                            span.pagination-ellipsis …
+                          li(v-for='i in tableAnnouns.pagination.shown.pages')
+                            a.pagination-link(:class="{ 'is-current' : tableAnnouns.pagination.current === i }" @click='table().pagination().goto(i)' style="text-decoration: none") {{ i }}
+                          li(v-if='tableAnnouns.pagination.shown.last !== tableAnnouns.pagination.pags')
+                            span.pagination-ellipsis …
+                          li(v-if='tableAnnouns.pagination.shown.last !== tableAnnouns.pagination.pags')
+                            a.pagination-link(@click='table().pagination().last()' style="text-decoration: none") {{ tableAnnouns.pagination.pags }}
+
     include ../footer.pug
     script(src=pathToRoot + "vue/vue.min.js")
     script(src=pathToRoot + "../../vue/controllers/home.js")
