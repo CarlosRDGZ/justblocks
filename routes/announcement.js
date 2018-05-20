@@ -4,7 +4,7 @@ const navBarMiddleware = require('../middlewares/navBarMiddleware');//Para valid
 const Announcement = require('../models/Announcement').Announcement;
 
 announ.use("/", navBarMiddleware);
-announ.use("/create", sessionMiddleware);
+// announ.use("/create", sessionMiddleware);
 
 announ.get('/', (req, res) => res.render('announcement/index.pug'))
 announ.get('/create', (req, res) => res.render('announcement/create.pug'))

@@ -9,7 +9,7 @@ global.gUrl = 'http://127.0.0.1:3000/'
 // global.userSession = { _id: '5ad7b0e28380150835d775bf' }
 
 //*************Manejo de sesiones
-//MongoStore connect-mongo
+//MongoStore connect-mongo 
 const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
 const sessionRedisMiddleware = session({

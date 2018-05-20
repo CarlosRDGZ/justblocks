@@ -148,6 +148,7 @@ function calculateMean(idProj, projectsPerEvaluator) {
           projectsGot.forEach(currentPro => {
             sumGrades += currentPro.grade;//Validar que sea diferente de -1
           })
+          
           let proj = {grade: sumGrades / projectsPerEvaluator};
           console.log(proj);
           resolve(proj);//Guardar en la base de datos en el campo grade de project

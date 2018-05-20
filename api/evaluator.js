@@ -15,21 +15,25 @@ evaluators.route('/')
       .catch(err => res.status(400).json(err))
   })
   .get((req, res) => {
-    Evaluator.find({}, (err, all) => {
-      if(err) {console.log(err); res.status(500).json({err: err});}
-      else
-        res.json(all);
-    })
+    Evaluator.find({})
+      .populate('idUser', ['name', '_id', 'email'])
+      .exec((err, all) => {
+        if(err) {console.log(err); res.status(500).json({err: err});}
+        else
+          res.json(all);
+      })
   })
 
 evaluators.route('/:id')
   .get((req, res) => {
     let id = req.params.id;
-    Evaluator.findById(id, (err, evaluator) => {
-      if(err) {console.log(err); res.status(500).json({err: err});}
-      else
-        res.json(evaluator);
-    })
+    Evaluator.findById(id)
+      .populate('idUser', ['name', '_id', 'email'])
+      .exec((err, evaluator) => {
+        if(err) {console.log(err); res.status(500).json({err: err});}
+        else
+          res.json(evaluator);
+      })
   })
   .delete((req,res) => {
     let id = req.params.id
@@ -49,11 +53,14 @@ evaluators.route('/:id')
 
 evaluators.route('/announcement/:idAnnoun')
   .get((req, res) => {
-    Evaluator.find({idAnnouncement: req.params.idAnnoun}, (err, evaluatorsAnnoun) => {
-      if(err) {console.log(err); res.status(500).json({err: err});}
-      else
-        res.json(evaluatorsAnnoun);
-    })
+    console.log('GET evaluators announcement')
+    Evaluator.find({idAnnouncement: req.params.idAnnoun})
+      .populate('idUser', ['name', '_id', 'email'])
+      .exec((err, evaluatorsAnnoun) => {
+        if(err) {console.log(err); res.status(500).json({err: err});}
+        else
+          res.json(evaluatorsAnnoun);
+      })
   })
 
 evaluators.route('/announcement/count/:idAnnoun')
@@ -74,8 +81,9 @@ evaluators.route('/announcement/qualified/:idAnnoun')
       .exec((err, evaluatorsAnnoun) => {
         if(err) {console.log("Evaluators error"); console.log(err.message); res.status(500).json({err: err});}
         else {
-          getAllEvaluators(evaluatorsAnnoun, idAnnoun)
+          getQualifiedProjectsEvaluators(evaluatorsAnnoun, idAnnoun)
             .then(data => {
+              //Ordenarlos con base al índice en que los asignó R
               for( let i = 0; i < data.length; i++ ) {
                 for( let j = 0; j < data.length - 1 - i; j++ ) {
                   if( data[ j ].index > data[ j + 1 ].index ) {
@@ -103,6 +111,7 @@ evaluators.route('/announcement/asignedProject/:idAnnoun')
         else {
           getAllProjectsEvaluators(evaluatorsAnnoun, idAnnoun)
             .then(data => {
+              //Ordenarlos en base al índice con que fueron asignados por R
               for( let i = 0; i < data.projectsEvalutor.length; i++ ) {
                 for( let j = 0; j < data.projectsEvalutor.length - 1 - i; j++ ) {
                   if( data.projectsEvalutor[ j ].index > data.projectsEvalutor[ j + 1 ].index ) {
@@ -113,6 +122,7 @@ evaluators.route('/announcement/asignedProject/:idAnnoun')
                 }
               }
 
+              //Para devolver una matriz donde cada fila tenga la cantidad exacta de proyectos de cada evaluador
               let projectIndex = 1;
               let currentPro = [];
               let allEvaluatorProjects = []
@@ -131,6 +141,16 @@ evaluators.route('/announcement/asignedProject/:idAnnoun')
             .catch(err => {console.log("Evaluators error"); console.log(err.message); res.status(500).json({err: err})})
         }
       })
+  })
+
+evaluators.route('/:idEvaluator/qualify/:idProject')
+  .put((req, res) => {//req.body.grade debe ser un json de la forma {grade: 8}
+    console.log(req.body);
+    ProjectsEvaluator.update({idEvaluator: req.params.idEvaluator, idProject: req.params.idProject}, {$set: req.body})
+      .then(result => {
+        res.json(result);
+      })
+      .catch(err => {console.log(err.message); res.status(500).json({err: err.message});});
   })
 
 function getAllProjectsEvaluators(evaluatorsAnnoun, idAnnoun) {
@@ -157,7 +177,7 @@ function getAllProjectsEvaluators(evaluatorsAnnoun, idAnnoun) {
   })
 }
 
-function getAllEvaluators(evaluatorsAnnoun, idAnnoun) {
+function getQualifiedProjectsEvaluators(evaluatorsAnnoun, idAnnoun) {
   return new Promise((resolve, reject) => {
     console.log('getAllEvaluators');
     let allEvaluatorsProjects = []

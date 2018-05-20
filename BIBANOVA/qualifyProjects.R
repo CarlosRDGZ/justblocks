@@ -3,7 +3,7 @@
 args <- commandArgs(trailingOnly = TRUE)
 if(length(args) != 4) {
 	stop("Deben de ser 4 parámetros", call.=FALSE)
-}
+} 
 
 suppressWarnings(suppressMessages(require(jsonlite)))
 suppressWarnings(suppressMessages(require(ibd)))
