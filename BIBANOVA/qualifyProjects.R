@@ -24,7 +24,6 @@ k <- strtoi(args[3])
 
 #Ordenadas por evaluador index y a su vez por proyecto index, así deben ser recibidas
 grades <- fromJSON(args[4])
-
 set.seed(1)
 bib <- find.BIB(trt = t, b = b, k = k)
 
@@ -43,6 +42,6 @@ modelo <- lme(Calificacion~project_Index, random = ~ 1 | evaluator_Index, data =
 
 Ajuste <- emmeans(modelo, ~project_Index)
 summ <- summary(Ajuste)
-
+adjusted.means <- cld(Ajuste, alpha = .05)
 # aov <- anova(modelo)
-print(toJSON(summ, pretty = T))
+print(toJSON(adjusted.means, pretty = T))

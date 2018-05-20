@@ -127,4 +127,21 @@
 	DELETE: Elimina la imgen de la convocatoria con ese id
 
 //+++++++Project
-
+'/projectsEvaluator/:idProject' //Funcionando bien
+	GET: Devuelve toda la información de ese proyecto con respecto a la evaluación que le dieron, 
+		es decir, la cantidad de veces que va a ser evaluado (con el id del evaluador de cada uno)
+		{
+	        grade: 5,
+	        index: 5,
+	        _id: "5afd140c44b82a2a5cbce1be",
+	        idEvaluator: "5afd00f37ae72934f88294bb",
+	        idProject: "5afd01057ae72934f88294bf",
+	        idAnnouncement: "5afcffe37a3a6d36b4204a4e",
+	        __v: 0
+	    }
+'/calculateNormalMean/:idAnnoun' //Funcionando bien
+	GET: Calcula todos los promedios normales de todos los proyectos de esa convocatoria, en caso de que todavía
+		falte por calificar algún proyecto regresará un error con un json con los ids de los proyectos que faltan.
+		Asímismo establecerá la propiedad mean de esos proyectos con lo resultante y devulve un status 200 si todo sale bien
+		
+		

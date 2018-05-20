@@ -92,7 +92,8 @@ cron.schedule('0 0 1 * * *', () => {
   .catch(err => {console.log("Cron error"); console.log(Date.now());})
 })
 
-announcements.use('/:id*', announFindMiddleware);
+//Habilitar middleware en producción
+// announcements.use('/:id*', announFindMiddleware);
   
 announcements.route('/')
   .get((req,res) => {
@@ -268,7 +269,7 @@ announcements.route('/:id')
   })
   .put((req, res) => {
     console.log("PUT announcement");
-    if(res.locals.permission)
+    if(!res.locals.permission)//Quitar la negación en producción
     {
       const data = req.body
       Announcement.findByIdAndUpdate(
@@ -283,6 +284,7 @@ announcements.route('/:id')
             deadlineDate: data.deadlineDate,
             evaluators: data.evaluators,
             projectsPerEvaluator: data.projectsPerEvaluator,
+/*            projectsEvaluatedTimes: data.projectsEvaluatedTimes,*/
             content: data.content
           }
         },
@@ -369,14 +371,16 @@ announcements.get('/R/projectsAssign/:idAnnoun', (req, res) => {
                   if (err) console.log('STDERR:\n', err.toString())
                   let i = 0;
                   trtPerBlock = JSON.parse(out.toString());
+                  let gradesPrueba = [9, 8, 10, 9, 9, 9, 7, 6, 6, 8, 7, 7, 3, 6, 4, 6, 5, 5, 2, 2, 1, 0, 3, 2, 8, 7, 8, 8, 8, 8];
                   trtPerBlock.forEach((current, index) => {
                     current.forEach(trt => {
                       let projectsEvaluator = new ProjectsEvaluator({
                         idEvaluator: blocks[index]._id,
                         idProject: treatments[trt - 1]._id,
                         idAnnouncement: idAnnoun,
-                        index: i++,
-                        grade: getRandomInt(5, 11)//Para puebas, borrar en producción :v
+                        index: i,
+                        grade: gradesPrueba[i++]//Para puebas, borrar en producción :v
+                        // grade: getRandomInt(5, 11)//Para puebas, borrar en producción :v
                         //grade: -1
                       })
 
@@ -434,7 +438,7 @@ function getRsAndKsAnnouncement(idAnnoun) {
           .then(evaluatorNumber => {
             blocksCount = evaluatorNumber; console.log("blocksCount: " + blocksCount);
             
-            let i = trtCount % 2 == 0 && blocksCount % 2 == 0 ? 2 : 3; //Si t y b son pares se empieza en 2 
+            let i = trtCount % 2 == 0 || blocksCount % 2 == 0 ? 2 : 3; //Si t o b son pares se empieza en 2 
             for(i; i < trtCount; i++) {
               let tempK = i * trtCount / blocksCount;
               if( tempK <= trtCount) {//K nunca puede ser mayor a t

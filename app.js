@@ -99,18 +99,25 @@ app.get('/R', (req, res) => {
 
 
 //Pruebas de scripts para generar usuario etc
+function getRandomInt(min, max) {return Math.floor(Math.random() * (max - min)) + min;}
+
+let idAnnoun = '5b01d16ffc5ae925acfbce0f';
+let t = 10, b = 5, k = 4
+
 const Project = require('./models/project').Project;
 const Evaluator = require('./models/evaluator').Evaluator;
 let falseNames = [{"name":"Oliver","surname":"Teichmann","gender":"male","region":"Germany"},{"name":"Maila","surname":"Schulze","gender":"female","region":"Germany"},{"name":"Michael","surname":"Richter","gender":"male","region":"Germany"},{"name":"Annika","surname":"Schulze","gender":"female","region":"Germany"},{"name":"Linus","surname":"Bergmann","gender":"male","region":"Germany"},{"name":"Ben","surname":"Albrecht","gender":"male","region":"Germany"},{"name":"Oliver","surname":"Thiele","gender":"male","region":"Germany"},{"name":"Oliver","surname":"Heinrich","gender":"male","region":"Germany"},{"name":"John","surname":"Hartmann","gender":"male","region":"Germany"},{"name":"Lena","surname":"Schmidt","gender":"female","region":"Germany"},{"name":"Robert","surname":"Martin","gender":"male","region":"Germany"},{"name":"John","surname":"Schneider","gender":"male","region":"Germany"},{"name":"Ben","surname":"Friedrichs","gender":"male","region":"Germany"},{"name":"Ida","surname":"Kühn","gender":"female","region":"Germany"},{"name":"Ingo","surname":"Sommer","gender":"male","region":"Germany"},{"name":"Luise","surname":"Günther","gender":"female","region":"Germany"},{"name":"Mia","surname":"Berger","gender":"female","region":"Germany"},{"name":"Pia","surname":"Weiß","gender":"female","region":"Germany"},{"name":"Annabell","surname":"Beck","gender":"female","region":"Germany"},{"name":"Ann-Julie","surname":"Engel","gender":"female","region":"Germany"}];
+
 app.get('/PRUEBAS/USER', (req, res) => {
   result = [];
-  for (var i = falseNames.length - 1; i >= 0; i--) {
+  for (var i = 0; i < (b + t); i++) {
+    console.log(falseNames[i]);
     var user = new User({
         name: {first: falseNames[i].name, last: falseNames[i].surname},
         password: "74b87337454200d4d33f80c4663dc5e5",//aaaa
         passwordConfirmation: "74b87337454200d4d33f80c4663dc5e5",
         dateOfBirth: new Date(1998, 2, 29),
-        email: falseNames[i].name + "@ucol.mx",
+        email: falseNames[i].name + falseNames[i].surname + "@ucol.mx",
       });
 
       user.save().then(function(userSaved) {
@@ -131,11 +138,11 @@ app.get('/PRUEBAS/EVALUATOR', (req, res) => {
       if(err){console.log("USER ERROR"); console.log(err); res.status(500).json({err: err});}
       else
       {
-        User.find({}, null, {skip: 12})
+        User.find({}, null, {skip: 1})
           .then(users => {
             users.forEach(current => {
               let evaluador = new Evaluator({
-                idAnnouncement: '5afcffe37a3a6d36b4204a4e',
+                idAnnouncement: idAnnoun,
                 idUser: current._id,
                 status: 1
               })
@@ -151,16 +158,14 @@ app.get('/PRUEBAS/EVALUATOR', (req, res) => {
 })
 
 app.get('/PRUEBAS/PROJECT', (req, res) => {
-  User.find({}, null, {skip: 1, limit: 10}, (err, usersGot) => {
+  User.find({}, null, {skip: 6, limit: 10}, (err, usersGot) => {
     usersGot.forEach((user, index) => {
       console.log(user);
       let project = new Project({
-        idAnnouncement: '5afcffe37a3a6d36b4204a4e',
+        idAnnouncement: idAnnoun,
         idCreator: user._id,
         description: "Éste es el proyecto no." + index,
         title: "Proyecto No. " + index,
-        score: 10,
-        grade: Math.random() * 10
       })
       project.save()
       .then(data => console.log(data))
