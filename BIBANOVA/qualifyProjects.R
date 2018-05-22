@@ -42,6 +42,7 @@ modelo <- lme(Calificacion~project_Index, random = ~ 1 | evaluator_Index, data =
 
 Ajuste <- emmeans(modelo, ~project_Index)
 summ <- summary(Ajuste)
-adjusted.means <- cld(Ajuste, alpha = .05)
+# 1 2 y 3 para que sólo agrupe los ganadores, los demás los regresa con letras
+adjusted.means <- cld(Ajuste, alpha = 0.05, Letters = c("123", LETTERS, letters), reversed = TRUE)
 # aov <- anova(modelo)
 print(toJSON(adjusted.means, pretty = T))

@@ -114,7 +114,7 @@
 			"possibleR":[1,2,3,4,5]
 		}
 		Nota* Sólo se puede usar cuando se esté en la fecha de evaluación
-'/image/:idAnnoun'
+'/image/:idAnnoun' //Funcionando bien
 	GET: (Deprecated, la información de la imagen va en la convocatoria cuando se hace el get) Devuelve la información de la imagen de esa convocatoria. Ejemplo:
 		{"_id":"5af8fdd8b3a4a5373494fa7e",
 		"owner":"5af8fdd8b3a4a5373494fa7d",
@@ -125,6 +125,10 @@
 			pueda ser obtenida de la siguiente forma -> req.files.image
 	PUT: Actualiza la imagen de la convocatoria con ese id
 	DELETE: Elimina la imgen de la convocatoria con ese id
+'/R/projectsAssign/:idAnnoun' //Funcionando bien
+	GET: Calcula el promedio ajustado de todos los proyectos de la convocatoria enviada, además
+		muestran el grupo al que pertenecen porque algunos promedios son estadísticamente iguales entre sí
+		y lo guarda en la base de datos. El modelo de Project ahora tiene los campos de mean, adjustedGrade y group
 
 //+++++++Project
 '/projectsEvaluator/:idProject' //Funcionando bien
@@ -143,5 +147,31 @@
 	GET: Calcula todos los promedios normales de todos los proyectos de esa convocatoria, en caso de que todavía
 		falte por calificar algún proyecto regresará un error con un json con los ids de los proyectos que faltan.
 		Asímismo establecerá la propiedad mean de esos proyectos con lo resultante y devulve un status 200 si todo sale bien
-		
-		
+'/adjustedGrades/:idAnnoun' //Funcionando bien
+	GET: Calcula los promedios ajustados de todos los proyectos de esa convocatoria y los guarda en la base
+		de datos, además de que les asigna también al grupo al que pertenecen si es que se encontraron
+		algunos que sean estadísticamente iguales entre sí y devuelve la información en este formato y ordenados
+		como los proyectos están ordenados en la base de datos tras cada consulta
+		Nota: Esto es sólo para prueba en realidad será cosa interna del servidor esta parte, nunca se
+		podrá llamar al API 
+		{
+	        adjustedGrade: 6.266,
+	        index: 0,
+	        group: "  23 "
+	    }
+'/winners/:idAnnoun'
+	GET: Devuelve los proyectos con las calificaciones estadísticamente iguales de los tres primeros grupos, es decir
+		los ganadores de la convocatoria. Los devuelve en 3 arreglos diferentes, por lo que un proyecto podría incluso
+		aparecer en los tres grupos de acuerdo a como lo haya asignado R. Devuelvo proyectos como tal pero ya ordenados por
+		grupo. Ejmplo del json de un proyecto devuelto
+		{
+            mean 6,
+            adjustedGrade: 6.9087,
+            group: "12",
+            _id: "5b01f18c8d6db70338ca5c33",
+            idAnnouncement: "5b01d16ffc5ae925acfbce0f",
+            idCreator: "5b01d505f75b231fd877932a",
+            description: "Éste es el proyecto no.2",
+            title: "Proyecto No. 2",
+            __v: 0
+        }

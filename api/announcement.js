@@ -284,7 +284,7 @@ announcements.route('/:id')
             deadlineDate: data.deadlineDate,
             evaluators: data.evaluators,
             projectsPerEvaluator: data.projectsPerEvaluator,
-/*            projectsEvaluatedTimes: data.projectsEvaluatedTimes,*/
+            projectsEvaluatedTimes: data.projectsEvaluatedTimes,
             content: data.content
           }
         },

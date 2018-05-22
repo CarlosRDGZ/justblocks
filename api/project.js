@@ -113,6 +113,7 @@ projects.route('/calculateNormalMean/:idAnnoun')
                         .then(mean => {
                           Project.findByIdAndUpdate(proj._id, {$set: {mean: mean.grade}})
                             .then(result => {
+                              console.log("MEAN: " + mean.grade);
                               itemsProcessed++;
                               if(itemsProcessed == projectsAnnoun.length) 
                                 res.sendStatus(200);
@@ -281,7 +282,6 @@ projects.route('/adjustedGrades/:idAnnoun')
                     }
 
                     let adjustedGrades = [];
-                    let cont = 0;
                     trtPerBlock.forEach(currentGrade => {
                       adjustedGrades.push({adjustedGrade: currentGrade.emmean, index: currentGrade.project_Index - 1, group: currentGrade['.group']});
                     })
@@ -290,10 +290,10 @@ projects.route('/adjustedGrades/:idAnnoun')
                     Project.find({idAnnouncement: idAnnoun})
                       .then(projsAnn => {
                         projsAnn.forEach((current, index) => {
-                          current.group = adjustedGrades[index]['group'];
+                          current.group = adjustedGrades[index]['group'].trim();
                           current.adjustedGrade = adjustedGrades[index].adjustedGrade;
                           current.save((err, proj) => {
-                              if(err){console.log("Hubo un problema al guardar la calificación ajustada de un proyecto"); res.status(500).json({err: "Hubo un problema al guardar la calificación ajustada de un proyecto"}); }
+                              if(err){console.log("Hubo un problema al guardar la calificación ajustada de un proyecto"); console.log(err.message); res.status(500).json({err: err.message}); }
                               else {
                                 console.log(proj);
                               }
@@ -317,6 +317,26 @@ projects.route('/adjustedGrades/:idAnnoun')
       }
     })
     .catch(err => {console.log("Announcement error"); console.log(err.message); res.status(500).json({err: err.message});})    
+  })
+
+//When the adjustedGrade is calculated the groups are genererated an saved in each project
+//this function order them by group, only the 1, 2 and 3 groups, the winners.
+projects.route('/winners/:idAnnoun')
+  .get((req, res) => {
+    Project.find({idAnnouncement: req.params.idAnnoun})
+      .then(projectsAnnoun => {
+        //Get the winner groups
+        let groups = new Array([], [], []);
+        projectsAnnoun.forEach(proj => {
+          for(let i = 0; i < proj.group.length; i++) {
+            if(!isNaN(proj.group[i])) { //Es un número (sólo entre 1 y 3, ver qualifyProjects.R para más info)
+              groups[proj.group[i] - 1].push(proj);
+            }
+          }
+        })
+        res.json(JSON.parse(JSON.stringify(groups)));
+      })
+      .catch(err => {console.log("getProjectsByGroup error"); console.log(err.message); res.status(500).json({err: err.message});})
   })
 
 module.exports = projects
