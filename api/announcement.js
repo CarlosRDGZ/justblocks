@@ -130,6 +130,7 @@ announcements.route('/user')
 //Return the 9 announcements recenter
 announcements.route('/newest')
   .get((req, res) => {
+    console.log('newest announcements')
     Announcement.count({}, function(err, c) {
       if(err){res.status(500).json({err: err});}
       else
@@ -140,8 +141,9 @@ announcements.route('/newest')
         Announcement.find({}, null, {skip: c - 9})
           .populate('image', 'extension').exec(function(err, announs) {
             if(err){res.status(500).json({err: err});}
-            else
+            else{
               res.status(200).json(announs);
+            }
         })
       }
     })

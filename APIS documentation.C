@@ -175,3 +175,18 @@
             title: "Proyecto No. 2",
             __v: 0
         }
+'/document/:idProject' //Funcionando bien, falta validar que sólo lo suban participantes 
+	POST: Subir un nuevo documento para ese proyecto (el documento lo podrá ver el evaluador)
+		Nota: En el FormData el archivo deberá ser eviado como document
+				    formData.append('document', documentFile.files[0])
+		{
+		    owner: "5b01f18c8d6db70338ca5c31",
+		    extension: "pdf",
+		    typeFile: "application/pdf",
+		    name: "Digital Booklet - El Círculo",
+		    _id: "5b04d2e37a06920480d84641",
+		    __v: 0
+		}
+	GET: Devulve todos los documentos de ese proyecto con un json con el formato de arriba.
+	DELETE: Elimina todos los documentos de ese proyecto
+

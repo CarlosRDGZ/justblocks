@@ -44,7 +44,7 @@ evaluators.route('/:id')
   })
   .put((req, res) => { //Actualizar sólo el status del evaluador
     let id = req.params.id;
-    Evaluator.update({ _id: id }, { $set: req.params.status }, (err, evaluator) => {
+    Evaluator.update({ _id: id }, { $set: req.params.status }, {new: true}, (err, evaluator) => {
       if(err) {console.log(err); res.status(500).json({err: err});}
       else
         res.json(evaluator);
@@ -179,7 +179,7 @@ function getAllProjectsEvaluators(evaluatorsAnnoun, idAnnoun) {
 
 function getQualifiedProjectsEvaluators(evaluatorsAnnoun, idAnnoun) {
   return new Promise((resolve, reject) => {
-    console.log('getAllEvaluators');
+    console.log('getQualifiedProjectsEvaluators');
     let allEvaluatorsProjects = []
     let itemsProcessed = 0;
     evaluatorsAnnoun.forEach(evalu => {
@@ -205,5 +205,21 @@ function getQualifiedProjectsEvaluators(evaluatorsAnnoun, idAnnoun) {
     })
   });
 }
+
+/*
+const  getQualifiedProjectsEvaluators = async (evaluatorsAnnoun, idAnnoun) => {
+  try {
+    const promise = evaluatorsAnnoun.map(async (evalu) => {
+      return await ProjectsEvaluator.find({ idEvaluator: evalu._id, idAnnouncement: idAnnoun }).populate('idProject')
+    })
+    const allEvaluatorsProjects = await Promise.all(promise)
+    const qualified =  allEvaluatorsProjects.map((currentPro) => currentPro.grade > -1)
+    return qualified
+  } catch (err) {
+     console.log("ProjectsEvaluator error");
+     console.log(err);
+  }
+}
+*/
 
 module.exports = evaluators
