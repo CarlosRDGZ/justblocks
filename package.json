@@ -22,6 +22,7 @@
     "mongoose": "^5.0.9",
     "morgan": "~1.9.0",
     "node-cron": "^1.2.1",
+    "nodemon": "^1.17.4",
     "pug": "^2.0.0-beta11",
     "serve-favicon": "~2.4.5",
     "vue": "^2.5.16"

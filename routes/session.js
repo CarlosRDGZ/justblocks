@@ -19,8 +19,6 @@ session.post("/signIn", function(req, res) {
 					req.session.user_id = user._id;
 					req.session.save();
 					res.cookie('session', user.id, { path: '/' }).status(200).json({success: "success"});
-					// userSession = user
-					// openSession = true
 				} 
 				else {
 					console.log("Las contraseñas no coinciden");

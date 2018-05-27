@@ -10,6 +10,10 @@ announ.use("/", navBarMiddleware);
 announ.get('/', (req, res) => res.render('announcement/index.pug'))
 announ.get('/create', (req, res) => res.render('announcement/create.pug'))
 announ.get('/view/:id', function(req, res) {
+	res.render('announcement/view', {id: req.params.id});
+})
+/*
+announ.get('/view/:id', function(req, res) {
 	Announcement.find({_id: req.params.id})
 		.then((announcementGot) => {
 			console.log("THEN");
@@ -35,6 +39,7 @@ announ.get('/view/evaluator/:idAnnoun', (req, res) => {
 		.catch(err =>{console.log('Evaluator announ error'); console.log(err.message); res.status(500).json({err: err.message});})
 })
 
+*/
 ///*****Debugg
 announ.get('/', (req, res) => res.render('announcements.pug'))
 announ.get('/opcions', (req, res) => {res.render("announcements.pug");})
