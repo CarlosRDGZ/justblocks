@@ -30,7 +30,8 @@ const userSchema = new Schema({
 	ocupation: String,
 	education: String,
 	bio: String,
-	token: String
+	token: String,
+  image: {type: Schema.Types.ObjectId, ref: "ImageUser" }
 })
 
 userSchema.virtual("passwordConfirmation").get(function() {

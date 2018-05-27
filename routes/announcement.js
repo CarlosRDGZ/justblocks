@@ -2,9 +2,10 @@ const announ = require('express').Router()
 const sessionMiddleware = require('../middlewares/session');//Para validar los usuarios
 const navBarMiddleware = require('../middlewares/navBarMiddleware');//Para validar los usuarios
 const Announcement = require('../models/Announcement').Announcement;
+const Evaluator = require('../models/evaluator').Evaluator;
 
 announ.use("/", navBarMiddleware);
-announ.use("/create", sessionMiddleware);
+// announ.use("/create", sessionMiddleware);
 
 announ.get('/', (req, res) => res.render('announcement/index.pug'))
 announ.get('/create', (req, res) => res.render('announcement/create.pug'))
@@ -23,6 +24,21 @@ announ.get('/view/:id', function(req, res) {
 			console.log("Err getAnnoun: " + err.message);
 		})
 })
+
+announ.get('/view/evaluator/:idAnnoun', (req, res) => {
+	console.log('View announcement evaluator');
+	let idAnnoun = req.params.idAnnoun;
+
+	Evaluator.find({idUser: req.session.user_id, idAnnouncement: idAnnoun})
+		.populate('idAnnouncement')
+		.exec()
+		.then(evaluator => {
+			console.log(evaluator[0])
+			res.render('announcement/evaluator/view.pug', {evaluator: evaluator[0]});
+		})
+		.catch(err =>{console.log('Evaluator announ error'); console.log(err.message); res.status(500).json({err: err.message});})
+})
+
 */
 ///*****Debugg
 announ.get('/', (req, res) => res.render('announcements.pug'))
