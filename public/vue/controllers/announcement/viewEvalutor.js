@@ -27,8 +27,9 @@ let vm = new Vue({
   				let temp = {};
   				temp.title = project.idProject.title;
   				temp.description = project.idProject.description;
-  				temp.grade = project.grade;
-  				temp.projectUri = `${url}api/project/${project.idProject._id}`
+  				temp.grade = project.grade > 0 ? project.grade : "Sin evaluación";
+          // temp.projectUri = `${url}api/project/${project.idProject._id}`;
+  				temp.projectUri = `${url}announcement/view/qualify/project/${project.idProject._id}`;
 
   				rows.push(temp);
   			});

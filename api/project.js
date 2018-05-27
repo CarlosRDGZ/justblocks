@@ -61,6 +61,31 @@ projects.route('/:id')
     })
   })
 
+projects.route('/qualify/:idProject')
+  .put((req, res) => {
+    console.log('put qualifyProject');
+    console.log(req.body);
+    let idProj = req.params.idProject;
+    Evaluator.find({idUser: req.session.user_id})
+      .then(evaluator =>{
+        if(evaluator[0]) {
+          let idEval = evaluator[0]._id;
+          ProjectsEvaluator.findOneAndUpdate(
+            {idEvaluator: idEval, idProject: idProj},
+            {$set: {grade: req.body.grade}},
+            {new: true})
+            .then(project => {
+              console.log(project)
+              res.json(project);
+            })
+            .catch(err =>{console.log('ProjectsEvaluator error'); console.log(err.message); res.status(500).json({err: err.message});})
+        }
+        else
+          res.send("404 not found");
+      })
+      .catch(err =>{console.log('Evaluator error'); console.log(err.message); res.status(500).json({err: err.message});})
+  })
+
 projects.route('/announcement/:id')
   .get((req,res) => {
     Project.find({ idAnnouncement: req.params.id }, (err,projects) => {

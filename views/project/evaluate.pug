@@ -1,0 +1,33 @@
+- const pathToRoot = 'http://127.0.0.1:3000/';
+doctype html
+html(lang="en")
+  head
+    include ../header.pug
+    link(rel="stylesheet", href=pathToRoot + "css/index.css")
+    link(rel="stylesheet", href=pathToRoot + "css/social-buttons.css")
+    link(rel="stylesheet", href=pathToRoot + "bulma-extensions/bulma-extensions.min.css")
+  body
+    include ../navbar.pug
+
+    .container
+      .notification
+        h1.title.is-3 #{project.idProject.title}
+        h1.title.is-6 Descripci&oacute;n
+        p #{project.idProject.description}
+        br
+        h1.title.is-6 Documentos
+        .container-fluid
+          table
+            tbody(id="documents")
+              tr
+        br
+        h1.title.is-6 Calificaci&oacute;n
+        input(type="number" min="0" max="10" id="grade" value="8")
+        input.button.is-success(type="button" id="evaluate" value="Evaluar") 
+
+  include ../footer.pug
+
+script(src=pathToRoot + 'vue/vue.min.js')
+script.
+  const idProject = `#{project.idProject._id}`
+script(src=pathToRoot + 'js/project/evaluate.js')

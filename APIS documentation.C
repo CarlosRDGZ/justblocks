@@ -94,15 +94,7 @@
 				"idProject":{"grade":2.9100203348479448,"_id":"5afd01057ae72934f88294c3","idAnnouncement":"5afcffe37a3a6d36b4204a4e","idCreator":"5af8fe28b3a4a5373494fa83","description":"Éste es el proyecto no.4","title":"Proyecto No. 4","score":10,"__v":0},"idAnnouncement":"5afcffe37a3a6d36b4204a4e","__v":0},
 			{"index":1,"_id":"5afd01487ae72934f88294ca","idEvaluator":"5afd00f37ae72934f88294ba",
 				"idProject":{"grade":2.1039498117494726,"_id":"5afd01057ae72934f88294c2","idAnnouncement":"5afcffe37a3a6d36b4204a4e","idCreator":"5af8fe28b3a4a5373494fa82","description":"Éste es el proyecto no.3","title":"Proyecto No. 3","score":10,"__v":0},"idAnnouncement":"5afcffe37a3a6d36b4204a4e","__v":0} ]]
-'/:idEvaluator/qualify/:idProject'//Funcionando bien 
-	PUT: Establece la calificación del proyecto con el id enviado, la calificación la recibe en el body
-		de la petición como un json de la forma {grade: 8} y devuelve:
-		{
-		    "n": 1,
-		    "nModified": 1,
-		    "ok": 1
-		}
-'/:idEvaluator/projects'
+'/:idEvaluator/projects' //Funcionando bien
 	GET: Devuelve todos los proyectos asignados a ese evaluador
 		{
 	        "grade": 9,
@@ -204,4 +196,6 @@
 		}
 	GET: Devulve todos los documentos de ese proyecto con un json con el formato de arriba.
 	DELETE: Elimina todos los documentos de ese proyecto
-
+'/qualify/:idProject'//Funcionando bien 
+	PUT: Establece la calificación del proyecto con el id enviado, la calificación la recibe en el body
+		de la petición como un json de la forma {grade: 8} y devuelve un json con el formato de proyecto
