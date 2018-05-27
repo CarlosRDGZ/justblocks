@@ -1,51 +1,4 @@
-function get(id) {return document.getElementById(id);}
-const creaDate = get('creationDate');
-const enrollDate = get('endEnrollmentsDate');
-const evaDate = get('evaluationDate');
-const deadDate = get('deadlineDate');
-const image = get('image');
-const today = new Date();
-
-function getImage(announ) {
-  window.axios.get('/api/announcement/image/' + announ._id)
-    .then(({data}) => {
-      announ.image = data;
-      let path = '/files/announcement/images/' + data['_id'] + "." + data['extension'];
-      image.src = path;
-      console.log(data);
-      console.log(path);
-    })
-    .catch(({err}) => { console.log("Err: " + err);})
-}
-
-window.onload = () => {
-  announcement.endEnrollmentsDate =new Date(announcement.endEnrollmentsDate);
-  announcement.creationDate = new Date(announcement.creationDate);
-  announcement.evaluationDate = new Date(announcement.evaluationDate);
-  announcement.deadlineDate = new Date(announcement.deadlineDate);
-
-  if(announcement.endEnrollmentsDate < today) {
-    enrollDate.setAttribute('readonly', true); 
-    // enrollDate.readOnly = true; 
-  }
-  if(announcement.evaluationDate < today) {
-    evaDate.setAttribute('readonly', 'true');
-  }
-  if(announcement.deadlineDate < today) {
-    deadDate.setAttribute('readonly', 'true');
-  }
-  getImage(announcement);
-
-  announcement.creationDate = announcement.creationDate.toISOString().substring(0, 10);
-  announcement.endEnrollmentsDate = announcement.endEnrollmentsDate.toISOString().substring(0, 10);
-  announcement.evaluationDate = announcement.evaluationDate.toISOString().substring(0, 10);
-  announcement.deadlineDate = announcement.deadlineDate.toISOString().substring(0, 10);   
-
-  // CKEDITOR.instances.content.editable().setHtml(announcement.content);
-  // CKEDITOR.instances.prize.editable().setHtml(announcement.prize);
-
-  vm.$data.announ = announcement;
-}
+const url = 'http://127.0.0.1:3000/'
 
 const vm = new Vue({
   el: '#app',
@@ -58,12 +11,13 @@ const vm = new Vue({
       evaluationDate: undefined,
       deadlineDate: undefined,
       evaluators: undefined,
-      image: 2,
+      image: undefined,
       projectsPerEvaluator: undefined,
       content: undefined,
       prize: undefined,
     },
     ui: {
+      today: new Date().toISOString().split('T')[0],
       helpper0: false,
       helpper1: false,
       helpper2: false,
@@ -81,7 +35,24 @@ const vm = new Vue({
       false, // 7 author
     ]
   },
-  mounted: function() {
+  beforeCreate: function () {
+    window.axios.get(`${url}api/announcement/${id}`)
+      .then(res => {
+        let today = new Date()
+        today.setHours(0,0,0,0)
+        for (let prop in res.data)
+          if (prop.includes('Date')) {
+            // ISO String YYYY-MM-DDT00:00:00.000Z"
+            res.data[prop] = new Date(res.data[prop]).toISOString().split('T')[0]
+          }
+        this.announ = res.data
+        document.title = res.data.title
+        get('content').textContent = res.data.content
+        get('prize').textContent = res.data.prize
+      })
+      .catch(err => console.log(err))
+  },
+  mounted: function () {
     let config = {
       language: 'es',
       extraplugins: '',
@@ -95,11 +66,17 @@ const vm = new Vue({
         ['Styles', 'Format']
       ]
     }
-    CKEDITOR.replace('content', config)
-    CKEDITOR.replace('prize', config)
+    this.mountEditor('content', config)
+      .then(res => CKEDITOR.instances.content.editable().setHtml(get('content').textContent))
+      .catch(err => console.log(err))
+    this.mountEditor('prize', config)
+      .then(res => CKEDITOR.instances.content.editable().setHtml(get('prize').textContent))
+      .catch(err => console.log(err))
+
+    // Input file upload
   },
   methods: {
-    send: function() {
+    send: function () {
       this.announ.content = CKEDITOR.instances.content.getData()
       this.announ.prize = CKEDITOR.instances.prize.getData()
       let i = 0, empty = false;
@@ -112,7 +89,7 @@ const vm = new Vue({
       if (!empty && this.errors.indexOf(true) === -1) {
         const url = 'http://127.0.0.1:3000/'
         window.axios
-          .post(`${url}api/announcement/`, this.announ)
+          .put(`${url}api/announcement/`, this.announ)
           .then(res => console.log(res.data))
           .catch(err => console.log(err))
       }
@@ -122,6 +99,30 @@ const vm = new Vue({
         if (this.ui[`helpper${i}`] === true && data != i)
           this.ui[`helpper${i}`] = false
       this.ui[`helpper${data}`] = !this.ui[`helpper${data}`]
+    },
+    /** @param {String} editor*/
+    mountEditor: function (editor, config) {
+      return new Promise((resolve,reject) => {
+        CKEDITOR.replace(editor, config)
+        if (CKEDITOR.instances[editor].editable !== undefined)
+          resolve(true)
+        else
+          reject(new Error('Error'))
+      })
+    },
+    updateImage: function () {
+      let fileUpload = get('file')
+      fileUpload.multiple = false
+      fileUpload.click()
+    },
+    readURL: function () {
+      let input = get('file')
+      let reader = new FileReader()
+      let announ = this.announ
+      reader.onload = function (e) {
+        announ.image = e.target.result
+      }
+      reader.readAsDataURL(input.files[0])
     }
   },
   watch: {
@@ -202,3 +203,60 @@ const vm = new Vue({
     },
   }
 })
+
+function get(id) {return document.getElementById(id);}
+/*
+const creaDate = get('creationDate');
+const enrollDate = get('endEnrollmentsDate');
+const evaDate = get('evaluationDate');
+const deadDate = get('deadlineDate');
+const image = get('image');
+const today = new Date();
+*/
+
+function getImage(announ) {
+  window.axios.get('/api/announcement/image/' + announ._id)
+    .then(({data}) => {
+      announ.image = data;
+      let path = '/files/announcement/images/' + data['_id'] + "." + data['extension'];
+      image.src = path;
+      console.log(data);
+      console.log(path);
+    })
+    .catch(({err}) => { console.log("Err: " + err);})
+}
+/**
+window.onload = () => {
+  announcement.endEnrollmentsDate =new Date(announcement.endEnrollmentsDate);
+  announcement.creationDate = new Date(announcement.creationDate);
+  announcement.evaluationDate = new Date(announcement.evaluationDate);
+  announcement.deadlineDate = new Date(announcement.deadlineDate);
+
+  if(announcement.endEnrollmentsDate < today) {
+    enrollDate.setAttribute('readonly', true); 
+    // enrollDate.readOnly = true; 
+  }
+  if(announcement.evaluationDate < today) {
+    evaDate.setAttribute('readonly', 'true');
+  }
+  if(announcement.deadlineDate < today) {
+    deadDate.setAttribute('readonly', 'true');
+  }
+  getImage(announcement);
+
+  announcement.creationDate = announcement.creationDate.toISOString().substring(0, 10);
+  announcement.endEnrollmentsDate = announcement.endEnrollmentsDate.toISOString().substring(0, 10);
+  announcement.evaluationDate = announcement.evaluationDate.toISOString().substring(0, 10);
+  announcement.deadlineDate = announcement.deadlineDate.toISOString().substring(0, 10);   
+
+  // CKEDITOR.instances.content.editable().setHtml(announcement.content);
+  // CKEDITOR.instances.prize.editable().setHtml(announcement.prize);
+
+  vm.$data.announ = announcement;
+}
+
+if (prop.includes('Date')) {
+            // ISO String YYYY-MM-DDT00:00:00.000Z"
+            res.data[prop] = new Date(res.data[prop]).toISOString().split('T')[0]
+          }
+*/

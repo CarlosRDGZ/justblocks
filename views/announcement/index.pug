@@ -28,8 +28,8 @@ html(lang="en")
                 .columns.is-gapless.is-multiline
                   .column.is-full
                     .notification.is-success
-                      p.title.is-4 {{ content.data[(j + (3 * (i - 1))) - 1] }}
-                      p.subtitle.is-6 SEMARNAT
+                      p.title.is-4 {{ content.data[(j + (3 * (i - 1))) - 1].title }}
+                      p.subtitle.is-6 {{ content.data[(j + (3 * (i - 1))) - 1].author }}
                   .column.is-three-fifths
                     .notification.has-text-centered.is-success.is-inverted
                       p
@@ -45,10 +45,10 @@ html(lang="en")
                     | Desarrollar una app web que permita a la población conocer sobre el Cambio Climático y colaborar con acciones
                     | para su mitigación.
                   p
-                    a(href=gUrl + 'announcement/464646464646') ver más...
+                    a(:href='url + "announcement/view/" + content.data[(j + (3 * (i - 1))) - 1]._id') ver más...
         .notification.is-white
           .content
-            p {{ content.data }}
+          //  p {{ content.data }}
           div(v-if='pagination.pags > 0')
             nav.pagination.is-centered(role='navigation', aria-label='pagination')
               a.pagination-previous(@click='paginations().previous()') Anterior

@@ -1,0 +1,156 @@
+- const pathToRoot = '../../../'
+- const lUser = user
+- const today = new Date()
+doctype html
+html(lang="en")
+  head
+    include ../../header.pug
+    title Title
+  body
+    include ../../navbar.pug
+    section.hero.is-success
+      .hero-body
+        .container.has-text-centered
+          h1.title Editar
+    main#app.section
+      .container-fluid
+        .columns.is-centered
+          .column.is-two-thirds.is-narrow
+            .notification.is-white
+              .field
+                label.label Titulo
+                .control
+                  input.input(type='text' :class="{ 'is-danger' : errors[0] }" placeholder='Titulo' v-model='announ.title' required)
+              .field
+                label.label Organizador
+                .control
+                  input.input(type='text' :class="{ 'is-danger' : errors[7] }" placeholder='Organizador' v-model='announ.author' required)
+              .field.is-horizontal
+                .field-body
+                  .field
+                    label.label Lanzamiento
+                      span.icon(@click='helpper(0)')
+                        i.far.fa-question-circle
+                    div(v-if='ui.today <= announ.creationDate')
+                      p.control.is-expanded.has-icons-left
+                        input.input(type='date' :class="{ 'is-danger' : errors[1] }" v-model='announ.creationDate' required)
+                        span.icon.is-small.is-left
+                          i.far.fa-calendar-alt
+                    div.tooltip(data-tooltip="La fecha ya se cumplio. No puede modificarse" v-else)
+                      p.control.is-expanded.has-icons-left
+                        input.input.is-success(type='date' v-model='announ.creationDate' required readonly)
+                        span.icon.is-small.is-left
+                          i.far.fa-calendar-alt
+                  .field
+                    label#closing.label Cierre de Registro
+                      span.icon(@click='helpper(1)')
+                        i.far.fa-question-circle
+                    div(v-if='ui.today <= announ.endEnrollmentsDate')
+                      p.control.is-expanded.has-icons-left
+                        input.input(type='date' :class="{ 'is-danger' : errors[2] }" v-model='announ.endEnrollmentsDate' required)
+                        span.icon.is-small.is-left
+                          i.far.fa-calendar-alt
+                    div.tooltip(data-tooltip="La fecha ya se cumplio. No puede modificarse" v-else)
+                      p.control.is-expanded.has-icons-left
+                        input.input.is-success(type='date' v-model='announ.endEnrollmentsDate' readonly required)
+                        span.icon.is-small.is-left
+                          i.far.fa-calendar-alt
+              article.message.is-info(v-show='ui.helpper0')
+                .message-header
+                  p Lanzamiento
+                  button.delete(@click='helpper(0)')
+                .message-body La fecha de lanzamiento es en la que la convocatoria ya es visible para el publico. Desde ese dia los usuarios podran inscribirse  o enviar su solicitud para participar como evaluadores de la misma.
+              article.message.is-info(v-show='ui.helpper1')
+                .message-header
+                  p Cierre de Registro
+                  button.delete(@click='helpper(1)')
+                .message-body It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English
+              .field.is-horizontal
+                .field-body                        
+                  .field
+                    label#evaluations.label Evaluaciones
+                      span.icon(@click='helpper(2)')
+                        i.far.fa-question-circle
+                    div(v-if='ui.today <= announ.evaluationDate')
+                      p.control.is-expanded.has-icons-left
+                        input.input(type='date' :class="{ 'is-danger' : errors[3] }" v-model='announ.evaluationDate' required)
+                        span.icon.is-small.is-left
+                          i.far.fa-calendar-alt
+                    div.tooltip(data-tooltip="La fecha ya se cumplio. No puede modificarse" v-else)
+                      p.control.is-expanded.has-icons-left
+                        input.input.is-success(type='date' v-model='announ.evaluationDate' required readonly)
+                        span.icon.is-small.is-left
+                          i.far.fa-calendar-alt
+                  .field
+                    label#results.label Resultados
+                      span.icon(@click='helpper(3)')
+                        i.far.fa-question-circle
+                    div(v-if='ui.today <= announ.deadlineDate')
+                      p.control.is-expanded.has-icons-left
+                        input.input(type='date' :class="{ 'is-danger' : errors[4] }" v-model='announ.deadlineDate' required readonly)
+                        span.icon.is-small.is-left
+                          i.far.fa-calendar-alt
+                    div.tooltip(data-tooltip="La fecha ya se cumplio. No puede modificarse" v-else)
+                      p.control.is-expanded.has-icons-left
+                        input.input.is-success(type='date' v-model='announ.deadlineDate' required readonly)
+                        span.icon.is-small.is-left
+                          i.far.fa-calendar-alt
+              article.message.is-info(v-show='ui.helpper2')
+                .message-header
+                  p Evaluaciones
+                  button.delete(@click='helpper(2)')
+                .message-body It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English
+              article.message.is-info(v-show='ui.helpper3')
+                .message-header
+                  p Resultados
+                  button.delete(@click='helpper(3)')
+                .message-body It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English
+              article.message.is-info(v-show='ui.helpper4')
+                .message-header
+                  p Descripci&oacute;n
+                  button.delete(@click='helpper(4)')
+                .message-body It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English
+              .field.is-horizontal
+                .field-body
+                  .field
+                    label.label N&uacute;mero de Evaluadores
+                    p.control.is-expanded.has-icons-left
+                      input(type='number' class='input' :class="{ 'is-danger': errors[5] }" v-model='announ.evaluators' required)
+                      span.icon.is-small.is-left
+                        i.fas.fa-users
+                  .field
+                    label.label Proyectos por Evaluador
+                    p.control.is-expanded.has-icons-left
+                      input(type='number' class='input' :class="{ 'is-danger': errors[6] }" v-model='announ.projectsPerEvaluator' required)
+                      span.icon.is-small.is-left
+                        i.fas.fa-boxes
+              .field
+                label.label Descripci&oacute;n
+                  span.icon(@click='helpper(4)')
+                    i.far.fa-question-circle
+                .control
+                  textarea#content.textarea
+              .field
+                label.label Premio
+                .control
+                  textarea#prize.textarea
+              br
+              .columns.is-centered
+                .column.is-half.is-narrow
+                  div.notification.has-text-centered
+                    figure.image.is-squared
+                      img.image(:src="announ.image")
+                    br
+                    a.button.is-primary(@click='updateImage') Cambiar
+                    input#file(type="file" name="image" accept=".png, .jpg, .jpeg" @change="readURL()" hidden)
+              br
+              button.button.is-success.is-fullwidth(@click='send') Actualizar información
+              br
+              .content
+              pre {{ $data }}
+    include ../../footer.pug
+  script.
+    window.id = !{JSON.stringify(id)}
+  script(src=pathToRoot + 'vue/vue.js')
+  script(src=pathToRoot + 'ckeditor/ckeditor.js')
+  script(src=pathToRoot + 'vue/controllers/announcement/admin.js')

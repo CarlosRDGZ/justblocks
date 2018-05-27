@@ -1,0 +1,147 @@
+- const pathToRoot = '../'
+script.
+  window.id = !{JSON.stringify(id)}
+doctype html
+script.
+  window.id = !{JSON.stringify(id)}
+html(lang="en") 
+  head
+    include ../header.pug
+    link(rel="stylesheet", href="../css/index.css")
+    title JustBlocks
+  style.
+    a {
+      text-decoration: none;
+    }
+  body
+    include ../navbar.pug
+    main#app.section
+      .container-fluid
+        .columns
+          .column.is-one-quarter
+            figure.image.is-5by4
+              if (user.image)
+                image(src='files/users/'+ user.image._id + "." + user.image.extension style='border-radius: 0%')
+              else
+                image(src=pathToRoot + 'images/Porg.png' style='border-radius: 0%')
+            .card
+              .card-content
+                p.title #{user.name.first} #{user.name.last}
+                p.subtitle #{user.email}
+                ul
+                  li
+                    span.icon
+                      i.fas.fa-briefcase
+                    span #{user.ocupation !== '' ? user.ocupation : 'ocupation'}
+                  li
+                    span.icon
+                      i.fas.fa-graduation-cap
+                    span #{user.education !== '' ? user.education : 'education'}
+                  li
+                    span.icon
+                      i.fas.fa-user-astronaut
+                    span Bio
+                    article.notification #{user.bio !== '' ? user.bio : 'bio'}
+            nav.panel                                                                                 
+              p.panel-heading Menu
+              a.panel-block(onclick="window.location='/announcement/create'") 
+                span.panel-icon
+                  i.fas.fa-plus-square
+                span Agregar Convocatoria
+          .column.is-three-quarters
+            .notification.is-primary
+              h1.title Mis Convocatorias
+            .notification.is-white
+              .tabs
+                ul
+                  li(:class="{ 'is-active' : tabs.announs }" @click='changeContent("announs")')
+                    a(style="text-decoration: none")
+                      // span.icon.is-small
+                      //   i.fas.fa-image(aria-hidden='true')    
+                      span Mis Convocatorias
+                  li(:class="{ 'is-active' : tabs.evaluation }" @click='changeContent("evaluation")')
+                    a(style="text-decoration: none")
+                      span.icon.is-small
+                        i.fas.fa-music(aria-hidden='true')    
+                      span Music
+                  li
+                    a(style="text-decoration: none")
+                      span.icon.is-small
+                        i.fas.fa-film(aria-hidden='true')    
+                      span Videos
+                  li
+                    a(style="text-decoration: none")
+                      span.icon.is-small
+                        i.far.fa-file-alt(aria-hidden='true')    
+                      span Documents
+              .tile.is-antecesor
+                .tile.is-vertical.parent(v-if='tabs.announs')
+                  .tile.is-child
+                    .tile.is-4
+                      .field
+                        p.control.has-icons-left
+                          input.input(type="text")
+                          span.icon.is-small.is-left
+                            i.fas.fa-search
+                  .tile.is-child
+                    table.table.is-striped.is-fullwidth
+                      thead
+                        tr
+                          th Título
+                          th Fecha de lanzamiento
+                          th Fecha de evaluación
+                          th Fecha de cierre
+                          th Opciones
+                      tbody(v-for='i in table.pagination.itemsPerPage')
+                        tr(v-if='table.data[i-1] !== undefined')
+                            td {{ table.data[i-1].title }}
+                            td {{ table.data[i-1].endEnrollmentsDate }}
+                            td {{ table.data[i-1].evaluationDate }}
+                            td {{ table.data[i-1].deadlineDate }}
+                            td
+                              .field.has-addons
+                                p.control
+                                  a.button.is-primary.is-outlined(:href="`app/announcement/admin/${table.data[i-1]._id}`")
+                                    span.icon.is-small
+                                      i.fas.fa-edit
+                                    span Editar
+                                p.control
+                                  a.button.is-info.is-outlined
+                                    span.icon.is-small
+                                      i.fas.fa-toolbox
+                                    span Administrar
+                  .tile.is-child
+                    .field.is-grouped.is-grouped-right
+                      div(v-for='i in table.pagination.itemsPerPage')
+                      .control
+                        .select
+                          select
+                            option 10
+                            option 25
+                            option 50
+                      nav.pagination.is-centered(role='navigation')
+                        ul.pagination-list
+                          li
+                            a.pagination-link(@click='table_().pagination().first()' style="text-decoration: none")
+                              span.icon.is-small
+                                i.fas.fa-angle-double-left
+                          li
+                            a.pagination-link(@click='table_().pagination().previous()' style="text-decoration: none")
+                              span.icon.is-small
+                                i.fas.fa-angle-left
+                          li(v-for='i in table.pagination.shown.pages')
+                            a.pagination-link(:class="{ 'is-current' : table.pagination.current === i }" @click='table_().pagination().goto(i)' style="text-decoration: none") {{ i }}
+                          li
+                            a.pagination-link(@click='table_().pagination().next()' style="text-decoration: none")
+                              span.icon.is-small
+                                i.fas.fa-angle-right
+                          li
+                            a.pagination-link(@click='table_().pagination().last()' style="text-decoration: none")
+                              //{{ table.pagination.pags }}
+                              span.icon.is-small
+                                i.fas.fa-angle-double-right
+
+    include ../footer.pug
+    script(src=pathToRoot + "vue/vue.min.js")
+    script(src=pathToRoot + "../../vue/controllers/home.js")
+    // script(src="../x../vue/components/tabs.vue")
