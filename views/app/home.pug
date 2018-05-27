@@ -50,84 +50,148 @@ html(lang="en")
                 span Agregar Convocatoria
           .column.is-three-quarters
             .notification.is-primary
-              h1.title Mis Convocatorias
+              h1.title(v-if='tabs.announs') Mis Convocatorias
+              h1.title(v-else-if='tabs.projects') Proyectos
+              //h1.title Mis Convocatorias
             .notification.is-white
               .tabs
                 ul
                   li(:class="{ 'is-active' : tabs.announs }" @click='changeContent("announs")')
                     a(style="text-decoration: none")
-                      // span.icon.is-small
-                      //   i.fas.fa-image(aria-hidden='true')    
+                      span.icon.is-small
+                        i.fas.fa-bullhorn(aria-hidden='true')
                       span Mis Convocatorias
-                  li(:class="{ 'is-active' : tabs.evaluation }" @click='changeContent("evaluation")')
+                  li(:class="{ 'is-active' : tabs.projects }" @click='changeContent("projects")')
                     a(style="text-decoration: none")
                       span.icon.is-small
-                        i.fas.fa-music(aria-hidden='true')    
-                      span Music
-                  li
-                    a(style="text-decoration: none")
-                      span.icon.is-small
-                        i.fas.fa-film(aria-hidden='true')    
-                      span Videos
-                  li
-                    a(style="text-decoration: none")
-                      span.icon.is-small
-                        i.far.fa-file-alt(aria-hidden='true')    
-                      span Documents
+                        i.fas.fa-project-diagram(aria-hidden='true')    
+                      span Proyectos
               .tile.is-antecesor
-                .tile.is-vertical.parent(v-show='tabs.announs')
-                  .tile.is-child
-                    .tile.is-4
-                      .field
-                        p.control.has-icons-left
-                          input.input(type="text")
-                          span.icon.is-small.is-left
-                            i.fas.fa-search
-                  .tile.is-child
-                    table.table.is-striped.is-fullwidth
-                      thead
-                        tr
-                          th Título
-                          th Fecha de lanzamiento
-                          th Fecha de evaluación
-                          th Fecha de cierre
-                          th Participantes
-                          th Evaluadores
-                          th Proyectos por evaluador
-                      tbody(v-for='i in tableAnnouns.pagination.itemsPerPage')
-                        tr(v-if='tableAnnouns.data[i] !== undefined')
-                            td 
-                              a(:href="`app/announcement/admin/${tableAnnouns.data[i]._id}`") {{ tableAnnouns.data[i].title }}
-                            td {{ tableAnnouns.data[i].endEnrollmentsDate }}
-                            td {{ tableAnnouns.data[i].evaluationDate }}
-                            td {{ tableAnnouns.data[i].deadlineDate }}
-                            td 0
-                            td {{ tableAnnouns.data[i].evaluators }}
-                            td {{ tableAnnouns.data[i].projectsPerEvaluator }}
-                  .tile.is-child
-                    .field.is-grouped.is-grouped-right
-                      div(v-for='i in tableAnnouns.pagination.itemsPerPage')
-                      .control
-                        .select
-                          select
-                            option 10
-                            option 25
-                            option 50
-                      nav.pagination.is-centered(role='navigation')
-                        a.pagination-previous(@click='table().pagination().previous()' style="text-decoration: none") Anterior
-                        a.pagination-next(@click='table().pagination().next()' style="text-decoration: none") Siguiente
-                        ul.pagination-list
-                          li(v-if='tableAnnouns.pagination.shown.last > 10')
-                            a.pagination-link(@click='table().pagination().first()' style="text-decoration: none") 1
-                          li(v-if='tableAnnouns.pagination.shown.last > 10')
-                            span.pagination-ellipsis …
-                          li(v-for='i in tableAnnouns.pagination.shown.pages')
-                            a.pagination-link(:class="{ 'is-current' : tableAnnouns.pagination.current === i }" @click='table().pagination().goto(i)' style="text-decoration: none") {{ i }}
-                          li(v-if='tableAnnouns.pagination.shown.last !== tableAnnouns.pagination.pags')
-                            span.pagination-ellipsis …
-                          li(v-if='tableAnnouns.pagination.shown.last !== tableAnnouns.pagination.pags')
-                            a.pagination-link(@click='table().pagination().last()' style="text-decoration: none") {{ tableAnnouns.pagination.pags }}
-
+                .tile.is-vertical.parent
+                  div(v-if='tabs.announs')
+                    .tile.is-child
+                      .tile.is-4
+                        .field
+                          p.control.has-icons-left
+                            input.input(type="text")
+                            span.icon.is-small.is-left
+                              i.fas.fa-search
+                    .tile.is-child
+                      table.table.is-striped.is-fullwidth
+                        thead
+                          tr
+                            th Título
+                            th Fecha de lanzamiento
+                            th Fecha de evaluación
+                            th Fecha de cierre
+                            th Opciones
+                        tbody(v-for='i in table.announs.pagination.itemsPerPage')
+                          tr(v-if='table.announs.data[i-1] !== undefined')
+                              td {{ table.announs.data[i-1].title }}
+                              td {{ table.announs.data[i-1].endEnrollmentsDate }}
+                              td {{ table.announs.data[i-1].evaluationDate }}
+                              td {{ table.announs.data[i-1].deadlineDate }}
+                              td
+                                .field.has-addons
+                                  p.control
+                                    a.button.is-primary.is-outlined(:href="`app/announcement/admin/${table.announs.data[i-1]._id}`")
+                                      span.icon.is-small
+                                        i.fas.fa-edit
+                                      span Editar
+                                  p.control
+                                    a.button.is-info.is-outlined
+                                      span.icon.is-small
+                                        i.fas.fa-toolbox
+                                      span Administrar
+                    .tile.is-child
+                      .field.is-grouped.is-grouped-right
+                        div(v-for='i in table.announs.pagination.itemsPerPage')
+                        .control
+                          .select
+                            select
+                              option 10
+                              option 25
+                              option 50
+                        nav.pagination.is-centered(role='navigation')
+                          ul.pagination-list
+                            li
+                              a.pagination-link(@click='table_(table.announs,announs).announs.first()' style="text-decoration: none")
+                                span.icon.is-small
+                                  i.fas.fa-angle-double-left
+                            li
+                              a.pagination-link(@click='table_(table.announs,announs).announs.previous()' style="text-decoration: none")
+                                span.icon.is-small
+                                  i.fas.fa-angle-left
+                            li(v-for='i in table.announs.pagination.shown.pages')
+                              a.pagination-link(:class="{ 'is-current' : table.announs.pagination.current === i }" @click='table_(table.announs,announs).announs.goto(i)' style="text-decoration: none") {{ i }}
+                            li
+                              a.pagination-link(@click='table_(table.announs,announs).announs.next()' style="text-decoration: none")
+                                span.icon.is-small
+                                  i.fas.fa-angle-right
+                            li
+                              a.pagination-link(@click='table_(table.announs,announs).announs.last()' style="text-decoration: none")
+                                span.icon.is-small
+                                  i.fas.fa-angle-double-right
+                  div(v-else-if='tabs.projects')
+                    .tile.is-child
+                      .tile.is-4
+                        .field
+                          p.control.has-icons-left
+                            input.input(type="text")
+                            span.icon.is-small.is-left
+                              i.fas.fa-search
+                    .tile.is-child
+                      table.table.is-striped.is-fullwidth
+                          thead
+                            tr
+                              th Título
+                              th Descripción
+                              th Opciones
+                          tbody(v-for='i in table.projects.pagination.itemsPerPage')
+                            tr(v-if='table.projects.data[i-1] !== undefined')
+                              td {{ table.projects.data[i-1].title }}
+                              td {{ table.projects.data[i-1].description }}
+                              td
+                                .field.has-addons
+                                  p.control
+                                    a.button.is-primary.is-outlined(:href="'#'")
+                                      span.icon.is-small
+                                        i.fas.fa-edit
+                                      span Editar
+                                  p.control
+                                    a.button.is-info.is-outlined
+                                      span.icon.is-small
+                                        i.fas.fa-toolbox
+                                      span Enviar
+                    .tile.is-child
+                      .field.is-grouped.is-grouped-right
+                        div(v-for='i in table.projects.pagination.itemsPerPage')
+                        .control
+                          .select
+                            select
+                              option 10
+                              option 25
+                              option 50
+                        nav.pagination.is-centered(role='navigation')
+                          ul.pagination-list
+                            li
+                              a.pagination-link(@click='table_(table.projects,projects).projects.first()' style="text-decoration: none")
+                                span.icon.is-small
+                                  i.fas.fa-angle-double-left
+                            li
+                              a.pagination-link(@click='table_(table.projects,projects).projects.previous()' style="text-decoration: none")
+                                span.icon.is-small
+                                  i.fas.fa-angle-left
+                            li(v-for='i in table.projects.pagination.shown.pages')
+                              a.pagination-link(:class="{ 'is-current' : table.projects.pagination.current === i }" @click='table_(table.projects,projects).projects.goto(i)' style="text-decoration: none") {{ i }}
+                            li
+                              a.pagination-link(@click='table_(table.projects,projects).projects.next()' style="text-decoration: none")
+                                span.icon.is-small
+                                  i.fas.fa-angle-right
+                            li
+                              a.pagination-link(@click='table_(table.projects,projects).projects.last()' style="text-decoration: none")
+                                span.icon.is-small
+                                  i.fas.fa-angle-double-right
     include ../footer.pug
     script(src=pathToRoot + "vue/vue.min.js")
     script(src=pathToRoot + "../../vue/controllers/home.js")
