@@ -30,7 +30,12 @@ announ.get('/view/evaluator/:idAnnoun', (req, res) => {
 		.exec()
 		.then(evaluator => {
 			console.log(evaluator[0])
-			res.render('announcement/evaluator/view.pug', {evaluator: evaluator[0]});
+			if(evaluator[0]) {
+				console.log('Dentro')
+				res.render('announcement/evaluator/view.pug', {evaluator: evaluator[0]});
+			}
+			else
+				res.send("404 not found");
 		})
 		.catch(err =>{console.log('Evaluator announ error'); console.log(err.message); res.status(500).json({err: err.message});})
 })

@@ -188,5 +188,7 @@ app.use('/bulma-extensions', express.static(path.join(__dirname,'/node_modules/b
 app.use('/bulma-carousel', express.static(path.join(__dirname,'/node_modules/bulma-extensions/bulma-carousel/dist')))
 
 app.use('/vue', express.static(path.join(__dirname, '/node_modules/vue/dist/')))
+app.use('/tables', express.static(path.join(__dirname, '/node_modules/vue-tables-2/dist/')))
+app.use('/pagination', express.static(path.join(__dirname, '/node_modules/vue-pagination-2/dist/')))
 app.use('/axios', express.static(path.join(__dirname, '/node_modules/axios/dist/')))
 app.use('/', routes)

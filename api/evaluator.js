@@ -153,6 +153,17 @@ evaluators.route('/:idEvaluator/qualify/:idProject')
       .catch(err => {console.log(err.message); res.status(500).json({err: err.message});});
   })
 
+evaluators.route('/:idEval/projects')
+  .get((req, res) => {
+    console.log('GET evaluator projects')
+    ProjectsEvaluator.find({idEvaluator: req.params.idEval})
+      .populate('idProject', ['_id', 'description', 'title'])
+      .exec()
+      .then(projectsGot => {
+        res.json(projectsGot);
+      })
+      .catch(err => {console.log('ProjectsEvaluator error'); console.log(err.message); res.status(500).json({err: err.message});})
+  })
 function getAllProjectsEvaluators(evaluatorsAnnoun, idAnnoun) {
   return new Promise((resolve, reject) => {
     console.log('getAllProjectsEvaluators');

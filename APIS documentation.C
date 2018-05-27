@@ -102,7 +102,22 @@
 		    "nModified": 1,
 		    "ok": 1
 		}
-
+'/:idEvaluator/projects'
+	GET: Devuelve todos los proyectos asignados a ese evaluador
+		{
+	        "grade": 9,
+	        "index": 0,
+	        "_id": "5b01f48a643bc907188410e8",
+	        "idEvaluator": "5b01d49f6d2c310404563293",
+	        "idProject": {
+	            "_id": "5b01f18c8d6db70338ca5c31",
+	            "description": "Éste es el proyecto no.0",
+	            "title": "Proyecto No. 0"
+	        },
+	        "idAnnouncement": "5b01d16ffc5ae925acfbce0f",
+	        "__v": 0
+	    },
+	    
 //+++++++Announcement
 '/possibleRsAndKs/:idAnnoun' //Funcionando bien
 	GET: Devuelve todos los posibles valores de 'r' (Número de veces que un proyecto será evaluado), así

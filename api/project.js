@@ -30,6 +30,13 @@ projects.route('/')
   })
 
 projects.route('/:id')
+  .get((req, res) => {
+    Project.findById(req.params.id)
+      .then(proj => {
+        res.json(proj);
+      })
+      .catch(err => {console.log('Project error'); console.log(err.message); res.status(500).json({err: err.message});})
+  })
   .put((req,res) => {
     Project.findByIdAndUpdate(
       req.params.id,

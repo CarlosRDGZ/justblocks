@@ -1,5 +1,5 @@
 - const pathToRoot = "../../../";
-- const today = new Date(2018, 4, 11);
+- const today = new Date(2018, 4, 11);//Se cuenta desde 0
 - const months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 doctype html
 html(lang="en")
@@ -27,7 +27,12 @@ html(lang="en")
       else if today < evaluator.idAnnouncement.deadlineDate
         //Etapa de evaluación
         //Toda la magia con Vue, sus proyectos asignados
-        h1 Aceptado y en la fecha de evaluación
+        h1.title.is-3 Es hora de la evaluación
+        h1.title.is-5 A continuación te presentamos los proyectos que te corresponden evaluar
+        .container-fluid
+          #app
+            v-client-table(:columns="columns" :data="data" :options="options")
+              a(slot="title" slot-scope="props" target="_blank" :href="props.row.projectUri") {{props.row.title}}
       else
         //Etapa final, convocatoria terminada
         - const idAnnoun = evaluator.idAnnouncement._id;
@@ -47,5 +52,7 @@ script.
   const idEvaluator = `#{evaluator._id}`;
 
 script(src=pathToRoot + 'vue/vue.min.js')
-//- script(src=pathToRoot + 'vue/controllers/announcement/view.js')
-//- script(src=pathToRoot + "js/announcement/view.js")
+if today < evaluator.idAnnouncement.deadlineDate && evaluator.status == 1
+  script(src=pathToRoot + 'tables/vue-tables-2.min.js')
+  //- script(src=pathToRoot + 'pagination/vue-pagination-2.min.js')
+  script(src=pathToRoot + 'vue/controllers/announcement/viewEvalutor.js')
