@@ -136,6 +136,14 @@
 	GET: Calcula el promedio ajustado de todos los proyectos de la convocatoria enviada, además
 		muestran el grupo al que pertenecen porque algunos promedios son estadísticamente iguales entre sí
 		y lo guarda en la base de datos. El modelo de Project ahora tiene los campos de mean, adjustedGrade y group
+'/abiertas' //Funcionando bien
+	GET: Devuelve todas las convocatorias que tengan fecha de evaluación mayor a la fecha actual, es decir, 
+		todas las que están abiertas y a las que los usuarios se pueden registrar todavía.
+		Devuelve un array de convocatorias  
+'/terminadas'
+	GET: Devuelve todas las convocatorias que tengan 'deadlineDead' menor o igual 
+		a la fecha actual, es decir, que ya hayan sido cerradas y terminadas
+		Devuelve un array de convocatorias
 
 //+++++++Project
 '/projectsEvaluator/:idProject' //Funcionando bien

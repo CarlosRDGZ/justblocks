@@ -164,6 +164,32 @@ announcements.route('/newest')
     })
   })
 
+announcements.route('/abiertas')
+  .get((req, res) => {
+    console.log('GET announcement abiertas');
+    let today = new Date();
+    Announcement.find({evaluationDate: {$gt: today}})
+      .populate('image')
+      .exec()
+      .then(announs => {
+        res.json(announs);
+      })
+      .catch(err => {console.log('Get announcements abiertas error'); console.log(err.message); res.status(500).json({err: err.message});})
+  })
+
+announcements.route('/terminadas')
+  .get((req, res) => {
+    console.log('GET announcement cerradas');
+    let today = new Date();
+    Announcement.find({deadlineDate: {$lte: today}})
+      .populate('image')
+      .exec()
+      .then(announs => {
+        res.json(announs);
+      })
+      .catch(err => {console.log('Get announcements abiertas error'); console.log(err.message); res.status(500).json({err: err.message});})
+  })
+
 //Subir la imagen de presentación de la convocatoria
 announcements.route('/image/:idAnnoun')
   .post((req, res) => {

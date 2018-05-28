@@ -10,6 +10,9 @@ announ.use("/", navBarMiddleware);
 // announ.use("/create", sessionMiddleware);
 
 announ.get('/', (req, res) => res.render('announcement/index.pug'))
+
+announ.get('/closed', (req, res) => res.render('announcement/closed.pug'))
+
 announ.get('/create', (req, res) => res.render('announcement/create.pug'))
 announ.get('/view/:id', function(req, res) {
 	res.render('announcement/view', {id: req.params.id});
@@ -57,19 +60,7 @@ announ.get('/view/qualify/project/:idProject', (req, res) => {
 		})
 		.catch(err =>{console.log('Evaluator error'); console.log(err.message); res.status(500).json({err: err.message});})
 })
-/*
-announ.get('/view/:id', function(req, res) {
-	Announcement.find({_id: req.params.id})
-		.then((announcementGot) => {
-			console.log("THEN");
-			//Por alguna razón es un array
-			res.render('announcement/view', announcementGot[0]);
-		})
-		.catch((err) => {
-			console.log("Err getAnnoun: " + err.message);
-		})
-})
-*/
+
 ///*****Debugg
 announ.get('/', (req, res) => res.render('announcements.pug'))
 announ.get('/opcions', (req, res) => {res.render("announcements.pug");})
