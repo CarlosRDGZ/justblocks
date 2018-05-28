@@ -140,7 +140,7 @@
 	GET: Devuelve todas las convocatorias que tengan fecha de evaluación mayor a la fecha actual, es decir, 
 		todas las que están abiertas y a las que los usuarios se pueden registrar todavía.
 		Devuelve un array de convocatorias  
-'/terminadas'
+'/terminadas' //Funcionando bien
 	GET: Devuelve todas las convocatorias que tengan 'deadlineDead' menor o igual 
 		a la fecha actual, es decir, que ya hayan sido cerradas y terminadas
 		Devuelve un array de convocatorias

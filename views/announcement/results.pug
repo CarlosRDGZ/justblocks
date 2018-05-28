@@ -1,0 +1,27 @@
+- const pathToRoot = '../../';
+doctype html
+html(lang="en")
+  head
+    include ../header.pug
+    style.
+      .title-hero {
+        font-size: 4rem
+      }
+    title Resultados #{announ.title}
+  body
+    section.hero.is-success
+      .hero-body
+        .container.has-text-centered
+          h1.title Resultados #{announ.title}
+    h1.title.is-3 Ganadores
+    #winners
+      v-client-table(:columns="columns" :data="data.winners" :options="options")
+      h1.title.is-3 Los demás participantes
+      v-client-table(:columns="columns" :data="data.rest" :options="options")
+   
+  include ../footer.pug
+script.
+  const idAnnoun = `#{announ._id}`;
+script(src=pathToRoot + 'vue/vue.min.js')
+script(src=pathToRoot + 'tables/vue-tables-2.min.js')
+script(src=pathToRoot + 'vue/controllers/announcement/results.js')

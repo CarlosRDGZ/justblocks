@@ -413,14 +413,21 @@ projects.route('/adjustedGrades/:idAnnoun')
 projects.route('/winners/:idAnnoun')
   .get((req, res) => {
     Project.find({idAnnouncement: req.params.idAnnoun})
+      .populate('idCreator', ['name', '_id', 'email'])
+      .exec()
       .then(projectsAnnoun => {
         //Get the winner groups
-        let groups = new Array([], [], []);
+        let groups = new Array([], [], [], []);
         projectsAnnoun.forEach(proj => {
           for(let i = 0; i < proj.group.length; i++) {
             if(!isNaN(proj.group[i])) { //Es un número (sólo entre 1 y 3, ver qualifyProjects.R para más info)
               groups[proj.group[i] - 1].push(proj);
+              break;
             }
+            else {
+              groups[3].push(proj);
+              break;
+            } 
           }
         })
         res.json(JSON.parse(JSON.stringify(groups)));
