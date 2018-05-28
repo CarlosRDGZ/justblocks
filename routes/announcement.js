@@ -2,7 +2,7 @@ const announ = require('express').Router()
 const sessionMiddleware = require('../middlewares/session');//Para validar los usuarios
 const navBarMiddleware = require('../middlewares/navBarMiddleware');//Para validar los usuarios
 const Announcement = require('../models/Announcement').Announcement;
-const Evaluator = require('../models/evaluator').Evaluator;
+const Evaluator = require('../models/Evaluator').Evaluator;
 
 announ.use("/", navBarMiddleware);
 // announ.use("/create", sessionMiddleware);
@@ -12,7 +12,7 @@ announ.get('/create', (req, res) => res.render('announcement/create.pug'))
 announ.get('/view/:id', function(req, res) {
 	res.render('announcement/view', {id: req.params.id});
 })
-/*
+
 announ.get('/view/:id', function(req, res) {
 	Announcement.find({_id: req.params.id})
 		.then((announcementGot) => {
@@ -24,7 +24,7 @@ announ.get('/view/:id', function(req, res) {
 			console.log("Err getAnnoun: " + err.message);
 		})
 })
-
+/*
 announ.get('/view/evaluator/:idAnnoun', (req, res) => {
 	console.log('View announcement evaluator');
 	let idAnnoun = req.params.idAnnoun;

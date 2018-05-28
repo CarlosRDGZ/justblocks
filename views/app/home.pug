@@ -2,8 +2,6 @@
 script.
   window.id = !{JSON.stringify(id)}
 doctype html
-script.
-  window.id = !{JSON.stringify(id)}
 html(lang="en") 
   head
     include ../header.pug
@@ -70,28 +68,37 @@ html(lang="en")
                 .tile.is-vertical.parent
                   div(v-if='tabs.announs')
                     .tile.is-child
-                      .tile.is-4
-                        .field
-                          p.control.has-icons-left
-                            input.input(type="text")
-                            span.icon.is-small.is-left
-                              i.fas.fa-search
+                      .columns
+                        .column.is-4
+                          .field
+                            p.control.has-icons-left
+                              input.input(type="text")
+                              span.icon.is-small.is-left
+                                i.fas.fa-search
+                        .column
+                          .field.is-pulled-right
+                            p.control
+                              a.button.is-success.is-outlined(:href="`/announcement/create`")
+                                span.icon.is-small
+                                  i.fas.fa-plus-square
+                                span Agregar
+                    br
                     .tile.is-child
                       table.table.is-striped.is-fullwidth
                         thead
                           tr
-                            th Título
-                            th Fecha de lanzamiento
-                            th Fecha de evaluación
-                            th Fecha de cierre
-                            th Opciones
+                            th.has-text-centered Título
+                            th.has-text-centered Fecha de lanzamiento
+                            th.has-text-centered Fecha de evaluación
+                            th.has-text-centered Fecha de cierre
+                            th.has-text-centered Opciones
                         tbody(v-for='i in table.announs.pagination.itemsPerPage')
                           tr(v-if='table.announs.data[i-1] !== undefined')
-                              td {{ table.announs.data[i-1].title }}
-                              td {{ table.announs.data[i-1].endEnrollmentsDate }}
-                              td {{ table.announs.data[i-1].evaluationDate }}
-                              td {{ table.announs.data[i-1].deadlineDate }}
-                              td
+                              td.has-text-centered {{ table.announs.data[i-1].title }}
+                              td.has-text-centered {{ table.announs.data[i-1].endEnrollmentsDate }}
+                              td.has-text-centered {{ table.announs.data[i-1].evaluationDate }}
+                              td.has-text-centered {{ table.announs.data[i-1].deadlineDate }}
+                              td.is-narrow
                                 .field.has-addons
                                   p.control
                                     a.button.is-primary.is-outlined(:href="`app/announcement/admin/${table.announs.data[i-1]._id}`")
@@ -134,24 +141,26 @@ html(lang="en")
                                   i.fas.fa-angle-double-right
                   div(v-else-if='tabs.projects')
                     .tile.is-child
-                      .tile.is-4
-                        .field
-                          p.control.has-icons-left
-                            input.input(type="text")
-                            span.icon.is-small.is-left
-                              i.fas.fa-search
+                      .columns
+                        .column.is-4
+                          .field
+                            p.control.has-icons-left
+                              input.input(type="text")
+                              span.icon.is-small.is-left
+                                i.fas.fa-search
+                    br
                     .tile.is-child
                       table.table.is-striped.is-fullwidth
                           thead
                             tr
-                              th Título
-                              th Descripción
-                              th Opciones
+                              th.has-text-centered Título
+                              th.has-text-centered Descripción
+                              th.has-text-centered Opciones
                           tbody(v-for='i in table.projects.pagination.itemsPerPage')
                             tr(v-if='table.projects.data[i-1] !== undefined')
-                              td {{ table.projects.data[i-1].title }}
-                              td {{ table.projects.data[i-1].description }}
-                              td
+                              td.has-text-centered {{ table.projects.data[i-1].title }}
+                              td.has-text-centered {{ table.projects.data[i-1].description }}
+                              td.is-narrow
                                 .field.has-addons
                                   p.control
                                     a.button.is-primary.is-outlined(:href="'#'")

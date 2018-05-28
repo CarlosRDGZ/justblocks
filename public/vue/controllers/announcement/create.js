@@ -1,15 +1,27 @@
+const url = 'http://127.0.0.1:3000/'
+const get = id => document.getElementById(id)
 const vm = new Vue({
   el: '#app',
   data: {
     announ: {
-      title: undefined,
+      // title: undefined,
+      title: 'Puppy Bowl',
+      //creationDate: undefined,
+      creationDate: '2018-05-27',
+      // endEnrollmentsDate: undefined,
+      endEnrollmentsDate: '2018-05-28',
+      // evaluationDate: undefined,
+      evaluationDate: '2018-05-29',
+      // deadlineDate: undefined,
+      deadlineDate: '2018-05-30',
+      // evaluators: undefined,
+      evaluators: '2',
+      // projectsPerEvaluator: undefined,
+      projectsPerEvaluator: '1',
       author: undefined,
-      creationDate: undefined,
-      endEnrollmentsDate: undefined,
-      evaluationDate: undefined,
-      deadlineDate: undefined,
-      evaluators: undefined,
-      projectsPerEvaluator: undefined,
+
+      image: undefined,
+      _image: undefined,
       content: undefined,
       prize: undefined,
     },
@@ -45,6 +57,7 @@ const vm = new Vue({
         ['Styles', 'Format']
       ]
     }
+    this.announ._image = `${url}images/Porg.png`
     CKEDITOR.replace('content', config)
     CKEDITOR.replace('prize', config)
   },
@@ -55,38 +68,37 @@ const vm = new Vue({
       this.announ.prize = CKEDITOR.instances.prize.getData()
       let i = 0, empty = false;
       for (let prop in this.announ) {
+        console.log(prop)
         if (this.announ[prop] === undefined) {
+          console.log(i)
           this.errors[i] = true
           empty = true
         }i++
+        if (i === 8) break;
       }
+      console.log('empty',empty)
+      console.log('errors',this.errors.indexOf(true))
       if (!empty && this.errors.indexOf(true) === -1) {
         const url = 'http://127.0.0.1:3000/'
         console.log(this.announ);
         window.axios
           .post(`${url}api/announcement/`, this.announ)
           .then(res => {
-              console.log(res.data); 
-              //Para enviar la imagen
               let id = res.data['_id'];
               if(file.files.length != 0) {
                 let formData = new FormData()
-                let imagefile = document.querySelector('#file')
-                console.log("ID: " + id);
-                formData.append('image', imagefile.files[0])
-
-                const config = { headers: { 'content-type': 'multipart/form-data' } }
-                window.axios.post('/api/announcement/image/' + id, formData, config)
+                let image = get('file').files[0]
+                formData.append('image', image, image.name)
+                window.axios.post(`/api/announcement/image/${id}`, formData, { headers: { 'content-type': 'multipart/form-data' } })
                   .then(({data}) => {
                     console.log("DENTRO");
                     console.log(data);
-                    window.location = "/announcement/view/" + id;
+                    window.location = `/announcement/view/${id}`
                   })
-              }
-              else
-              {
+                  .catch(err => console.log(err))
+              } else {
                 console.log(res.data); 
-                window.location = "/announcement/view/" + id;
+                window.location = `/announcement/view/${id}`
               }
             })
           .catch(err => console.log(err))
@@ -97,6 +109,20 @@ const vm = new Vue({
         if (this.ui[`helpper${i}`] === true && data != i)
           this.ui[`helpper${i}`] = false
       this.ui[`helpper${data}`] = !this.ui[`helpper${data}`]
+    },
+    updateImage: function () {
+      let fileUpload = get('file')
+      fileUpload.multiple = false
+      fileUpload.click()
+    },
+    readURL: function () {
+      let input = get('file')
+      let reader = new FileReader()
+      let announ = this.announ
+      reader.onload = function (e) {
+        announ._image = e.target.result
+      }
+      reader.readAsDataURL(input.files[0])
     }
   },
   watch: {

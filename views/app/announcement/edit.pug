@@ -136,10 +136,11 @@ html(lang="en")
                   textarea#prize.textarea
               br
               .columns.is-centered
-                .column.is-half.is-narrow
+                // .column.is-half.is-narrow
+                .column.is-two-thirds.is-narrow
                   div.notification.has-text-centered
                     figure.image.is-squared
-                      img.image(:src="announ.image")
+                      img.image(:src="announ._image")
                     br
                     a.button.is-primary(@click='updateImage') Cambiar
                     input#file(type="file" name="image" accept=".png, .jpg, .jpeg" @change="readURL()" hidden)

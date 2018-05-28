@@ -1,6 +1,6 @@
 const evaluators = require('express').Router()
-const Evaluator = require('../models/evaluator').Evaluator
-const Project = require('../models/project').Project
+const Evaluator = require('../models/Evaluator').Evaluator
+const Project = require('../models/Project').Project
 const ProjectsEvaluator = require('../models/projectsEvaluator').ProjectsEvaluator
 const bodyParser = require('body-parser')
 

@@ -1,12 +1,12 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-var fileAnnouncementSchema = new Schema({ 
+const fileAnnouncementSchema = new Schema({ 
 	owner: {type: Schema.Types.ObjectId, ref: "Announcement"},
 	extension: {type: String, required: true},
 	typeFile: {type: String, required: true}
 });
 
-var FileAnnouncement = mongoose.model("FileAnnouncement", fileAnnouncementSchema);
+const FileAnnouncement = mongoose.model("FileAnnouncement", fileAnnouncementSchema);
 
 module.exports.FileAnnouncement = FileAnnouncement;

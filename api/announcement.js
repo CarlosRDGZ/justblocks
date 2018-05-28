@@ -2,9 +2,9 @@ const announcements = require('express').Router()
 
 //Models
 const Announcement = require('../models/Announcement').Announcement;
-const Project = require('../models/project').Project;
+const Project = require('../models/Project').Project;
 const ProjectsEvaluator = require('../models/projectsEvaluator').ProjectsEvaluator;
-const Evaluator = require('../models/evaluator').Evaluator;
+const Evaluator = require('../models/Evaluator').Evaluator;
 const FileAnnouncement = require('../models/FileAnnouncement').FileAnnouncement;
 
 //Middlewares
@@ -15,6 +15,8 @@ const fs = require('fs');
 const cron = require('node-cron');
 const formidable = require("express-form-data");
 const mongoose = require('../database/config')
+const path = require('path')
+const mv = require('mv')
 
 //npm install --save express-form-data
 //npm install --save node-cron
@@ -168,28 +170,29 @@ announcements.route('/newest')
 announcements.route('/image/:idAnnoun')
   .post((req, res) => {
     console.log("POST image announcement");
-    var extension = req.files.image.name.split(".").pop();
-    var image = new FileAnnouncement({
+    let extension = req.files.image.name.split(".").pop();
+    let image = new FileAnnouncement({
       owner: req.params.idAnnoun,
       extension: extension,
       typeFile: req.files.image.type
     });
-
     console.log(image);
-
-    image.save(function(err) {
+    image.save(err => {
       if(!err) {
-        fs.rename(req.files.image.path, "public/files/announcement/images/" + image._id + "." + extension );
-
-        Announcement.findByIdAndUpdate(req.params.idAnnoun, {$set: {image: image._id } },
-          (err,data) => {
-            if (err) res.status(400).json({err: err.message});
+        // https://stackoverflow.com/questions/44146393/error-exdev-cross-device-link-not-permitted-rename-nodejs?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
+        // error con rename
+        // fs.rename(req.files.image.path, path.join(gRootDir,`public/files/announcement/images/${image._id}.${extension}`), err => console.log(err));
+        // falto parametro callback
+        mv(req.files.image.path, // source
+          path.join(gRootDir,`public/files/announcement/images/${image._id}.${extension}`), // destiny
+          err => err ? console.log(err) : console.log('file moved')) // callback
+        Announcement.findByIdAndUpdate(req.params.idAnnoun, { $set: {image: image._id } },(err,data) => {
+            if (err)
+              res.status(400).json({err: err.message});
             else
               res.json(data);
-          }
-        )
-      }
-      else {
+          })
+      } else {
         console.log(err);
         res.status(500).json({err: err});
       }
@@ -277,12 +280,11 @@ announcements.route('/image/:idAnnoun')
 announcements.route('/:id')
   .get((req, res) => {
       console.log("GET announcements by id");
-
-      Announcement.find({_id: req.params.id})
-        .populate('image', 'extension').exec(function(err, announcementGot) {
-          if(err){res.status(404).json(err)}
+      Announcement.findById({_id: req.params.id})
+        .populate('image', 'extension').exec(function(err, announ) {
+          if(err) res.status(404).json(err)
           else
-            res.json(announcementGot);
+            res.json(announ);
       })
   })
   .put((req, res) => {
