@@ -1,5 +1,5 @@
 // import Vue from "vue";
-const vm = new Vue({
+const vm = new Vue({ 
   el: '#app',
   data: {
     items: [],
@@ -75,6 +75,11 @@ const vm = new Vue({
           this.goto(self.pagination.pags)
         }
       }
+    },
+    setLenght: function(str, limit) {
+      if(str.length > limit)
+        str = str.substring(0, limit - 4) + "...";
+      return str;
     }
   },
   created: function() {
@@ -82,6 +87,10 @@ const vm = new Vue({
     //Con la url no funcionaba
     window.axios(`${this.url}api/announcement/terminadas`)
       .then(res => {
+        for (var i = res.data.length - 1; i >= 0; i--) {
+          res.data[i].title = this.setLenght(res.data[i].title, 23);
+          res.data[i].author = this.setLenght("Convoca: " + res.data[i].author, 36);
+        }
         let announs = res.data
         // announs = res.data
         this.items = announs

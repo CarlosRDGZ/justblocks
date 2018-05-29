@@ -144,7 +144,9 @@
 	GET: Devuelve todas las convocatorias que tengan 'deadlineDead' menor o igual 
 		a la fecha actual, es decir, que ya hayan sido cerradas y terminadas
 		Devuelve un array de convocatorias
-
+'/search/:str' //Funcionando bien
+	GET: Devuelve un array de convocatorias que incluyan en su título la cadena enviada.
+		No importa en donde aparezca la cadena, principio, en medio o al final
 //+++++++Project
 '/projectsEvaluator/:idProject' //Funcionando bien
 	GET: Devuelve toda la información de ese proyecto con respecto a la evaluación que le dieron, 
@@ -174,10 +176,10 @@
 	        index: 0,
 	        group: "  23 "
 	    }
-'/winners/:idAnnoun'
+'/winners/:idAnnoun' //Funcionando bien
 	GET: Devuelve los proyectos con las calificaciones estadísticamente iguales de los tres primeros grupos, es decir
-		los ganadores de la convocatoria. Los devuelve en 3 arreglos diferentes, por lo que un proyecto podría incluso
-		aparecer en los tres grupos de acuerdo a como lo haya asignado R. Devuelvo proyectos como tal pero ya ordenados por
+		los ganadores de la convocatoria y en un último arreglo el resto de los participantes (los que no ganaron). 
+		Los devuelve en 4 arreglos diferentes. Devuelvo proyectos como tal pero ya ordenados por
 		grupo. Ejmplo del json de un proyecto devuelto
 		{
             mean 6,

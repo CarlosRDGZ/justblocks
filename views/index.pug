@@ -1,6 +1,6 @@
-- const pathToRoot = '../'
+- const pathToRoot = '../';
 doctype html
-html(lang="en")
+html(lang="en") 
   head
     include header.pug
     link(rel="stylesheet", href="../css/index.css")
@@ -30,48 +30,46 @@ html(lang="en")
           .column.is-half.is-narrow
             .field.has-addons.has-icons-left
               .control.is-expanded.has-icons-left
-                input.input(type="text", placeholder="Encontrar Convocatoria")
+                input#txtSearch.input(type="text" placeholder="Encontrar Convocatoria")
                 span.icon.is-small.is-left
                   i.fa.fa-search
               .control
-                a.button.is-info Buscar
+                button#search.button.is-info Buscar
 
     main#app.section
+      h1.title.has-text-centered Más Recientes
       .container-fluid
-        h1.title.has-text-centered Más Recientes
-        .columns.is-variable.is-6
-          div(v-for="i in 3")
-            div(v-for="j in 3")
-              .column
-                .card
-                  .card-image
-                    figure.image.is-4by3
-                        div(v-if="announs[(j + (3 * (i - 1))) - 1].image._id")
-                          img(:src="`/files/announcement/images/${announs[(j + (3 * (i - 1))) - 1].image._id}.${announs[(j + (3 * (i - 1))) - 1].image.extension}`", alt='{{announs[(j + (3 * (i - 1))) - 1].title}}')
-                        div(v-else)
-                          img(src="/images/Porg.png", alt='{{announs[(j + (3 * (i - 1))) - 1].title}}')
-                  .card-content
-                    .columns.is-gapless.is-multiline
-                      .column.is-full
-                        .notification.is-success
-                          p.title.is-4 {{announs[(j + (3 * (i - 1))) - 1].title}}
-                          p.subtitle.is-6 {{announs[(j + (3 * (i - 1))) - 1].userName}}
-                      .column.is-three-fifths
-                        .notification.has-text-centered.is-success.is-inverted
-                          p
-                            b Etapa: Lanzamiento
-                          progress.progress.is-success(value='33', max='100') 33%
-                      .column.is-two-fifths
-                        .notification.has-text-centered
-                          p
-                            b 183
-                          p Participates
-                    .content
-                      p(hidden='')
-                        | Desarrollar una app web que permita a la población conocer sobre el Cambio Climático y colaborar con acciones
-                        | para su mitigación.
+        .columns(v-for='i in 3')
+          .column.is-4(v-for="j in 3")
+            .card(v-if='announs[(j + (3 * (i - 1))) - 1] !== undefined')
+              .card-image
+                figure.image.is-4by3
+                    div(v-if="announs[(j + (3 * (i - 1))) - 1].image._id")
+                      img(:src="`/files/announcement/images/${announs[(j + (3 * (i - 1))) - 1].image._id}.${announs[(j + (3 * (i - 1))) - 1].image.extension}`", alt='{{announs[(j + (3 * (i - 1))) - 1].title}}')
+                    div(v-else)
+                      img(src="/images/Porg.png", alt='{{announs[(j + (3 * (i - 1))) - 1].title}}')
+              .card-content
+                .columns.is-gapless.is-multiline
+                  .column.is-full
+                    .notification.is-success
+                      p.title.is-4 {{announs[(j + (3 * (i - 1))) - 1].title}}
+                      p.subtitle.is-6 {{announs[(j + (3 * (i - 1))) - 1].userName}}
+                  .column.is-three-fifths
+                    .notification.has-text-centered.is-success.is-inverted
                       p
-                        a(:href="`/announcement/view/${announs[(j + (3 * (i - 1))) - 1]._id}`") ver más...
+                        b Etapa: Lanzamiento
+                      progress.progress.is-success(value='33', max='100') 33%
+                  .column.is-two-fifths
+                    .notification.has-text-centered
+                      p
+                        b 183
+                      p Participates
+                .content
+                  p(hidden='')
+                    | Desarrollar una app web que permita a la población conocer sobre el Cambio Climático y colaborar con acciones
+                    | para su mitigación.
+                  p
+                    a(:href="`/announcement/view/${announs[(j + (3 * (i - 1))) - 1]._id}`") ver más...
 
     section.section
       .container

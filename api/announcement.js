@@ -142,7 +142,6 @@ announcements.route('/user')
 */
 
 //Return the 9 announcements recenter
-
 announcements.route('/newest')
   .get((req, res) => {
     console.log('newest announcements')
@@ -162,6 +161,18 @@ announcements.route('/newest')
         })
       }
     })
+  })
+
+announcements.route('/search/:str')
+  .get((req, res) => {
+    console.log('GET search announcements');
+    Announcement.find({$text: {$search: req.params.str}})
+      .populate('image')
+      .exec()
+      .then(announs => {
+        res.json(announs);
+      })
+      .catch(err => {console.log('Get Announcement error'); console.log(err.message); res.status(500).json({err: err.message});})
   })
 
 announcements.route('/abiertas')

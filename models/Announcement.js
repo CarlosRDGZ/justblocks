@@ -16,7 +16,7 @@ const announcementSchema = new Schema({
 	prize: { type: String },
 	image: {type: Schema.Types.ObjectId, ref: "FileAnnouncement" }
 })
-
+announcementSchema.index({title: 'text'});
 delete mongoose.models.Announcement;
 const Announcement = mongoose.model('Announcement', announcementSchema);
 module.exports.Announcement = Announcement;
