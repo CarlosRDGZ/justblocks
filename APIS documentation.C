@@ -147,6 +147,7 @@
 '/search/:str' //Funcionando bien
 	GET: Devuelve un array de convocatorias que incluyan en su título la cadena enviada.
 		No importa en donde aparezca la cadena, principio, en medio o al final
+
 //+++++++Project
 '/projectsEvaluator/:idProject' //Funcionando bien
 	GET: Devuelve toda la información de ese proyecto con respecto a la evaluación que le dieron, 
@@ -192,7 +193,7 @@
             title: "Proyecto No. 2",
             __v: 0
         }
-'/document/:idProject' //Funcionando bien, falta validar que sólo lo suban participantes 
+'/documents/:idProject' //Funcionando bien, falta validar que sólo lo suban participantes 
 	POST: Subir un nuevo documento para ese proyecto (el documento lo podrá ver el evaluador)
 		Nota: En el FormData el archivo deberá ser eviado como document
 				    formData.append('document', documentFile.files[0])
@@ -209,3 +210,7 @@
 '/qualify/:idProject'//Funcionando bien 
 	PUT: Establece la calificación del proyecto con el id enviado, la calificación la recibe en el body
 		de la petición como un json de la forma {grade: 8} y devuelve un json con el formato de proyecto
+
+'/:idProject/status'//Funcionando bien
+	PUT: (Para administradores de la convocatoria) Actualiza el status del proyecto y lo devulve.
+		Los status posibles son 0: Enviado, 1: Aceptado y 2: Rechazado

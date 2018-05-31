@@ -5,7 +5,7 @@ const bodyParser = require('body-parser')
 partakers.use(bodyParser.urlencoded({ extended: true }))
 partakers.use(bodyParser.json())
 
-partakers.route('/')
+partakers.route('/') 
   .post((req,res) => {
     const partaker = new Partaker(req.body)
     partaker.save()

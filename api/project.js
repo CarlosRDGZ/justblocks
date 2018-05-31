@@ -125,6 +125,18 @@ projects.route('/projectsEvaluator/:idProject')
       .catch(err => {console.log("projectsEvaluator error"); console.log(err); res.status(500).json({err: err});})
   })
 
+projects.route('/:idProject/status')
+  .put((req, res) => {
+    console.log('Update project´s status');
+    console.log(req.body)
+    //Validar que sólo lo pueda actualizar el admin de la convocatoria
+    Project.findByIdAndUpdate(req.params.idProject, {$set: {status: req.body.status}}, {new: true})
+      .then(proj => {
+        res.json(proj);
+      })
+      .catch(err => {console.log('Project error'); console.log(err.message); res.status(500).json({err: err.message});})
+  })
+
 //Cuando se terminé la fecha de evaluación se tienen que calcular nos promedios "normales" para luego calcular los ajustados
 projects.route('/calculateNormalMean/:idAnnoun')
   .get((req, res) => {
@@ -216,7 +228,7 @@ function calculateMean(idProj, projectsEvaluatedTimes) {
 }
 
 /****************DOCUMENTS SECTION**********************/ 
-projects.route('/document/:idProject')
+projects.route('/documents/:idProject')
   .post((req, res) => {//Validar que sólo lo puedan subir participantes
     console.log("POST document Project");
     let extension = req.files.document.name.split(".").pop();
@@ -265,6 +277,8 @@ projects.route('/document/:idProject')
       })
       .catch(err => {console.log("DELETE documents of project error"); console.log(err.message); res.json({err: err.message });});
   })
+
+
 
 
 /****************R SECTION**********************/ 

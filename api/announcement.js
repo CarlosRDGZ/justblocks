@@ -1,5 +1,4 @@
 const announcements = require('express').Router()
-
 //Models
 const Announcement = require('../models/Announcement').Announcement;
 const Project = require('../models/project').Project;

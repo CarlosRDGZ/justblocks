@@ -8,7 +8,8 @@ const projectSchema = new Schema({
   title: { type: String },
   mean: { type: Number, default: -1},//El promedio de las calificaciones obtenidas de todos los evaluadores
   adjustedGrade: { type: Number, default: -1},
-  group: {type: String, default: -1}//El grupo al que pertenecen cuando se calculen los promedios ajustados
+  group: {type: String, default: -1},//El grupo al que pertenecen cuando se calculen los promedios ajustados
+  status: { type: Number, default: 0 }	//0: Enviado, 1: Aceptado, 2: Rechazado
 })
 
 delete mongoose.models.Project;

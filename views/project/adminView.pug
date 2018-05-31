@@ -1,0 +1,49 @@
+- const pathToRoot = 'http://127.0.0.1:3000/';
+- const today = new Date(2018, 4, 25);//Se cuenta desde 0
+- const months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+
+doctype html
+html(lang="en")
+  head
+    include ../header.pug
+    link(rel="stylesheet", href=pathToRoot + "css/index.css")
+    link(rel="stylesheet", href=pathToRoot + "css/social-buttons.css")
+    link(rel="stylesheet", href=pathToRoot + "bulma-extensions/bulma-extensions.min.css")
+  body
+    include ../navbar.pug
+    - const announ = project.idAnnouncement
+    h1 Proyecto
+    h2 #{project.title}
+    .container
+      if today < announ.endEnrollmentsDate
+        //Etapa de registro de proyectos y esas cosas
+        if project.status == 0
+          //Enviado
+          h5 Tu solicitud para unirte a la convocatoria fue enviada, pronto recibirás noticias de la confirmación
+        else if project.status == 1
+          h5 Tu proyecto ahora forma parte de los partipantes en la convocatoria "#{announ.title}".
+          h5 Te recordamos que la fecha de evaluación empieza el #{announ.endEnrollmentsDate.getDay()}/#{months[announ.endEnrollmentsDate.getMonth()]}/ #{announ.endEnrollmentsDate.getFullYear()} así que no demores en subir los documentos de tu proyecto
+        else
+          h5 Lo sentimos, por esta ocasión no podrás participar en esta convocatoria porque no cumples con alguno de los lineamientos, esperamos poder contar contigo en próximas ocasiones. 
+          h5 Para consultar otras convocatorias por favor visita el siguiente  
+            a(href="http://127.0.0.1:3000/announcement/") enlace
+      else if today < announ.deadlineDate
+        //Etapa de evaluación
+      else
+        //Etapa final, convocatoria terminada, para entonces ya debió haber sido evaluado, también con el modelo
+        h5 La espera ha terminado, a continuación puedes encontrar la información correspondiente a la evaluación de tu proyecto.
+        h5 N&uacute;mero de personas que evaluaron tu proyecto: #{announ.projectsEvaluatedTimes}
+        h5 Promedio obtenido de las evaluaciones: #{project.mean}
+        h5 Promedio ajustado obtenido con el modelo BIB: #{project.adjustedGrade}
+        h5 Grupo(s) estadístico al que entra el resultado de tu proyecto: #{project.group}
+        - let idAnnoun = announ._id
+        h4 Para ver los resultados completos de la convocatoria, así como los ganadores dirígete a este 
+          a(href=`http://127.0.0.1:3000/announcement/results/` + idAnnoun) enlace
+
+        h5 ¡Gracias por tu participación!
+  include ../footer.pug
+
+script(src=pathToRoot + 'vue/vue.min.js')
+script.
+  const idProject = `#{project._id}`
+script(src=pathToRoot + 'vue/controllers/project/admin.js')
