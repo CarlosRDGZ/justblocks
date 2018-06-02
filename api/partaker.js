@@ -6,10 +6,10 @@ partakers.use(bodyParser.urlencoded({ extended: true }))
 partakers.use(bodyParser.json())
 
 partakers.route('/') 
-  .post((req,res) => {
+  .post((req,res) => { 
     const partaker = new Partaker(req.body)
     partaker.save()
-      .then(data => res.json(data))
+      .then(data => res.json(data))//Validar que no pertenezca ya, que no sea el dueño de la convocatoria ni evaluador de la misma
       .catch(err => res.status(400).json(err))
   }) 
   .get((req, res) => {

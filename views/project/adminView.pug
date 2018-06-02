@@ -1,8 +1,8 @@
 - const pathToRoot = 'http://127.0.0.1:3000/';
-- const today = new Date(2018, 4, 25);//Se cuenta desde 0
+- const today = new Date(2018, 4, 7);//Se cuenta desde 0
 - const months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
-doctype html
+doctype html 
 html(lang="en")
   head
     include ../header.pug
@@ -14,6 +14,7 @@ html(lang="en")
     - const announ = project.idAnnouncement
     h1 Proyecto
     h2 #{project.title}
+    h2 #{project.status}
     .container
       if today < announ.endEnrollmentsDate
         //Etapa de registro de proyectos y esas cosas
@@ -21,29 +22,64 @@ html(lang="en")
           //Enviado
           h5 Tu solicitud para unirte a la convocatoria fue enviada, pronto recibirás noticias de la confirmación
         else if project.status == 1
+          //Aceptado
           h5 Tu proyecto ahora forma parte de los partipantes en la convocatoria "#{announ.title}".
           h5 Te recordamos que la fecha de evaluación empieza el #{announ.endEnrollmentsDate.getDay()}/#{months[announ.endEnrollmentsDate.getMonth()]}/ #{announ.endEnrollmentsDate.getFullYear()} así que no demores en subir los documentos de tu proyecto
         else
+          //Rechazado
           h5 Lo sentimos, por esta ocasión no podrás participar en esta convocatoria porque no cumples con alguno de los lineamientos, esperamos poder contar contigo en próximas ocasiones. 
           h5 Para consultar otras convocatorias por favor visita el siguiente  
             a(href="http://127.0.0.1:3000/announcement/") enlace
       else if today < announ.deadlineDate
         //Etapa de evaluación
-      else
-        //Etapa final, convocatoria terminada, para entonces ya debió haber sido evaluado, también con el modelo
-        h5 La espera ha terminado, a continuación puedes encontrar la información correspondiente a la evaluación de tu proyecto.
-        h5 N&uacute;mero de personas que evaluaron tu proyecto: #{announ.projectsEvaluatedTimes}
-        h5 Promedio obtenido de las evaluaciones: #{project.mean}
-        h5 Promedio ajustado obtenido con el modelo BIB: #{project.adjustedGrade}
-        h5 Grupo(s) estadístico al que entra el resultado de tu proyecto: #{project.group}
-        - let idAnnoun = announ._id
-        h4 Para ver los resultados completos de la convocatoria, así como los ganadores dirígete a este 
-          a(href=`http://127.0.0.1:3000/announcement/results/` + idAnnoun) enlace
+        h1 En etapa de evaluación
+        if project.status == 1
+          h1 TABLA  
+          #partakers
+            v-client-table(:columns="columns" :data="data.partakers" :options="options")
 
-        h5 ¡Gracias por tu participación!
+            h1 Puedes buscar otro compañero con su dirección de correo y agregarlo a este proyecto
+            label(for="search") Buscar compañero
+            input#searchMail(type="email" placeholder="Correo")
+            button#btnSearch.button.is-info(@click="searchPartaker") Buscar
+            p#result(hidden)
+            p#question(hidden) ¿Es él el compañero que buscas?
+            button#btnAddPartaker(hidden @click="addNewPartaker") Guardar
+            br
+            br
+            h1.title.is-6 Documentos
+            .container-fluid
+              table
+                tbody(id="documents")
+                  tr
+            h1 A continuación puedes subir los documentos (uno a la vez) que servirán para evaluar tu proyecto
+            label(for="documents")
+              input#docs(type="file")
+            button#btnUploadFiles(@click="uploadFile") Subir    
+        else
+          h1 404 NOT FOUND
+        
+      else
+        if project.status == 1
+          //Etapa final, convocatoria terminada, para entonces ya debió haber sido evaluado, también con el modelo
+          h5 La espera ha terminado, a continuación puedes encontrar la información correspondiente a la evaluación de tu proyecto.
+          h5 N&uacute;mero de personas que evaluaron tu proyecto: #{announ.projectsEvaluatedTimes}
+          h5 Promedio obtenido de las evaluaciones: #{project.mean}
+          h5 Promedio ajustado obtenido con el modelo BIB: #{project.adjustedGrade}
+          h5 Grupo(s) estadístico al que entra el resultado de tu proyecto: #{project.group}
+          - let idAnnoun = announ._id
+          h4 Para ver los resultados completos de la convocatoria, así como los ganadores dirígete a este 
+            a(href=`http://127.0.0.1:3000/announcement/results/` + idAnnoun) enlace
+
+          h5 ¡Gracias por tu participación!
+        else
+          h1 404 NOT FOUND
+
   include ../footer.pug
 
 script(src=pathToRoot + 'vue/vue.min.js')
 script.
   const idProject = `#{project._id}`
+if today < announ.deadlineDate && project.status == 1
+  script(src=pathToRoot + 'tables/vue-tables-2.min.js')
 script(src=pathToRoot + 'vue/controllers/project/admin.js')

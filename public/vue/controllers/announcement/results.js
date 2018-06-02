@@ -1,7 +1,7 @@
 const url = 'http://127.0.0.1:3000/'
 Vue.use(VueTables.ClientTable);
-
-let vm = new Vue({
+ 
+let vm = new Vue({ 
   el: "#winners",
   data: {
     columns: ['title', 'mean', 'adjustedMean', 'group', 'creator'],
@@ -58,38 +58,3 @@ let vm = new Vue({
   		.catch(err => {console.log(err.err);})
   }
 });
-
-/*let vmRest = new Vue({
-  el: "#rest",
-  data: {
-    columns: ['title', 'mean', 'adjustedMean', 'group', 'creator'],
-    data: [],
-    options: {
-      headings: {
-        title: 'Título',
-        mean: 'Promedio',
-        adjustedMean: 'Promedio ajustado',
-        group: "Grupo",
-        creator: "Creador"
-      },
-      sortable: ['title', 'mean', 'adjustedMean', 'group', 'creator'],
-      filterable: ['title', 'grade', 'creator'],
-      orderBy: {'column': 'group'}
-    }
-  }, 
-  created: function() {
-    let rows = [];
-    for(let j = 0; j < restData.length; j++) { 
-      let temp = {};
-      temp.title = restData[j].title;
-      temp.mean = restData[j].mean;
-      temp.adjustedMean = restData[j].adjustedGrade;
-      temp.group = restData[j].group;
-      temp.creator = restData[j].idCreator.name.first + " " + restData[j].idCreator.name.last;
-
-      rows.push(temp);
-    }
-
-    this.data = rows;
-  }
-});*/

@@ -95,6 +95,57 @@ projects.route('/announcement/:id')
     })
   })
 
+/****************DOCUMENTS SECTION**********************/ 
+projects.route('/documents/:idProject')
+  .post((req, res) => {//Validar que sólo lo puedan subir participantes
+    console.log("POST document Project");
+    let extension = req.files.document.name.split(".").pop();
+    let name = req.files.document.name.substring(0, req.files.document.name.length - extension.length - 1);//Quitarle el punto y la extensión
+
+    var doc = new DocumentProject({
+      owner: req.params.idProject,
+      extension: extension,
+      typeFile: req.files.document.type,
+      name: name
+    });
+
+    doc.save()
+      .then(data =>{
+        fs.rename(req.files.document.path, "public/files/projects/" + doc._id + "." + extension );
+        res.json(data);
+      })
+      .catch(err =>{console.log("DocumentProject error"); console.log(err.message); res.status(500).json({err: err.message});})  
+  })
+  .get((req, res) => {
+    console.log("GET all documents of project");
+    DocumentProject.find({owner: req.params.idProject})
+      .then(documents => {
+        res.json(documents);
+      })
+      .catch(err =>{console.log("Find DocumentProject error"); console.log(err.message); res.status(500).json({err: err.message});})  
+  })
+  .delete((req, res) => {
+    console.log("DELETE all documents of project");
+    DocumentProject.find({owner: req.params.idProject})
+      .then(documents => {
+        // if(req.session.user_id == req.params.idAnnoun) { //Validar que sólo lo pueda eliminar el creador o partakers
+          let itemsDeleted = 0;
+          documents.forEach(currentDoc => {
+            fs.unlink("public/files/projects/" + currentDoc._id + "." + currentDoc.extension, (err) => {
+              if(err){console.log("Problemas para eliminar el archivo en el servidor: " + err.message); res.status(500).json({err: err.message});}
+              currentDoc.remove(err => {
+                if(err){console.log("Problema al eliminar el documento de la DB: " + err.message); res.status(500).json({err: err.message});}            
+                itemsDeleted++; 
+              })  
+            })
+            if(itemsDeleted >= documents.length)
+                  res.send(200); 
+          })
+        // }
+      })
+      .catch(err => {console.log("DELETE documents of project error"); console.log(err.message); res.json({err: err.message });});
+  })
+
 projects.route('/user/:id')
   .get((req,res) => {
     Project.find({ idCreator: req.params.id }, (err,projects) => {
@@ -226,60 +277,6 @@ function calculateMean(idProj, projectsEvaluatedTimes) {
       })
   })
 }
-
-/****************DOCUMENTS SECTION**********************/ 
-projects.route('/documents/:idProject')
-  .post((req, res) => {//Validar que sólo lo puedan subir participantes
-    console.log("POST document Project");
-    let extension = req.files.document.name.split(".").pop();
-    let name = req.files.document.name.substring(0, req.files.document.name.length - extension.length - 1);//Quitarle el punto y la extensión
-
-    var doc = new DocumentProject({
-      owner: req.params.idProject,
-      extension: extension,
-      typeFile: req.files.document.type,
-      name: name
-    });
-
-    doc.save()
-      .then(data =>{
-        fs.rename(req.files.document.path, "public/files/projects/" + doc._id + "." + extension );
-        res.json(data);
-      })
-      .catch(err =>{console.log("DocumentProject error"); console.log(err.message); res.status(500).json({err: err.message});})  
-  })
-  .get((req, res) => {
-    console.log("GET all documents of project");
-    DocumentProject.find({owner: req.params.idProject})
-      .then(documents => {
-        res.json(documents);
-      })
-      .catch(err =>{console.log("Find DocumentProject error"); console.log(err.message); res.status(500).json({err: err.message});})  
-  })
-  .delete((req, res) => {
-    console.log("DELETE all documents of project");
-    DocumentProject.find({owner: req.params.idProject})
-      .then(documents => {
-        // if(req.session.user_id == req.params.idAnnoun) { //Validar que sólo lo pueda eliminar el creador o partakers
-          let itemsDeleted = 0;
-          documents.forEach(currentDoc => {
-            fs.unlink("public/files/projects/" + currentDoc._id + "." + currentDoc.extension, (err) => {
-              if(err){console.log("Problemas para eliminar el archivo en el servidor: " + err.message); res.status(500).json({err: err.message});}
-              currentDoc.remove(err => {
-                if(err){console.log("Problema al eliminar el documento de la DB: " + err.message); res.status(500).json({err: err.message});}            
-                itemsDeleted++; 
-              })  
-            })
-            if(itemsDeleted >= documents.length)
-                  res.send(200); 
-          })
-        // }
-      })
-      .catch(err => {console.log("DELETE documents of project error"); console.log(err.message); res.json({err: err.message });});
-  })
-
-
-
 
 /****************R SECTION**********************/ 
 //Devuelve todos los proyectos de la convocatoria enviada ordenados por el índice generado al usar el modelo de asignación

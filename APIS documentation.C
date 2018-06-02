@@ -210,7 +210,10 @@
 '/qualify/:idProject'//Funcionando bien 
 	PUT: Establece la calificación del proyecto con el id enviado, la calificación la recibe en el body
 		de la petición como un json de la forma {grade: 8} y devuelve un json con el formato de proyecto
-
 '/:idProject/status'//Funcionando bien
 	PUT: (Para administradores de la convocatoria) Actualiza el status del proyecto y lo devulve.
 		Los status posibles son 0: Enviado, 1: Aceptado y 2: Rechazado
+
+//+++++++User
+'/email/:email' //Funcionando bien
+	GET: Devuelve el nombre y el id del usuario con ese correo electrónico

@@ -6,7 +6,7 @@ let evaluate = get("evaluate");
 
 window.onload = function() {
 	console.log('onload');
-	window.axios.get(`${url}api/project/document/${idProject}`)
+	window.axios.get(`${url}api/project/documents/${idProject}`)
 		.then(({data}) => {
 			docs = data;
 			console.log(data);

@@ -1,3 +1,5 @@
+let today = new Date(2018,4,10);
+let fecha;
 // import Vue from "vue";
 const vm = new Vue({
   el: '#app', 
@@ -90,8 +92,30 @@ const vm = new Vue({
         for (var i = res.data.length - 1; i >= 0; i--) {
           res.data[i].title = this.setLenght(res.data[i].title, 23);
           res.data[i].author = this.setLenght("Convoca: " + res.data[i].author, 36);
+          res.data[i].endEnrollmentsDate = new Date(res.data[i].endEnrollmentsDate);
+          res.data[i].evaluationDate = new Date(res.data[i].evaluationDate);
+          res.data[i].deadlineDate = new Date(res.data[i].deadlineDate);
+          fecha = res.data[i].deadlineDate;
+          if(today < res.data[i].endEnrollmentsDate) {
+            res.data[i].stage = "Lanzamiento y registro";
+            res.data[i].progress = "25";
+          } 
+          else if(today < res.data[i].evaluationDate) {
+            res.data[i].stage = "Postulación de proyectos";
+            res.data[i].progress = "50";
+          }
+          else if(today < res.data[i].deadlineDate){
+            res.data[i].stage = "Evaluación";
+            res.data[i].progress = "75";
+          }
+          else {
+            res.data[i].stage = "Cerrada";
+            res.data[i].progress = "100";
+          }
         }
         let announs = res.data
+        console.log("announs Brandon");
+        console.log(announs);
         // announs = res.data
         this.items = announs
         this.pagination.pags = Math.ceil(announs.length / this.pagination.itemsPerPage)
