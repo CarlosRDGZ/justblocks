@@ -1,0 +1,34 @@
+- const pathToRoot = "../../../";
+script.
+  window.id = !{JSON.stringify(id)};
+doctype html
+html(lang="en")
+  head
+    include ../../header.pug
+    link(rel="stylesheet", href=pathToRoot + "css/index.css")
+    link(rel="stylesheet", href=pathToRoot + "css/social-buttons.css")
+    link(rel="stylesheet", href=pathToRoot + "bulma-extensions/bulma-extensions.min.css")
+  body
+    include ../../navbar.pug
+    #app
+      section.hero.has-carousel
+        .hero-carousel.carousel-animated.carousel-animate-fade
+          .carousel-container
+            .carousel-item.has-background.is-active
+              // img.is-background(:src='image.src', alt='')
+              img.is-background(src='https://wikiki.github.io/images/merry-christmas.jpg', alt='')
+        .hero-body.has-text-centered
+          .columns.is-mobile.is-centered
+            .column.is-half.is-narrow
+              p.title.is-1 {{ project.title }}
+      main.section
+        .container
+          .tile.is-antecesor.is-full
+            .tile.is-parent.is-vertical
+              .tile.is-child.notification.is-primary
+                p.title.is-1 {{ project.title }}
+                p.subtitle.is-pulled-right {{ owner.name.first + ' ' + owner.name.last }}
+    include ../../footer.pug
+script(src=pathToRoot + 'vue/vue.js')
+script(src=pathToRoot + 'ckeditor/ckeditor.js')
+script(src=pathToRoot + "vue/controllers/project/edit.js")

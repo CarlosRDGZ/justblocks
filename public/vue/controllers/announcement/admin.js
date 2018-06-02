@@ -5,17 +5,18 @@ const vm = new Vue({
   data: {
     announ: {
       title: undefined,
-      author: undefined,
       creationDate: undefined,
       endEnrollmentsDate: undefined,
       evaluationDate: undefined,
       deadlineDate: undefined,
       evaluators: undefined,
       projectsPerEvaluator: undefined,
+      author: undefined,
       image: undefined,
       _image: undefined,
       content: undefined,
       prize: undefined,
+      _id: undefined,
     },
     ui: {
       today: new Date().toISOString().split('T')[0],
@@ -42,14 +43,23 @@ const vm = new Vue({
         let today = new Date()
         today.setHours(0,0,0,0)
         for (let prop in res.data)
-          if (prop.includes('Date')) {
-            // ISO String YYYY-MM-DDT00:00:00.000Z"
+          if (prop.includes('Date'))
             res.data[prop] = new Date(res.data[prop]).toISOString().split('T')[0]
-          }
-        this.announ = res.data
+            // ISO String YYYY-MM-DDT00:00:00.000Z"
+        for(let prop in res.data)
+          this.announ[prop] = res.data[prop]
         document.title = res.data.title
         get('content').textContent = res.data.content
         get('prize').textContent = res.data.prize
+
+        // Get image
+        let announ = this.announ
+        window.axios.get(`${url}api/announcement/image/${announ._id}`)
+        .then(({data}) => {
+          let path = `${url}files/announcement/images/${data['_id']}.${data['extension']}`
+          announ._image = path
+        })
+        .catch(err => console.log("Err:", err))
       })
       .catch(err => console.log(err))
   },
@@ -73,8 +83,6 @@ const vm = new Vue({
     this.mountEditor('prize', config)
       .then(res => CKEDITOR.instances.content.editable().setHtml(get('prize').textContent))
       .catch(err => console.log(err))
-
-    // Input file upload
   },
   methods: {
     send: function () {
@@ -90,7 +98,7 @@ const vm = new Vue({
       if (!empty && this.errors.indexOf(true) === -1) {
         const url = 'http://127.0.0.1:3000/'
         window.axios
-          .put(`${url}api/announcement/`, this.announ)
+          .put(`${url}api/announcement/${this.announ._id}`, this.announ)
           .then(res => console.log(res.data))
           .catch(err => console.log(err))
       }
@@ -120,9 +128,7 @@ const vm = new Vue({
       let input = get('file')
       let reader = new FileReader()
       let announ = this.announ
-      reader.onload = function (e) {
-        announ.image = e.target.result
-      }
+      reader.onload = e => announ._image = e.target.result
       reader.readAsDataURL(input.files[0])
     }
   },
