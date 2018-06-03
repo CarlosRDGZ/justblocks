@@ -37,6 +37,7 @@ html(lang="en")
           h1 TABLA  
           #partakers
             v-client-table(:columns="columns" :data="data.partakers" :options="options")
+              button.button.is-danger(slot="options" slot-scope="props" target="_blank" :value="props.row.id" @click="deletePartaker(props)") Eliminar
 
             h1 Puedes buscar otro compañero con su dirección de correo y agregarlo a este proyecto
             label(for="search") Buscar compañero
@@ -51,7 +52,18 @@ html(lang="en")
             .container-fluid
               table
                 tbody(id="documents")
-                  tr
+                  thead
+                    tr
+                      th Documento
+                      th Eliminar
+                  tbody
+                    tr(v-for="doc in data.documents")
+                        td 
+                          a(:href="`${url}/files/projects/${doc._id}.${doc.extension}`" :download="`${doc.name}.${doc.extension}`") {{doc.name}}
+                        td 
+                          button.button.is-danger(:value="`btn${doc._id}`" @click="deleteFile(doc)") Eliminar
+            br
+            br
             h1 A continuación puedes subir los documentos (uno a la vez) que servirán para evaluar tu proyecto
             label(for="documents")
               input#docs(type="file")

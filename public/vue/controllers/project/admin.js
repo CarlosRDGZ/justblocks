@@ -1,4 +1,4 @@
-const url = 'http://127.0.0.1:3000/'
+const url = 'http://127.0.0.1:3000/' 
 Vue.use(VueTables.ClientTable);
 const emailMatch = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
@@ -7,14 +7,15 @@ const vm = new Vue({
 	data: {
 		columns: ['name', 'email', 'rol', 'options'],
 		data: {
-			partakers: []
+			partakers: [],
+			documents: []
 		},
 		options: {
 			headings: {
 				name: 'Nombre',
 				email: 'Correo',
 				rol: 'Rol',
-				options: 'Opciones'
+				options: 'Eliminar'
 			},
 			sortable: ['name', 'rol'],
 			filterable: ['name', 'email'],
@@ -33,6 +34,7 @@ const vm = new Vue({
 					temp.email = data[i].idUser.email;
 					temp.rol = data[i].rol;
 					temp.options = "Eliminar";
+					temp.id = data[i]._id;
 					rows.push(temp);
 				}
 				console.log(rows);
@@ -41,19 +43,8 @@ const vm = new Vue({
 
 		window.axios.get(`${url}api/project/documents/${idProject}`)
 			.then(({data}) => {
-				let documents = document.getElementById('documents');
-				docs = data;
+				this.data.documents = data;
 				console.log(data);
-				data.forEach( function(doc) {
-					let a = document.createElement("a");
-					let row = document.createElement("tr");
-					a.setAttribute("href", `${url}/files/projects/${doc._id}.${doc.extension}`);
-					a.download = `${doc.name}.${doc.extension}`;
-					a.text = doc.name;
-
-					row.appendChild(a);
-					documents.appendChild(row);
-				});
 			})
 			.catch(err => {console.log(err.err);})
 	},
@@ -99,39 +90,60 @@ const vm = new Vue({
 					temp.options = "Eliminar";
 
 					this.data.partakers.push(temp);
+					
+					this.get('searchMail').value = "";
+					this.get('result').setAttribute('hidden', true);
+					this.get('result').innerHTML = "";
+					this.get('question').setAttribute('hidden', true);
+					this.get('btnAddPartaker').setAttribute('hidden', true);
+					this.get('btnAddPartaker').value = "";					
 				})
 				.catch(err => console.log(err))
+		},
+		deletePartaker: function(row) {
+			let index = row.index;
+			let info = row.row;
+			if(confirm(`¿Estás seguro que quieres eliminar a ${info.name} como integrante del proyecto?`)) {
+				window.axios.delete(`${url}api/partaker/${info.id}`)
+					.then(({data}) => {
+						this.data.partakers = this.data.partakers.filter(e => e.id != info.id);
+						console.log("Eliminado")
+					})
+					.catch(err => console.log(err))
+			}
 		},
 		uploadFile: function() {
 			let docs = this.get('docs');
 			console.log("upload");
 			if(docs.files.length != 0) {
-        let formData = new FormData()
+	        let formData = new FormData()
 
-        console.log(docs.files);
-        formData.append('document', docs.files[0])
+	        console.log(docs.files);
+	        formData.append('document', docs.files[0])
 
-        const config = { headers: { 'content-type': 'multipart/form-data' } }
-        window.axios.post(`${url}api/project/documents/${idProject}`, formData, config)
-          .then(({data}) => {
-            console.log(data);
-            let documents = this.get('documents');
-            console.log(documents)
-          	let a = document.createElement("a");
-          	let row = document.createElement("tr");
-          	a.setAttribute("href", `${url}/files/projects/${data._id}.${data.extension}`);
-          	a.download = `${data.name}.${data.extension}`;
-          	a.text = data.name;
-
-          	row.appendChild(a);
-          	documents.appendChild(row);
-          })
-          .catch(err => console.log(err))
-      }
-      else
-      {
-        console.log(res.data); 
-      }
+	        const config = { headers: { 'content-type': 'multipart/form-data' } }
+	        window.axios.post(`${url}api/project/documents/${idProject}`, formData, config)
+	          .then(({data}) => {
+	          	this.data.documents.push(data);
+	          	console.log(data);
+	          })
+	          .catch(err => console.log(err))
+		    }
+		    else
+		    {
+		      console.log(res.data); 
+		    }
+		},
+		deleteFile: function(doc) {
+			if(confirm(`¿Estás seguro que quieres eliminar el docuemento "${doc.name}" del proyecto?`)) {
+				window.axios.delete(`${url}api/project/document/${doc._id}`)
+					.then(({data}) => {
+						this.data.documents = this.data.documents.filter(e => e._id != doc._id);
+						console.log("Eliminado");
+						console.log(data);
+					})
+					.catch(err => console.log(err))
+			}
 		}
 	}
 })

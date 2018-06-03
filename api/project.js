@@ -146,6 +146,15 @@ projects.route('/documents/:idProject')
       .catch(err => {console.log("DELETE documents of project error"); console.log(err.message); res.json({err: err.message });});
   })
 
+projects.route('/document/:idDocument')
+  .delete((req, res) => {
+    DocumentProject.findByIdAndRemove(req.params.idDocument)
+      .then(result => {
+        res.json(result);
+      })
+      .catch(err => {console.log("Delete document error"); console.log(err.message); res.status(500).json({err: err.message});})
+  })
+
 projects.route('/user/:id')
   .get((req,res) => {
     Project.find({ idCreator: req.params.id }, (err,projects) => {
