@@ -5,6 +5,7 @@ const path = require('path')
 const md5 = require('md5');
 const app = express()
 global.gUrl = 'http://127.0.0.1:3000/'
+global.gRootDir = path.resolve(__dirname)
 // global.openSession = false
 // global.userSession = { _id: '5ad7b0e28380150835d775bf' }
 
@@ -104,8 +105,9 @@ function getRandomInt(min, max) {return Math.floor(Math.random() * (max - min)) 
 let idAnnoun = '5b01d16ffc5ae925acfbce0f';
 let t = 10, b = 5, k = 4
 
-const Project = require('./models/project').Project;
-const Evaluator = require('./models/evaluator').Evaluator;
+const Project = require('./models/Project').Project;
+const Evaluator = require('./models/Evaluator').Evaluator
+//const Evaluator = require('./models/evaluator').Evaluator;
 let falseNames = [{"name":"Oliver","surname":"Teichmann","gender":"male","region":"Germany"},{"name":"Maila","surname":"Schulze","gender":"female","region":"Germany"},{"name":"Michael","surname":"Richter","gender":"male","region":"Germany"},{"name":"Annika","surname":"Schulze","gender":"female","region":"Germany"},{"name":"Linus","surname":"Bergmann","gender":"male","region":"Germany"},{"name":"Ben","surname":"Albrecht","gender":"male","region":"Germany"},{"name":"Oliver","surname":"Thiele","gender":"male","region":"Germany"},{"name":"Oliver","surname":"Heinrich","gender":"male","region":"Germany"},{"name":"John","surname":"Hartmann","gender":"male","region":"Germany"},{"name":"Lena","surname":"Schmidt","gender":"female","region":"Germany"},{"name":"Robert","surname":"Martin","gender":"male","region":"Germany"},{"name":"John","surname":"Schneider","gender":"male","region":"Germany"},{"name":"Ben","surname":"Friedrichs","gender":"male","region":"Germany"},{"name":"Ida","surname":"Kühn","gender":"female","region":"Germany"},{"name":"Ingo","surname":"Sommer","gender":"male","region":"Germany"},{"name":"Luise","surname":"Günther","gender":"female","region":"Germany"},{"name":"Mia","surname":"Berger","gender":"female","region":"Germany"},{"name":"Pia","surname":"Weiß","gender":"female","region":"Germany"},{"name":"Annabell","surname":"Beck","gender":"female","region":"Germany"},{"name":"Ann-Julie","surname":"Engel","gender":"female","region":"Germany"}];
 
 app.get('/PRUEBAS/USER', (req, res) => {

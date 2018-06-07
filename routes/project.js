@@ -26,4 +26,10 @@ project.get('/admin/:idProject', (req, res) => {
 		.catch(err => {console.log('Project error'); console.log(err.message); res.status(500).json({err: err.message});})
 })
 
+project.use("/", navBarMiddleware);
+
+project.get('/edit/:id', function(req, res) {
+	res.render('project/edit', {id: req.params.id});
+})
+
 module.exports = project;

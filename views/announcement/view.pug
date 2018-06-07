@@ -15,7 +15,8 @@ html(lang="en")
         .hero-carousel.carousel-animated.carousel-animate-fade
           .carousel-container
             .carousel-item.has-background.is-active
-              img.is-background(src='https://wikiki.github.io/images/merry-christmas.jpg', alt='')
+              img.is-background(:src='image.src', alt='')
+              // img.is-background(src='https://wikiki.github.io/images/merry-christmas.jpg', alt='')
         .hero-body.has-text-centered
           .columns.is-mobile.is-centered
             .column.is-half.is-narrow
@@ -123,8 +124,7 @@ html(lang="en")
                   .tile.is-child
                     .content.has-text-centered
                       button.button.is-link.is-large(:disabled='ui.enrolled' @click='enrollAsEvaluator' v-if='!ui.evaluatorsFull') Inscribirse
-                      p.is-size-4(v-else) Cantidad de evaluadores completa
-                
+                      p.is-size-4(v-else) Cantidad de evaluadores completa          
   include ../footer.pug
 script(src=pathToRoot + 'vue/vue.min.js')
 script(src=pathToRoot + 'vue/controllers/announcement/view.js')

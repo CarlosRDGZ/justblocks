@@ -135,6 +135,15 @@ users.route('/email/:email')
 
 users.route('/:id')
   .get((req,res) => {
+    User.findById(req.params.id)
+      .populate('image', 'extension').exec(function (err, user) {
+        if(err) {res.sendStatus(500).json({err: err.message});}
+        else
+          res.status(200).json(user);
+      })
+  })
+/*
+  .get((req,res) => {
     User.find({_id: req.params.id})
       .populate('image', 'extension').exec(function (err, user) {
         if(err) {res.sendStatus(500).json({err: err.message});}
@@ -142,6 +151,7 @@ users.route('/:id')
           res.status(200).json(user);
       })
   })
+*/
   .put((req, res) => {
     console.log("PUT users");
     if(req.session.user_id)

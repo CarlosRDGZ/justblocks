@@ -5,6 +5,7 @@ const vm = new Vue({
   el: '#app',
   data: {
     announ: { },
+    image: { },
     ui: {
       today: new Date(),
       timeline: [],
@@ -33,11 +34,21 @@ const vm = new Vue({
         this.announ = res.data
         document.title = res.data.title
       })
+      .catch(err => console.log(err))
+
     window.axios.get(`${url}api/partaker/count/Evaluator`)
       .then(res => {
         if (res.data === this.announ.evaluators)
           this.ui.evaluatorsFull = true
       })
+      .catch(err => console.log(err))
+    
+    window.axios.get(`${url}api/announcement/image/${id}`)
+      .then(({data}) => {
+        this.image = data;
+        this.image.src = `${url}files/announcement/images/${data._id}.${data.extension}`
+      })
+      .catch(err => console.log(err))
   },
   beforeMount: function () {
     this.ui.session = document.cookie.indexOf('session') !== -1 ? true : false
@@ -77,7 +88,7 @@ const vm = new Vue({
             let contestant = {
               idUser: user,
               idProject: project._id,
-              rol: 'Contestant'
+              rol: 'Owner'
             }
             console.log(contestant)
             window.axios.post(`${url}api/partaker`, contestant)
@@ -95,7 +106,6 @@ const vm = new Vue({
     },
     enrollAsEvaluator: function () {
       if (this.ui.session) {
-        
         window.axios.post(`${url}api/partaker`,)
       } else {
         window.launchSignInModal()

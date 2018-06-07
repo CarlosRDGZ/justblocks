@@ -110,13 +110,18 @@ html(lang="en")
                 .control
                   textarea#prize.textarea
               br
-              button.button.is-success.is-fullwidth(@click='send') Crear
-              .field
-                input#file(type="file" name="image")
+              .columns.is-centered
+                // .column.is-half.is-narrow
+                .column.is-two-thirds.is-narrow
+                  div.notification.has-text-centered
+                    figure.image.is-squared
+                      img.image(:src="announ._image")
+                    br
+                    a.button.is-primary(@click='updateImage') Cambiar
+                    input#file(type="file" name="image" accept=".png, .jpg, .jpeg" @change="readURL()" hidden)
               br
-              // .container
-                // .field
-                  // button#Crear.button.is-link(onclick="createAnnoun()") Crear
+              button.button.is-success.is-fullwidth(@click='send') Crear
+              br
               .content
               pre {{ $data }}
     include ../footer.pug
