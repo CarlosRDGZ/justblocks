@@ -1,6 +1,6 @@
 - const pathToRoot = '../../';
 doctype html
-html(lang="en")
+html(lang="en") 
   head
     include ../header.pug
     style.
@@ -15,8 +15,8 @@ html(lang="en")
         .container.has-text-centered
           h1.title Resultados #{announ.title}
     h1.title.is-3 Ganadores
-    #winners
-      v-client-table(:columns="columns" :data="data.winners" :options="options")
+    #winners.container(style="text-align: center;")
+      v-client-table(:columns="columns" :data="data.winners" :options="options" :columnsDisplay="{}")
       h1.title.is-3 Los demás participantes
       v-client-table(:columns="columns" :data="data.rest" :options="options")
    
