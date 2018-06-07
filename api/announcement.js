@@ -141,7 +141,7 @@ announcements.route('/user')
     })
   })
 */
-
+ 
 //Return the 9 announcements recenter
 announcements.route('/newest')
   .get((req, res) => {
