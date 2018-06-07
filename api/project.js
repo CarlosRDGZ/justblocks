@@ -30,12 +30,12 @@ projects.route('/')
   })
 
 projects.route('/:id')
-  .get((req,res) => {
-    Project.findById(req.params.id, (err,data) => {
-      if (err)
-        res.status(400).json(err)
-      res.json(data)
-    })
+  .get((req, res) => {
+    Project.findById(req.params.id)
+      .then(proj => {
+        res.json(proj);
+      })
+      .catch(err => {console.log('Project error'); console.log(err.message); res.status(500).json({err: err.message});})
   })
   .put((req,res) => {
     Project.findByIdAndUpdate(
@@ -61,6 +61,31 @@ projects.route('/:id')
     })
   })
 
+projects.route('/qualify/:idProject')
+  .put((req, res) => {
+    console.log('put qualifyProject');
+    console.log(req.body);
+    let idProj = req.params.idProject;
+    Evaluator.find({idUser: req.session.user_id})
+      .then(evaluator =>{
+        if(evaluator[0]) {
+          let idEval = evaluator[0]._id;
+          ProjectsEvaluator.findOneAndUpdate(
+            {idEvaluator: idEval, idProject: idProj},
+            {$set: {grade: req.body.grade}},
+            {new: true})
+            .then(project => {
+              console.log(project)
+              res.json(project);
+            })
+            .catch(err =>{console.log('ProjectsEvaluator error'); console.log(err.message); res.status(500).json({err: err.message});})
+        }
+        else
+          res.send("404 not found");
+      })
+      .catch(err =>{console.log('Evaluator error'); console.log(err.message); res.status(500).json({err: err.message});})
+  })
+
 projects.route('/announcement/:id')
   .get((req,res) => {
     Project.find({ idAnnouncement: req.params.id }, (err,projects) => {
@@ -68,6 +93,66 @@ projects.route('/announcement/:id')
         res.status(400).json(err)
       res.json(projects)
     })
+  })
+
+/****************DOCUMENTS SECTION**********************/ 
+projects.route('/documents/:idProject')
+  .post((req, res) => {//Validar que sólo lo puedan subir participantes
+    console.log("POST document Project");
+    let extension = req.files.document.name.split(".").pop();
+    let name = req.files.document.name.substring(0, req.files.document.name.length - extension.length - 1);//Quitarle el punto y la extensión
+
+    var doc = new DocumentProject({
+      owner: req.params.idProject,
+      extension: extension,
+      typeFile: req.files.document.type,
+      name: name
+    });
+
+    doc.save()
+      .then(data =>{
+        fs.rename(req.files.document.path, "public/files/projects/" + doc._id + "." + extension );
+        res.json(data);
+      })
+      .catch(err =>{console.log("DocumentProject error"); console.log(err.message); res.status(500).json({err: err.message});})  
+  })
+  .get((req, res) => {
+    console.log("GET all documents of project");
+    DocumentProject.find({owner: req.params.idProject})
+      .then(documents => {
+        res.json(documents);
+      })
+      .catch(err =>{console.log("Find DocumentProject error"); console.log(err.message); res.status(500).json({err: err.message});})  
+  })
+  .delete((req, res) => {
+    console.log("DELETE all documents of project");
+    DocumentProject.find({owner: req.params.idProject})
+      .then(documents => {
+        // if(req.session.user_id == req.params.idAnnoun) { //Validar que sólo lo pueda eliminar el creador o partakers
+          let itemsDeleted = 0;
+          documents.forEach(currentDoc => {
+            fs.unlink("public/files/projects/" + currentDoc._id + "." + currentDoc.extension, (err) => {
+              if(err){console.log("Problemas para eliminar el archivo en el servidor: " + err.message); res.status(500).json({err: err.message});}
+              currentDoc.remove(err => {
+                if(err){console.log("Problema al eliminar el documento de la DB: " + err.message); res.status(500).json({err: err.message});}            
+                itemsDeleted++; 
+              })  
+            })
+            if(itemsDeleted >= documents.length)
+                  res.send(200); 
+          })
+        // }
+      })
+      .catch(err => {console.log("DELETE documents of project error"); console.log(err.message); res.json({err: err.message });});
+  })
+
+projects.route('/document/:idDocument')
+  .delete((req, res) => {
+    DocumentProject.findByIdAndRemove(req.params.idDocument)
+      .then(result => {
+        res.json(result);
+      })
+      .catch(err => {console.log("Delete document error"); console.log(err.message); res.status(500).json({err: err.message});})
   })
 
 projects.route('/user/:id')
@@ -98,6 +183,18 @@ projects.route('/projectsEvaluator/:idProject')
         res.json(data);
       })
       .catch(err => {console.log("projectsEvaluator error"); console.log(err); res.status(500).json({err: err});})
+  })
+
+projects.route('/:idProject/status')
+  .put((req, res) => {
+    console.log('Update project´s status');
+    console.log(req.body)
+    //Validar que sólo lo pueda actualizar el admin de la convocatoria
+    Project.findByIdAndUpdate(req.params.idProject, {$set: {status: req.body.status}}, {new: true})
+      .then(proj => {
+        res.json(proj);
+      })
+      .catch(err => {console.log('Project error'); console.log(err.message); res.status(500).json({err: err.message});})
   })
 
 //Cuando se terminé la fecha de evaluación se tienen que calcular nos promedios "normales" para luego calcular los ajustados
@@ -189,58 +286,6 @@ function calculateMean(idProj, projectsEvaluatedTimes) {
       })
   })
 }
-
-/****************DOCUMENTS SECTION**********************/ 
-projects.route('/document/:idProject')
-  .post((req, res) => {//Validar que sólo lo puedan subir participantes
-    console.log("POST document Project");
-    let extension = req.files.document.name.split(".").pop();
-    let name = req.files.document.name.substring(0, req.files.document.name.length - extension.length - 1);//Quitarle el punto y la extensión
-
-    var doc = new DocumentProject({
-      owner: req.params.idProject,
-      extension: extension,
-      typeFile: req.files.document.type,
-      name: name
-    });
-
-    doc.save()
-      .then(data =>{
-        fs.rename(req.files.document.path, "public/files/projects/" + doc._id + "." + extension );
-        res.json(data);
-      })
-      .catch(err =>{console.log("DocumentProject error"); console.log(err.message); res.status(500).json({err: err.message});})  
-  })
-  .get((req, res) => {
-    console.log("GET all documents of project");
-    DocumentProject.find({owner: req.params.idProject})
-      .then(documents => {
-        res.json(documents);
-      })
-      .catch(err =>{console.log("Find DocumentProject error"); console.log(err.message); res.status(500).json({err: err.message});})  
-  })
-  .delete((req, res) => {
-    console.log("DELETE all documents of project");
-    DocumentProject.find({owner: req.params.idProject})
-      .then(documents => {
-        // if(req.session.user_id == req.params.idAnnoun) { //Validar que sólo lo pueda eliminar el creador o partakers
-          let itemsDeleted = 0;
-          documents.forEach(currentDoc => {
-            fs.unlink("public/files/projects/" + currentDoc._id + "." + currentDoc.extension, (err) => {
-              if(err){console.log("Problemas para eliminar el archivo en el servidor: " + err.message); res.status(500).json({err: err.message});}
-              currentDoc.remove(err => {
-                if(err){console.log("Problema al eliminar el documento de la DB: " + err.message); res.status(500).json({err: err.message});}            
-                itemsDeleted++; 
-              })  
-            })
-            if(itemsDeleted >= documents.length)
-                  res.send(200); 
-          })
-        // }
-      })
-      .catch(err => {console.log("DELETE documents of project error"); console.log(err.message); res.json({err: err.message });});
-  })
-
 
 /****************R SECTION**********************/ 
 //Devuelve todos los proyectos de la convocatoria enviada ordenados por el índice generado al usar el modelo de asignación
@@ -388,14 +433,21 @@ projects.route('/adjustedGrades/:idAnnoun')
 projects.route('/winners/:idAnnoun')
   .get((req, res) => {
     Project.find({idAnnouncement: req.params.idAnnoun})
+      .populate('idCreator', ['name', '_id', 'email'])
+      .exec()
       .then(projectsAnnoun => {
         //Get the winner groups
-        let groups = new Array([], [], []);
+        let groups = new Array([], [], [], []);
         projectsAnnoun.forEach(proj => {
           for(let i = 0; i < proj.group.length; i++) {
             if(!isNaN(proj.group[i])) { //Es un número (sólo entre 1 y 3, ver qualifyProjects.R para más info)
               groups[proj.group[i] - 1].push(proj);
+              break;
             }
+            else {
+              groups[3].push(proj);
+              break;
+            } 
           }
         })
         res.json(JSON.parse(JSON.stringify(groups)));

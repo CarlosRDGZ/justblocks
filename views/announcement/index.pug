@@ -1,6 +1,6 @@
 - const pathToRoot = '../../'
 doctype html
-html(lang="en")
+html(lang="en") 
   head
     include ../header.pug
     link(rel="stylesheet", href="../css/index.css")
@@ -23,7 +23,10 @@ html(lang="en")
             .card(v-if='content.data[(j + (3 * (i - 1))) - 1] !== undefined')
               .card-image
                 figure.image.is-4by3
-                  img(src='https://www.iagua.es/sites/default/files/styles/thumbnail-830x455/public/glaciar_perito_moreno_0.jpg?itok=9a_iNcsz', alt='Placeholder image')
+                  div(v-if="content.data[(j + (3 * (i - 1))) - 1].image")
+                    img(:src="`/files/announcement/images/${content.data[(j + (3 * (i - 1))) - 1].image._id}.${content.data[(j + (3 * (i - 1))) - 1].image.extension}`", alt='{{content.data[(j + (3 * (i - 1))) - 1].title}}')
+                  div(v-else)
+                    img(src="/images/Porg.png", alt='{{content.data[(j + (3 * (i - 1))) - 1].title}}')
               .card-content
                 .columns.is-gapless.is-multiline
                   .column.is-full
@@ -33,17 +36,15 @@ html(lang="en")
                   .column.is-three-fifths
                     .notification.has-text-centered.is-success.is-inverted
                       p
-                        b Etapa: Lanzamiento
-                      progress.progress.is-success(value='33', max='100') 33%
+                        b Etapa: {{ content.data[(j + (3 * (i - 1))) - 1].stage }}
+                      progress.progress.is-success(:value="content.data[(j + (3 * (i - 1))) - 1].progress" max='100') 
+                      p {{ content.data[(j + (3 * (i - 1))) - 1].progress }}%
                   .column.is-two-fifths
                     .notification.has-text-centered
                       p
                         b {{ (j + (3 * (i - 1))) - 1 }}
                       p Participates
                 .content
-                  p(hidden='')
-                    | Desarrollar una app web que permita a la población conocer sobre el Cambio Climático y colaborar con acciones
-                    | para su mitigación.
                   p
                     a(:href='url + "announcement/view/" + content.data[(j + (3 * (i - 1))) - 1]._id') ver más...
         .notification.is-white

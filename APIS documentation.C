@@ -94,15 +94,22 @@
 				"idProject":{"grade":2.9100203348479448,"_id":"5afd01057ae72934f88294c3","idAnnouncement":"5afcffe37a3a6d36b4204a4e","idCreator":"5af8fe28b3a4a5373494fa83","description":"Éste es el proyecto no.4","title":"Proyecto No. 4","score":10,"__v":0},"idAnnouncement":"5afcffe37a3a6d36b4204a4e","__v":0},
 			{"index":1,"_id":"5afd01487ae72934f88294ca","idEvaluator":"5afd00f37ae72934f88294ba",
 				"idProject":{"grade":2.1039498117494726,"_id":"5afd01057ae72934f88294c2","idAnnouncement":"5afcffe37a3a6d36b4204a4e","idCreator":"5af8fe28b3a4a5373494fa82","description":"Éste es el proyecto no.3","title":"Proyecto No. 3","score":10,"__v":0},"idAnnouncement":"5afcffe37a3a6d36b4204a4e","__v":0} ]]
-'/:idEvaluator/qualify/:idProject'//Funcionando bien 
-	PUT: Establece la calificación del proyecto con el id enviado, la calificación la recibe en el body
-		de la petición como un json de la forma {grade: 8} y devuelve:
+'/:idEvaluator/projects' //Funcionando bien
+	GET: Devuelve todos los proyectos asignados a ese evaluador
 		{
-		    "n": 1,
-		    "nModified": 1,
-		    "ok": 1
-		}
-
+	        "grade": 9,
+	        "index": 0,
+	        "_id": "5b01f48a643bc907188410e8",
+	        "idEvaluator": "5b01d49f6d2c310404563293",
+	        "idProject": {
+	            "_id": "5b01f18c8d6db70338ca5c31",
+	            "description": "Éste es el proyecto no.0",
+	            "title": "Proyecto No. 0"
+	        },
+	        "idAnnouncement": "5b01d16ffc5ae925acfbce0f",
+	        "__v": 0
+	    },
+	    
 //+++++++Announcement
 '/possibleRsAndKs/:idAnnoun' //Funcionando bien
 	GET: Devuelve todos los posibles valores de 'r' (Número de veces que un proyecto será evaluado), así
@@ -129,6 +136,17 @@
 	GET: Calcula el promedio ajustado de todos los proyectos de la convocatoria enviada, además
 		muestran el grupo al que pertenecen porque algunos promedios son estadísticamente iguales entre sí
 		y lo guarda en la base de datos. El modelo de Project ahora tiene los campos de mean, adjustedGrade y group
+'/abiertas' //Funcionando bien
+	GET: Devuelve todas las convocatorias que tengan fecha de evaluación mayor a la fecha actual, es decir, 
+		todas las que están abiertas y a las que los usuarios se pueden registrar todavía.
+		Devuelve un array de convocatorias  
+'/terminadas' //Funcionando bien
+	GET: Devuelve todas las convocatorias que tengan 'deadlineDead' menor o igual 
+		a la fecha actual, es decir, que ya hayan sido cerradas y terminadas
+		Devuelve un array de convocatorias
+'/search/:str' //Funcionando bien
+	GET: Devuelve un array de convocatorias que incluyan en su título la cadena enviada.
+		No importa en donde aparezca la cadena, principio, en medio o al final
 
 //+++++++Project
 '/projectsEvaluator/:idProject' //Funcionando bien
@@ -159,10 +177,10 @@
 	        index: 0,
 	        group: "  23 "
 	    }
-'/winners/:idAnnoun'
+'/winners/:idAnnoun' //Funcionando bien
 	GET: Devuelve los proyectos con las calificaciones estadísticamente iguales de los tres primeros grupos, es decir
-		los ganadores de la convocatoria. Los devuelve en 3 arreglos diferentes, por lo que un proyecto podría incluso
-		aparecer en los tres grupos de acuerdo a como lo haya asignado R. Devuelvo proyectos como tal pero ya ordenados por
+		los ganadores de la convocatoria y en un último arreglo el resto de los participantes (los que no ganaron). 
+		Los devuelve en 4 arreglos diferentes. Devuelvo proyectos como tal pero ya ordenados por
 		grupo. Ejmplo del json de un proyecto devuelto
 		{
             mean 6,
@@ -175,7 +193,7 @@
             title: "Proyecto No. 2",
             __v: 0
         }
-'/document/:idProject' //Funcionando bien, falta validar que sólo lo suban participantes 
+'/documents/:idProject' //Funcionando bien, falta validar que sólo lo suban participantes 
 	POST: Subir un nuevo documento para ese proyecto (el documento lo podrá ver el evaluador)
 		Nota: En el FormData el archivo deberá ser eviado como document
 				    formData.append('document', documentFile.files[0])
@@ -189,4 +207,13 @@
 		}
 	GET: Devulve todos los documentos de ese proyecto con un json con el formato de arriba.
 	DELETE: Elimina todos los documentos de ese proyecto
+'/qualify/:idProject'//Funcionando bien 
+	PUT: Establece la calificación del proyecto con el id enviado, la calificación la recibe en el body
+		de la petición como un json de la forma {grade: 8} y devuelve un json con el formato de proyecto
+'/:idProject/status'//Funcionando bien
+	PUT: (Para administradores de la convocatoria) Actualiza el status del proyecto y lo devulve.
+		Los status posibles son 0: Enviado, 1: Aceptado y 2: Rechazado
 
+//+++++++User
+'/email/:email' //Funcionando bien
+	GET: Devuelve el nombre y el id del usuario con ese correo electrónico

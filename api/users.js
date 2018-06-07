@@ -124,6 +124,15 @@ users.route('/image/:idUser')
       .catch(err => {console.log(err.message); res.status(500).json({err: err.message});})  
   })
 
+users.route('/email/:email')
+  .get((req, res) => {
+    User.findOne({email: req.params.email}, ['name', '_id', 'email'])
+      .then(userGot => {
+        res.json(userGot);
+      })
+      .catch(err => {console.log('Users find error'); console.log(err.message); res.status(500).json({err: err.message});})
+  })
+
 users.route('/:id')
   .get((req,res) => {
     User.findById(req.params.id)
@@ -197,7 +206,6 @@ users.route('/:id/name')
         res.status(200).json(user);
     })
   })
-
 
 //*************Sólo para fines de pruebas
 users.get("/deleteAllUsers", function(req, res) {

@@ -1,5 +1,4 @@
 const announcements = require('express').Router()
-
 //Models
 const Announcement = require('../models/Announcement').Announcement;
 const Project = require('../models/Project').Project;
@@ -144,7 +143,6 @@ announcements.route('/user')
 */
 
 //Return the 9 announcements recenter
-
 announcements.route('/newest')
   .get((req, res) => {
     console.log('newest announcements')
@@ -164,6 +162,44 @@ announcements.route('/newest')
         })
       }
     })
+  })
+
+announcements.route('/search/:str')
+  .get((req, res) => {
+    console.log('GET search announcements');
+    Announcement.find({$text: {$search: req.params.str}})
+      .populate('image')
+      .exec()
+      .then(announs => {
+        res.json(announs);
+      })
+      .catch(err => {console.log('Get Announcement error'); console.log(err.message); res.status(500).json({err: err.message});})
+  })
+
+announcements.route('/abiertas')
+  .get((req, res) => {
+    console.log('GET announcement abiertas');
+    let today = new Date();
+    Announcement.find({evaluationDate: {$gt: today}})
+      .populate('image')
+      .exec()
+      .then(announs => {
+        res.json(announs);
+      })
+      .catch(err => {console.log('Get announcements abiertas error'); console.log(err.message); res.status(500).json({err: err.message});})
+  })
+
+announcements.route('/terminadas')
+  .get((req, res) => {
+    console.log('GET announcement cerradas');
+    let today = new Date();
+    Announcement.find({deadlineDate: {$lte: today}})
+      .populate('image')
+      .exec()
+      .then(announs => {
+        res.json(announs);
+      })
+      .catch(err => {console.log('Get announcements abiertas error'); console.log(err.message); res.status(500).json({err: err.message});})
   })
 
 //Subir la imagen de presentación de la convocatoria

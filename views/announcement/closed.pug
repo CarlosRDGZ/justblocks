@@ -1,0 +1,70 @@
+- const pathToRoot = '../../'
+doctype html
+html(lang="en")
+  head
+    include ../header.pug
+    link(rel="stylesheet", href="../css/index.css")
+    style.
+      .title-hero {
+        font-size: 4rem
+      }
+    title Convocatorias cerradas
+  body
+    section.hero.is-info.is-medium
+      .hero-head 
+        include ../navbar.pug
+      .hero-body
+        .container.has-text-centered
+          h1.title.title-hero Convocatorias cerradas
+    main.section#app
+      .container-fluid
+        .columns(v-for='i in Math.ceil(pagination.itemsPerPage / 3)')
+          .column.is-4(v-for='j in 3')
+            .card(v-if='content.data[(j + (3 * (i - 1))) - 1] !== undefined')
+              .card-image
+                figure.image.is-4by3
+                  div(v-if="content.data[(j + (3 * (i - 1))) - 1].image")
+                    img(:src="`/files/announcement/images/${content.data[(j + (3 * (i - 1))) - 1].image._id}.${content.data[(j + (3 * (i - 1))) - 1].image.extension}`", alt='{{content.data[(j + (3 * (i - 1))) - 1].title}}')
+                  div(v-else)
+                    img(src="/images/Porg.png", alt='{{content.data[(j + (3 * (i - 1))) - 1].title}}')
+              .card-content
+                .columns.is-gapless.is-multiline
+                  .column.is-full
+                    .notification.is-success
+                      p.title.is-4 {{ content.data[(j + (3 * (i - 1))) - 1].title }}
+                      p.subtitle.is-6 {{ content.data[(j + (3 * (i - 1))) - 1].author }}
+                  .column.is-three-fifths
+                    .notification.has-text-centered.is-success.is-inverted
+                      p
+                        b Cerrada
+                  .column.is-two-fifths
+                    .notification.has-text-centered
+                      p
+                        b {{ (j + (3 * (i - 1))) - 1 }}
+                      p Participates
+                .content
+                  p
+                    a(:href='url + "announcement/results/" + content.data[(j + (3 * (i - 1))) - 1]._id') ver resultados
+        .notification.is-white
+          .content
+          //  p {{ content.data }}
+          div(v-if='pagination.pags > 0')
+            nav.pagination.is-centered(role='navigation', aria-label='pagination')
+              a.pagination-previous(@click='paginations().previous()') Anterior
+              a.pagination-next(@click='paginations().next()') Siguiente
+              ul.pagination-list
+                li(v-if='pagination.shown.last > 10')
+                  a.pagination-link(@click='paginations().first()') 1
+                li(v-if='pagination.shown.last > 10')
+                  span.pagination-ellipsis …
+                li(v-for='i in pagination.shown.pages')
+                  a.pagination-link(:class="{ 'is-current' : pagination.current === i }" @click='paginations().goto(i)') {{ i }}
+                li(v-if='pagination.shown.last !== pagination.pags')
+                  span.pagination-ellipsis …
+                li(v-if='pagination.shown.last !== pagination.pags')
+                  a.pagination-link(@click='paginations().last()') {{ pagination.pags }}
+          div(v-else)
+            p No Announcements
+  include ../footer.pug
+script(src=pathToRoot + 'vue/vue.min.js')
+script(src=pathToRoot + 'vue/controllers/announcement/closed.js')

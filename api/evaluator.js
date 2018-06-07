@@ -142,7 +142,7 @@ evaluators.route('/announcement/asignedProject/:idAnnoun')
         }
       })
   })
-
+/*
 evaluators.route('/:idEvaluator/qualify/:idProject')
   .put((req, res) => {//req.body.grade debe ser un json de la forma {grade: 8}
     console.log(req.body);
@@ -151,8 +151,19 @@ evaluators.route('/:idEvaluator/qualify/:idProject')
         res.json(result);
       })
       .catch(err => {console.log(err.message); res.status(500).json({err: err.message});});
-  })
+  })*/
 
+evaluators.route('/:idEval/projects')
+  .get((req, res) => {
+    console.log('GET evaluator projects')
+    ProjectsEvaluator.find({idEvaluator: req.params.idEval})
+      .populate('idProject', ['_id', 'description', 'title'])
+      .exec()
+      .then(projectsGot => {
+        res.json(projectsGot);
+      })
+      .catch(err => {console.log('ProjectsEvaluator error'); console.log(err.message); res.status(500).json({err: err.message});})
+  })
 function getAllProjectsEvaluators(evaluatorsAnnoun, idAnnoun) {
   return new Promise((resolve, reject) => {
     console.log('getAllProjectsEvaluators');
