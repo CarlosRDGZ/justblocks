@@ -46,7 +46,8 @@ announ.get('/view/:id', function(req, res) {
 			console.log("Err getAnnoun: " + err.message);
 		})
 })
-/*
+
+module.exports = announ;
 announ.get('/view/evaluator/:idAnnoun', (req, res) => {
 	console.log('View announcement evaluator');
 	let idAnnoun = req.params.idAnnoun;
@@ -94,5 +95,3 @@ announ.get('/view/qualify/project/:idProject', (req, res) => {
 announ.get('/', (req, res) => res.render('announcements.pug'))
 announ.get('/opcions', (req, res) => {res.render("announcements.pug");})
 announ.get('/delete', (req, res) => {res.render("announcementDelete.pug");})
-
-module.exports = announ;
