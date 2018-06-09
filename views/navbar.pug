@@ -1,3 +1,16 @@
+style.
+  .alert {
+    background-color: #fa3e3e;
+    border-radius: 2px;
+    color: white;
+   
+    padding: 1px 3px;
+    font-size: 10px;
+    
+    position: absolute; /* Position the badge within the relatively positioned button */
+    top: 10;
+    right: 12;
+  }
 nav#mainNavbar.navbar.is-info(role='navigation')
   .navbar-brand 
     a.navbar-item(href=gUrl)
@@ -55,12 +68,24 @@ nav#mainNavbar.navbar.is-info(role='navigation')
               span.icon
                 i.fas.fa-sign-out-alt
               span Salir
-        a.navbar-item(href='#')
-          span.icon
-            i.far.fa-bell
+        if(notis.length <= 0)                   
+          a.navbar-item(href='#')
+            span(class="badge is-badge-danger")
+              span.icon
+                i.far.fa-bell
+        else
+          .navbar-item.has-dropdown.is-hoverable
+            a.navbar-link(href='#')
+              span(class="badge is-badge-danger" data-badge=`${notis.length}`)
+                span.icon
+                  i.far.fa-bell
+            .navbar-dropdown.is-boxed
+              each val in notis
+                a.navbar-item(href=`javascript:checkNotification("${val._id}", "${val.url}")`) #{val.title}
+              a.navbar-item(href=`${pathToRoot}/app/notifications`) Ver todas
         a.navbar-item(href="#")
           span.icon
             i.fas.fa-tasks
         a.navbar-item(href="#")
           span.icon
-            i.far.fa-calendar-alt
+            i.far.fa-calendar-alt            
