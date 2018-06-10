@@ -1,0 +1,37 @@
+- const pathToRoot = '../';
+doctype html
+html(lang="en") 
+  head
+    include ../header.pug
+    link(rel="stylesheet", href="../css/index.css")
+    title Notificaciones  
+  body
+    include ../navbar.pug
+    #notifications
+      br
+      .container-fluid
+        .columns
+          .column.is-one-quarter
+          .colum.is-three-quarters
+            table.table.is-striped.is-fullwidth(v-if="notifications.length > 0")
+              thead
+                tr
+                  th.has-text-centered Notificaciones
+                  th.has-text-centered Revisada
+                  th.has-text-centered Eliminar
+              tbody
+                tr(v-for="not in notifications")
+                  td
+                    a(:href="`${not.url}`") {{not.title}}
+                  td
+                    p(v-if="not.checked") Sí
+                    p(v-else) No
+                  td
+                    button.button.is-danger(@click="deleteNotification(not)") Eliminar
+            h1(v-else) ¡Genial, por el momento no tiene ninguna notificación pendiente!  
+    include ../footer.pug
+    script.
+      const idUser = `#{idUser}`;
+    script(src=pathToRoot + "vue/vue.min.js")
+    script(src=pathToRoot + 'tables/vue-tables-2.min.js')
+    script(src=pathToRoot + "../../vue/controllers/notifications.js")

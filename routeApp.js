@@ -3,6 +3,8 @@ const express = require('express');
 const router = express.Router();
 const Announcement = require('./models/Announcement').Announcement; 
 const Project = require('./models/Project').Project
+const Notification = require('./models/Notification').Notification
+
 //*************Para poder acceder a los parámetros del cuerpo de las peticiones
 const bodyParser = require('body-parser');
 router.use(bodyParser.json()); //Para peticiones aplication/json
@@ -47,6 +49,10 @@ router.get('/project/admin/:id', (req,res) => {
 		else
 			res.status(403).send('Denegado');
 	})
+})
+
+router.get('/notifications', (req, res) => {
+	res.render('app/notifications', {idUser: req.session.user_id});
 })
 
 module.exports = router;
