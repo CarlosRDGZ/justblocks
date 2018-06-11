@@ -61,6 +61,16 @@ projects.route('/:id')
     })
   })
 
+projects.route('/status/:id')
+  .put((req,res) => {
+    const id = req.params.id
+    Project.findOneAndUpdate(id,{ $set: { status: req.body.status } }, { new: true })
+      .populate('idCreator', ['_id', 'name', 'email'])
+      .exec()
+      .then(data => res.json(data))
+      .catch(err => res.status(500).json(err))
+  })
+
 projects.route('/qualify/:idProject')
   .put((req, res) => {
     console.log('put qualifyProject');
@@ -88,11 +98,16 @@ projects.route('/qualify/:idProject')
 
 projects.route('/announcement/:id')
   .get((req,res) => {
-    Project.find({ idAnnouncement: req.params.id }, (err,projects) => {
-      if (err)
-        res.status(400).json(err)
-      res.json(projects)
-    })
+    Project.find({ idAnnouncement: req.params.id, status: { $not: { $eq:2 } } })
+      .populate('idCreator', ['_id', 'name', 'email'])
+      .exec()
+      .then(data => {
+        if (data)
+          res.json(data)
+        else
+          res.status(404).send('Not found')
+      })
+      .catch(err => res.status(500).json(err))
   })
 
 /****************DOCUMENTS SECTION**********************/ 

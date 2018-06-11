@@ -1,11 +1,16 @@
 // import Vue from "vue";
-const url = 'http://127.0.0.1:3000/'
+const url = 'http://127.0.0.1:3000'
+Date.prototype.toCostumeString = function () {
+	const months = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic']
+	return `${this.getDate()}/${months[this.getMonth()]}/${this.getFullYear()}`
+}
 
 const vm = new Vue({ 
   el: '#app',
   data: {
     announ: { },
     image: { },
+    user: '',
     ui: {
       today: new Date(),
       timeline: [],
@@ -18,15 +23,18 @@ const vm = new Vue({
       evaluatorsFull: false,
       session: false,
       enrolled: false,
+    },
+    info: {
+      evaluators: -1
     }
   },
   created: function() {
-    window.axios.get(`${url}api/announcement/${id}`)
+    window.axios.get(`${url}/api/announcement/${id}`)
       .then(res => {
         let today = new Date()
         today.setHours(0,0,0,0)
-        for (let prop in res.data)
-          if (prop.includes('Date')) {
+        for (let prop in res.data) {
+          if (prop.includes('Date'))
             res.data[prop] = new Date(res.data[prop])
             this.ui.timeline.push(today >= res.data[prop])
             this.ui.timeline.push(today > res.data[prop])
@@ -36,17 +44,18 @@ const vm = new Vue({
       })
       .catch(err => console.log(err))
 
-    window.axios.get(`${url}api/partaker/count/Evaluator`)
+    window.axios.get(`${url}/api/evaluator/announcement/count/${window.id}`)
       .then(res => {
         if (res.data === this.announ.evaluators)
           this.ui.evaluatorsFull = true
+        this.info.evaluators = res.data
       })
       .catch(err => console.log(err))
     
-    window.axios.get(`${url}api/announcement/image/${id}`)
+    window.axios.get(`${url}/api/announcement/image/${id}`)
       .then(({data}) => {
         this.image = data;
-        this.image.src = `${url}files/announcement/images/${data._id}.${data.extension}`
+        this.image.src = `${url}/files/announcement/images/${data._id}.${data.extension}`
       })
       .catch(err => console.log(err))
   },
@@ -59,8 +68,13 @@ const vm = new Vue({
       let indexSemicolon = document.cookie.indexOf(';')
       let length = indexSemicolon === -1 ? document.cookie.length : indexSemicolon - start
       let id = document.cookie.slice(start,length).split('=')[1]
-      window.axios.get(`${url}api/partaker/user/${id}`)
+      window.axios.get(`${url}/api/partaker/user/${id}`)
         .then(res => this.ui.enrolled = res.data == null ? false : true)
+        .catch(err => console.log(err))
+      window.axios.get(`${url}/api/evaluator/announcement/${window.id}/user/${id}`)
+        .then(res => this.ui.enrolled = res.data === null ? false : true)
+        .catch(err => console.log(err))
+      this.user = id
     }
   },
   methods: {
@@ -73,29 +87,25 @@ const vm = new Vue({
     },
     enrollAsContestant: function () {
       if (this.ui.session) {
-        let start = document.cookie.indexOf('session')
-        let indexSemicolon = document.cookie.indexOf(';')
-        let length = indexSemicolon === -1 ? document.cookie.length : indexSemicolon - start
-        let user = document.cookie.slice(start,length).split('=')[1]
         let project = {
           idAnnouncement: window.id,
-          idCreator: user,
+          idCreator: this.user,
         }
-        window.axios.post(`${url}api/project`, project)
+        window.axios.post(`${url}/api/project`, project)
           .then(res => {
             project = res.data
             console.log('project', project)
-            let contestant = {
+            const contestant = {
               idUser: user,
               idProject: project._id,
               rol: 'Owner'
             }
             console.log(contestant)
-            window.axios.post(`${url}api/partaker`, contestant)
+            window.axios.post(`${url}/api/partaker`, contestant)
               .then(res => location.href = `${url}app`)
               .catch(err => {
                 console.log(err)
-                window.axios.delete(`${url}api/delete/${project._id}`)
+                window.axios.delete(`${url}/api/delete/${project._id}`)
                   .then(res => console.log(res.data))
                   .catch(err => console.log(err))
               })
@@ -106,7 +116,13 @@ const vm = new Vue({
     },
     enrollAsEvaluator: function () {
       if (this.ui.session) {
-        window.axios.post(`${url}api/partaker`,)
+        const evaluator = {
+          idAnnouncement: window.id,
+          idUser: this.user,
+        }
+        window.axios.post(`${url}/api/evaluator`,evaluator)
+          .then(res => console.log(res.data))
+          .catch(err => console.log(err))
       } else {
         window.launchSignInModal()
       }
