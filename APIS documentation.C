@@ -217,3 +217,44 @@
 //+++++++User
 '/email/:email' //Funcionando bien
 	GET: Devuelve el nombre y el id del usuario con ese correo electrónico
+
+//+++++++Notification
+'/:idUser' //Funcionando bien
+	GET: Devuelve todas las notificaciones del usuario con ese id
+		y en el siguiente formato
+		{
+      checked: true,
+      _id: "5b1b2cc0c345052428561872",
+      owner: "5b01d106fc5ae925acfbce0d",
+      title: "Notificación de prueba 2",
+      url: "http://127.0.0.1:3000/announcement/results/5b01d16ffc5ae925acfbce0f",
+      __v: 0
+	  }	
+	POST: Registra una nueva notificación a nombre del usuario con el id enviado
+		y también devuelve la notificación creada con el mismo formato que en GET
+'/checked/:idUser' //Funcionando bien
+	GET: Devuelve todas las notificaciones que no han sido revisado por el usuario
+		con el formato tradicional de notificaciones
+		{
+		  checked: false,
+		  _id: "5b1b4b139e791f08cc0032c0",
+		  owner: "5b01d106fc5ae925acfbce0d",
+		  title: "Notificación de prueba 15",
+		  url: "http://127.0.0.1:3000/announcement/results/5b01d16ffc5ae925acfbce0f",
+		  __v: 0
+		}
+'/check/:id' //Funciondo bien
+	PUT: Actualiza el estado checked a true de una notificación y 
+		la devuelve con el formato tradicional
+'/:id' //Funcionando bien
+	GET: Devuelve la notificación con el id enviado
+	DELETE: Elimina la notificación con el id enviado
+	PUT: Actualiza la notificación con la información enviada en el body 
+'/discheckedAll/:idUser' //Sólo para debugguear, funcionando bien
+	PUT: Cambia el estado checked de todas las notifiaciones del usuario con ese
+		id a false (no revisadas), devuelve el número de notifiaciones actualizadas
+		{
+	    n: 2,
+	    nModified: 2,
+	    ok: 1
+		}

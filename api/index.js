@@ -4,6 +4,7 @@ const project = require('./project')
 const announcement = require('./announcement')
 const partaker = require('./partaker')
 const evaluator = require('./evaluator')
+const notification = require('./notification')
 // const sessionMiddleware = require('../middlewares/session');//Para validar los usuarios
 
 // api.use("/", sessionMiddleware);
@@ -12,5 +13,6 @@ api.use('/announcement', announcement)
 api.use('/project', project)
 api.use('/partaker', partaker)
 api.use('/evaluator', evaluator)
+api.use('/notification', notification)
 
 module.exports = api

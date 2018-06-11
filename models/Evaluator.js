@@ -7,5 +7,6 @@ const evaluatorSchema = new Schema({
   status: { type: Number, default: 0 }	//0: Enviado, 1: Aceptado, 2: Rechazado, 3: Suplente
 })
 
+delete mongoose.models.Evaluator;
 const Evaluator = mongoose.model('Evaluator', evaluatorSchema)
 module.exports.Evaluator = Evaluator

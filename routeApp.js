@@ -5,6 +5,9 @@ const announ = require('./app/announcement')
 const project = require('./app/project')
 // const Announcement = require('./models/Announcement').Announcement;
 // const Project = require('./models/Project').Project
+const Announcement = require('./models/Announcement').Announcement; 
+const Project = require('./models/Project').Project
+const Notification = require('./models/Notification').Notification
 
 //*************Para poder acceder a los parámetros del cuerpo de las peticiones
 const bodyParser = require('body-parser');
@@ -52,6 +55,12 @@ router.get('/announcement/adminEvaluators/:id', (req, res) => {
 })
 */
 /*
+			console.log("Find announcement error"); 
+			console.log(err.message); 
+			res.status(500).json({err: err.message})
+		});
+})		
+               
 router.get('/project/admin/:id', (req,res) => {
 	Project.count({_id: req.params.id}, (err, count) => {
 		if (count === 1)
@@ -61,3 +70,7 @@ router.get('/project/admin/:id', (req,res) => {
 	})
 })
 */
+
+router.get('/notifications', (req, res) => {
+	res.render('app/notifications', {idUser: req.session.user_id});
+})
