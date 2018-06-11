@@ -12,6 +12,6 @@ const projectSchema = new Schema({
   status: { type: Number, default: 0 }	//0: Enviado, 1: Aceptado, 2: Rechazado
 })
 
-delete mongoose.models.Project;
+// delete mongoose.models.Project;
 const Project = mongoose.model('Project', projectSchema)
 module.exports.Project = Project

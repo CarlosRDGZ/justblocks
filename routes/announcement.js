@@ -10,9 +10,9 @@ const Evaluator = require('../models/Evaluator').Evaluator;
 announ.use("/", navBarMiddleware);
 // announ.use("/create", sessionMiddleware);
 
-announ.get('/', (req, res) => res.render('announcement/index.pug'))
+announ.get('/', (req,res) => res.render('announcement/index.pug'))
 
-announ.get('/closed', (req, res) => res.render('announcement/closed.pug'))
+announ.get('/closed', (req,res) => res.render('announcement/closed.pug'))
 
 announ.get('/results/:id', (req, res) => {
 	Announcement.findById(req.params.id)
@@ -30,10 +30,8 @@ announ.get('/results/:id', (req, res) => {
 })
 
 announ.get('/create', (req, res) => res.render('announcement/create.pug'))
-announ.get('/view/:id', function(req, res) {
-	res.render('announcement/view', {id: req.params.id});
-})
 
+// announ.get('/view/:id', (req, res) => res.render('announcement/view', {id: req.params.id}))
 
 announ.get('/view/:id', function(req, res) {
 	Announcement.find({_id: req.params.id})
@@ -50,7 +48,6 @@ announ.get('/view/:id', function(req, res) {
 announ.get('/view/evaluator/:idAnnoun', (req, res) => {
 	console.log('View announcement evaluator');
 	let idAnnoun = req.params.idAnnoun;
-
 	Evaluator.find({idUser: req.session.user_id, idAnnouncement: idAnnoun})
 		.populate('idAnnouncement')
 		.exec()
@@ -64,7 +61,6 @@ announ.get('/view/evaluator/:idAnnoun', (req, res) => {
 		})
 		.catch(err =>{console.log('Evaluator announ error'); console.log(err.message); res.status(500).json({err: err.message});})
 })
-
 announ.get('/view/qualify/project/:idProject', (req, res) => {
 	let idProj = req.params.idProject;
 	Evaluator.find({idUser: req.session.user_id})
@@ -89,10 +85,9 @@ announ.get('/view/qualify/project/:idProject', (req, res) => {
 		})
 		.catch(err =>{console.log('Evaluator error'); console.log(err.message); res.status(500).json({err: err.message});})
 })
-
 ///*****Debugg
 announ.get('/', (req, res) => res.render('announcements.pug'))
 announ.get('/opcions', (req, res) => {res.render("announcements.pug");})
 announ.get('/delete', (req, res) => {res.render("announcementDelete.pug");})
-
+*/
 module.exports = announ;

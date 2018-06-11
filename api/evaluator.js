@@ -9,7 +9,8 @@ evaluators.use(bodyParser.json())
 
 evaluators.route('/')
   .post((req,res) => {
-    const evaluator = new Evaluator(req.body.evaluator)
+    const evaluator = new Evaluator(req.body)
+    console.log(evaluator)
     evaluator.save()
       .then(data => res.json(data))
       .catch(err => res.status(400).json(err))
@@ -51,25 +52,44 @@ evaluators.route('/:id')
     })
   })
 
+evaluators.route('/status/:id')
+  .put((req,res) => {
+    const id = req.params.id
+    Evaluator.findOneAndUpdate(id,{ $set: { status: req.body.status } }, { new: true })
+      .populate('idUser', ['_id', 'name', 'email'])
+      .exec()
+      .then(data => res.json(data))
+      .catch(err => res.status(500).json(err))
+  })
+
 evaluators.route('/announcement/:idAnnoun')
   .get((req, res) => {
     console.log('GET evaluators announcement')
-    Evaluator.find({idAnnouncement: req.params.idAnnoun})
+    Evaluator.find({
+      idAnnouncement: req.params.idAnnoun,
+      status: { $not: { $eq:2 } }
+    })
       .populate('idUser', ['name', '_id', 'email'])
-      .exec((err, evaluatorsAnnoun) => {
-        if(err) {console.log(err); res.status(500).json({err: err});}
-        else
-          res.json(evaluatorsAnnoun);
-      })
+      .exec()
+      .then(data => res.json(data))
+      .catch(err => res.status(500).json(err))
+  })
+
+evaluators.route('/announcement/:idAnnoun/user/:idUser')
+  .get((req,res) => {
+    Evaluator.findOne({
+      idAnnouncement: req.params.idAnnoun,
+      idUser: req.params.idUser
+    })
+    .then(data => res.json(data))
+    .catch(err => res.status(500).json(err))
   })
 
 evaluators.route('/announcement/count/:idAnnoun')
   .get((req, res) => {
-    Evaluator.count({idAnnouncement: req.params.idAnnoun}, (err, evaluatorsAnnoun) => {
-      if(err) {console.log(err); res.status(500).json({err: err});}
-      else
-        res.json({evaluatorsAmount: evaluatorsAnnoun});
-    })
+    Evaluator.count({idAnnouncement: req.params.idAnnoun})
+      .then(count => res.json(count))
+      .catch(err => res.status(500).json(err))
   })
 
 evaluators.route('/announcement/qualified/:idAnnoun')
