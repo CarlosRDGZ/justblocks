@@ -124,7 +124,12 @@ html(lang="en")
                   .tile.is-child
                     .content.has-text-centered
                       button.button.is-link.is-large(:disabled='ui.enrolled' @click='enrollAsEvaluator' v-if='!ui.evaluatorsFull') Inscribirse
-                      p.is-size-4(v-else) Cantidad de evaluadores completa          
+                      p.is-size-4(v-else) Cantidad de evaluadores completa
+        .modal(:class='{ "is-active": ui.send }')
+          .modal-content
+            .notification(:class='ui.success ? "is-success" : "is-danger"')
+              button.delete(@click='ui.send = false')
+              h1.title Petici&oacute;n {{ ui.success ? '' : 'no' }} enviada.   
   include ../footer.pug
 script(src=pathToRoot + 'vue/vue.min.js')
 script(src=pathToRoot + 'vue/controllers/announcement/view.js')

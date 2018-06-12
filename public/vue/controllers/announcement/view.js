@@ -23,6 +23,8 @@ const vm = new Vue({
       evaluatorsFull: false,
       session: false,
       enrolled: false,
+      send: false,
+      success: true
     },
     info: {
       evaluators: -1
@@ -87,6 +89,7 @@ const vm = new Vue({
     },
     enrollAsContestant: function () {
       if (this.ui.session) {
+        const vm = this
         let project = {
           idAnnouncement: window.id,
           idCreator: this.user,
@@ -96,7 +99,7 @@ const vm = new Vue({
             project = res.data
             console.log('project', project)
             const contestant = {
-              idUser: user,
+              idUser: this.user,
               idProject: project._id,
               rol: 'Owner'
             }
@@ -105,10 +108,24 @@ const vm = new Vue({
               .then(res => location.href = `${url}app`)
               .catch(err => {
                 console.log(err)
-                window.axios.delete(`${url}/api/delete/${project._id}`)
-                  .then(res => console.log(res.data))
-                  .catch(err => console.log(err))
+                window.axios.delete(`${url}/api/project/${project._id}`)
+                  .then(res => {
+                    console.log(res.data)
+                    vm.enrolled = true,
+                    vm.ui.success = false
+                    vm.ui.send = true
+                  })
+                  .catch(err => {
+                    console.log(err)
+                    vm.ui.success = false
+                    vm.ui.send = true
+                  })
               })
+          })
+          .catch(err  => {
+            console.log(err)
+            vm.ui.success = false
+            vm.ui.send = true
           })
       } else {
         window.launchSignInModal()
@@ -121,8 +138,16 @@ const vm = new Vue({
           idUser: this.user,
         }
         window.axios.post(`${url}/api/evaluator`,evaluator)
-          .then(res => console.log(res.data))
-          .catch(err => console.log(err))
+          .then(res => {
+            console.log(res.data)
+            vm.ui.success = true
+            vm.ui.send = true
+          })
+          .catch(err => {
+            console.log(err)
+            vm.ui.success = false
+            vm.ui.send = true
+          })
       } else {
         window.launchSignInModal()
       }
