@@ -1,0 +1,140 @@
+- const pathToRoot = 'http://127.0.0.1:3000/'
+- const today = new Date(2018, 4, 1);
+doctype html
+html(lang="en")
+  head
+    include ../../header.pug
+    link(rel="stylesheet", href=pathToRoot + "bulma-extensions/bulma-extensions.min.css")
+    title Administración de evaluadores
+  body
+    include ../../navbar.pug
+    section.hero.is-info
+      .hero-body
+        .container.has-text-centered
+          h1.title #{announ.title}
+          h2.subtitle Administraci&oacute;n
+    main#app.section.is-paddingless
+      .container-fluid
+        .notification.is-white
+          if today < announ.endEnrollmentsDate
+            .tabs
+              ul
+                li(:class="{ 'is-active' : tabs.projects }" @click='changeContent("projects")')
+                  a(style="text-decoration: none")
+                    p.badge.is-badge-small.is-badge-info(:class='tabs.projects ? "" : "is-badge-outlined"' :data-badge='projects.length')
+                      span.icon.is-small
+                        i.fas.fa-project-diagram(aria-hidden='true')
+                      span Proyectos
+                li(:class="{ 'is-active' : tabs.evaluators }" @click='changeContent("evaluators")')
+                  a(style="text-decoration: none")
+                    p.badge.is-badge-small.is-badge-info(:class='tabs.evaluators ? "" : "is-badge-outlined"' :data-badge='evaluators.length')
+                      span.icon.is-small
+                        i.fas.fa-user-astronaut(aria-hidden='true')    
+                      span Evaluadores
+            .tile.is-antecesor
+              .tile.is-vertical.parent
+                .tile.is-child(v-if='tabs.projects')
+                  .columns.is-centered
+                    .column.is-10.box
+                      v-client-table(:columns="table.projects.columns" :data="projects" :options="table.projects.options")
+                        div(slot='idCreator' slot-scope='props') {{ props.row.idCreator.fullName() }}
+                        div(slot='status' slot-scope='props')
+                          p(v-if='props.row.status == 0')
+                            span.icon.is-small.has-text-primary(v-if='props.row.status == 0')
+                              i.fas.fa-inbox
+                            span &nbsp;Enviado
+                          p(v-else-if='props.row.status == 1')
+                            span.icon.is-small.has-text-success
+                              i.fas.fa-check(v-if='props.row.status == 1')
+                            span &nbsp;Aceptado
+                        .field.has-addons(slot='options' slot-scope='props')
+                          p.control
+                            button.button.is-info.is-outlined(@click='modalProject(props.row,true)')
+                              span.icon.is-small
+                                i.fas.fa-eye
+                              span Ver
+                          p.control
+                            button.button.is-link.is-outlined
+                              span.icon.is-small
+                                i.fas.fa-user-astronaut
+                              span Creador
+                          p.control(v-if='props.row.status == 0')
+                            button.button.is-success.is-outlined(@click='updateStatus(props.row._id,1,"project")')
+                              span.icon.is-small
+                                i.fas.fa-check
+                              span Aceptar
+                          p.control(v-if='props.row.status == 0')
+                            button.button.is-danger.is-outlined(@click='updateStatus(props.row._id,2,"project")')
+                              span.icon.is-small
+                                i.fas.fa-times
+                              span Rechazar
+                .tile.is-child(v-if='tabs.evaluators')
+                  .columns.is-centered
+                    .column.is-10.box
+                      v-client-table(:columns="table.evaluators.columns" :data="evaluators" :options="table.evaluators.options")
+                        div(slot='name' slot-scope='props') {{ props.row.idUser.fullName() }}
+                        div(slot='email' slot-scope='props') {{ props.row.idUser.email }}
+                        div(slot='status' slot-scope='props')
+                          p(v-if='props.row.status == 0')
+                            span.icon.is-small.has-text-primary(v-if='props.row.status == 0')
+                              i.fas.fa-inbox
+                            span &nbsp;Enviado
+                          p(v-else-if='props.row.status == 1')
+                            span.icon.is-small.has-text-success
+                              i.fas.fa-checkfas fa-people-carry
+                            span &nbsp;Aceptado
+                          p(v-else-if='props.row.status == 3')
+                            span.icon.is-small.has-text-info
+                              i.fas.fa-people-carry
+                            span &nbsp;Suplente
+                        .field.has-addons(slot='options' slot-scope='props')
+                          p.control
+                            button.button.is-info.is-outlined
+                              span.icon.is-small
+                                i.fas.fa-eye
+                              span Ver
+                          p.control(v-if='props.row.status == 0')
+                            button.button.is-success.is-outlined(@click='updateStatus(props.row._id,1,"evaluator")')
+                              span.icon.is-small
+                                i.fas.fa-check
+                              span Aceptar
+                          p.control(v-if='props.row.status == 0')
+                            button.button.is-danger.is-outlined(@click='updateStatus(props.row._id,2,"evaluator")')
+                              span.icon.is-small
+                                i.fas.fa-times
+                              span Rechazar
+          else if today < announ.deadlineDate
+            h1 En la etapa de evaluación
+          else
+            //Etapa final, convocatoria terminada, para entonces ya debió haber sido evaluado, también con el modelo
+            h1 En la etapa final, resultados
+            - let idAnnoun = announ._id
+            h1 Esta convocatoria está terminada, para ver los resultados por favor dirígete a este 
+              a(href=`http://127.0.0.1:3000/announcement/results/` + idAnnoun) enlace
+      .modal(:class='{ "is-active" : modal.project.active }')
+        .modal-background
+        .modal-card
+          header.modal-card-head.has-text-centered
+            p.modal-card-title {{ modal.project.info.title }}
+            button.delete(aria-label='close' @click='modalProject(empty.project,false)')
+          section.modal-card-body
+            .content(v-html='modal.project.info.description')
+            .content
+              b Creador
+              ul
+                li
+                  span.icon.has-text-link
+                    i.fas.fa-user-astronaut
+                  span {{ modal.project.info.idCreator.fullName() }}
+                li
+                  span.icon.has-text-link
+                    i.fas.fa-envelope
+                  span {{ modal.project.info.idCreator.email }}
+          footer.modal-card-foot(@click='modalProject(empty.project,false)')
+            button.button.is-link Cerrar
+  include ../../footer.pug
+script.
+  const idAnnoun = `#{announ._id}`
+script(src=pathToRoot + 'vue/vue.js')
+script(src=pathToRoot + 'tables/vue-tables-2.min.js')
+script(src=pathToRoot + 'vue/controllers/announcement/admin.js')

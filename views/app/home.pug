@@ -1,4 +1,4 @@
-- const pathToRoot = '../'
+- const pathToRoot = 'http://localhost:3000/'
 script.
   window.id = !{JSON.stringify(id)}
 doctype html
@@ -50,7 +50,6 @@ html(lang="en")
             .notification.is-primary
               h1.title(v-if='tabs.announs') Mis Convocatorias
               h1.title(v-else-if='tabs.projects') Proyectos
-              //h1.title Mis Convocatorias
             .notification.is-white
               .tabs
                 ul
@@ -69,12 +68,6 @@ html(lang="en")
                   div(v-if='tabs.announs')
                     .tile.is-child
                       .columns
-                        .column.is-4
-                          .field
-                            p.control.has-icons-left
-                              input.input(type="text")
-                              span.icon.is-small.is-left
-                                i.fas.fa-search
                         .column
                           .field.is-pulled-right
                             p.control
@@ -83,125 +76,39 @@ html(lang="en")
                                   i.fas.fa-plus-square
                                 span Agregar
                     br
-                    .tile.is-child
-                      table.table.is-striped.is-fullwidth
-                        thead
-                          tr
-                            th.has-text-centered Título
-                            th.has-text-centered Fecha de lanzamiento
-                            th.has-text-centered Fecha de evaluación
-                            th.has-text-centered Fecha de cierre
-                            th.has-text-centered Opciones
-                        tbody(v-for='i in table.announs.pagination.itemsPerPage')
-                          tr(v-if='table.announs.data[i-1] !== undefined')
-                              td.has-text-centered {{ table.announs.data[i-1].title }}
-                              td.has-text-centered {{ table.announs.data[i-1].endEnrollmentsDate }}
-                              td.has-text-centered {{ table.announs.data[i-1].evaluationDate }}
-                              td.has-text-centered {{ table.announs.data[i-1].deadlineDate }}
-                              td.is-narrow
-                                .field.has-addons
-                                  p.control
-                                    a.button.is-primary.is-outlined(:href="`app/announcement/admin/${table.announs.data[i-1]._id}`")
-                                      span.icon.is-small
-                                        i.fas.fa-edit
-                                      span Editar
-                                  p.control
-                                    a.button.is-info.is-outlined
-                                      span.icon.is-small
-                                        i.fas.fa-toolbox
-                                      span Administrar
-                    .tile.is-child
-                      .field.is-grouped.is-grouped-right
-                        div(v-for='i in table.announs.pagination.itemsPerPage')
-                        .control
-                          .select
-                            select
-                              option 10
-                              option 25
-                              option 50
-                        nav.pagination.is-centered(role='navigation')
-                          ul.pagination-list
-                            li
-                              a.pagination-link(@click='table_(table.announs,announs).announs.first()' style="text-decoration: none")
-                                span.icon.is-small
-                                  i.fas.fa-angle-double-left
-                            li
-                              a.pagination-link(@click='table_(table.announs,announs).announs.previous()' style="text-decoration: none")
-                                span.icon.is-small
-                                  i.fas.fa-angle-left
-                            li(v-for='i in table.announs.pagination.shown.pages')
-                              a.pagination-link(:class="{ 'is-current' : table.announs.pagination.current === i }" @click='table_(table.announs,announs).announs.goto(i)' style="text-decoration: none") {{ i }}
-                            li
-                              a.pagination-link(@click='table_(table.announs,announs).announs.next()' style="text-decoration: none")
-                                span.icon.is-small
-                                  i.fas.fa-angle-right
-                            li
-                              a.pagination-link(@click='table_(table.announs,announs).announs.last()' style="text-decoration: none")
-                                span.icon.is-small
-                                  i.fas.fa-angle-double-right
+                    .tile.is-child.box
+                       v-client-table(:columns='table.announs.columns' :data='announs' :options='table.announs.options')
+                        div(slot='creationDate' slot-scope='props') {{ props.row.creationDate.toCostumeString() }}
+                        div(slot='deadlineDate' slot-scope='props') {{ props.row.deadlineDate.toCostumeString() }}
+                        .field.has-addons(slot='options' slot-scope='props')
+                          p.control
+                            a.button.is-primary.is-outlined(:href="`app/announcement/edit/${props.row._id}`")
+                              span.icon.is-small
+                                i.fas.fa-edit
+                              span Editar
+                          p.control
+                            a.button.is-info.is-outlined(:href="`app/announcement/admin/${props.row._id}`")
+                              span.icon.is-small
+                                i.fas.fa-toolbox
+                              span Administrar
                   div(v-else-if='tabs.projects')
-                    .tile.is-child
-                      .columns
-                        .column.is-4
-                          .field
-                            p.control.has-icons-left
-                              input.input(type="text")
-                              span.icon.is-small.is-left
-                                i.fas.fa-search
-                    br
-                    .tile.is-child
-                      table.table.is-striped.is-fullwidth
-                          thead
-                            tr
-                              th.has-text-centered Título
-                              th.has-text-centered Descripción
-                              th.has-text-centered Opciones
-                          tbody(v-for='i in table.projects.pagination.itemsPerPage')
-                            tr(v-if='table.projects.data[i-1] !== undefined')
-                              td.has-text-centered {{ table.projects.data[i-1].title }}
-                              td.has-text-centered {{ table.projects.data[i-1].description }}
-                              td.is-narrow
-                                .field.has-addons
-                                  p.control
-                                    a.button.is-primary.is-outlined(:href="`app/project/admin/${table.projects.data[i-1]._id}`")
-                                      span.icon.is-small
-                                        i.fas.fa-edit
-                                      span Editar
-                                  p.control
-                                    a.button.is-info.is-outlined
-                                      span.icon.is-small
-                                        i.fas.fa-toolbox
-                                      span Enviar
-                    .tile.is-child
-                      .field.is-grouped.is-grouped-right
-                        div(v-for='i in table.projects.pagination.itemsPerPage')
-                        .control
-                          .select
-                            select
-                              option 10
-                              option 25
-                              option 50
-                        nav.pagination.is-centered(role='navigation')
-                          ul.pagination-list
-                            li
-                              a.pagination-link(@click='table_(table.projects,projects).projects.first()' style="text-decoration: none")
-                                span.icon.is-small
-                                  i.fas.fa-angle-double-left
-                            li
-                              a.pagination-link(@click='table_(table.projects,projects).projects.previous()' style="text-decoration: none")
-                                span.icon.is-small
-                                  i.fas.fa-angle-left
-                            li(v-for='i in table.projects.pagination.shown.pages')
-                              a.pagination-link(:class="{ 'is-current' : table.projects.pagination.current === i }" @click='table_(table.projects,projects).projects.goto(i)' style="text-decoration: none") {{ i }}
-                            li
-                              a.pagination-link(@click='table_(table.projects,projects).projects.next()' style="text-decoration: none")
-                                span.icon.is-small
-                                  i.fas.fa-angle-right
-                            li
-                              a.pagination-link(@click='table_(table.projects,projects).projects.last()' style="text-decoration: none")
-                                span.icon.is-small
-                                  i.fas.fa-angle-double-right
+                    .tile.is-child.box
+                      v-client-table(:columns='table.projects.columns' :data='projects' :options='table.projects.options')
+                        div(slot='title' slot-scope='props') {{ props.row.title != '' ? props.row.title : 'Sin Título' }}
+                        div(slot='description' slot-scope='props') {{ props.row.description != '' ? props.row.description : 'Sin Título' }}
+                        .field.has-addons(slot='options' slot-scope='props')
+                          p.control
+                            a.button.is-primary.is-outlined(:href="`/app/project/edit/${props.row._id}`")
+                              span.icon.is-small
+                                i.fas.fa-edit
+                              span Editar
+                          p.control
+                            a.button.is-info.is-outlined(:href="`project/edit/${props.row  ._id}`")
+                              span.icon.is-small
+                                i.fas.fa-toolbox
+                              span Administrar
     include ../footer.pug
     script(src=pathToRoot + "vue/vue.min.js")
-    script(src=pathToRoot + "../../vue/controllers/home.js")
-    // script(src="../x../vue/components/tabs.vue")
+    script(src=pathToRoot + 'tables/vue-tables-2.min.js')
+    script(src=pathToRoot + "vue/controllers/home.js")
+

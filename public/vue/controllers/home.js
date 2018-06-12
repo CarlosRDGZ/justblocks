@@ -1,145 +1,99 @@
-let getDate = date => date != undefined ? date.substring(0,10) : 'NA'
-
-let Table = () => {
-	return {
-			pagination: {
-			current: 0,
-			pags: 0,
-			itemsPerPage: 10,
-			shown: {
-				first: -1,
-				last: -1,
-				pages: []
-			}
-		},
-		data: [],
-		index: {
-			top: -1,
-			bottom: -1
-		}
-	}
+const url = 'http://127.0.0.1:3000'
+Date.prototype.toCostumeString = function () {
+	const months = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic']
+	return `${this.getDate()}/${months[this.getMonth()]}/${this.getFullYear()}`
 }
 
-let pagination = (table,data) => {
-	return {
-		previous: function() {
-			if (table.pagination.current > 1) {
-				table.pagination.current--
-				table.data = 
-					data.slice(table.index.top -= table.pagination.itemsPerPage, table.index.bottom -= table.pagination.itemsPerPage)
-				if (table.pagination.current < table.pagination.shown.first){
-					table.pagination.shown.pages.unshift(table.pagination.current)
-					table.pagination.shown.pages = table.pagination.shown.pages.slice(0,table.pagination.shown.pages.length-1)
-					table.pagination.shown.first--
-					table.pagination.shown.last--
-				}
-			}
-		},
-		next: function() {
-			if (table.pagination.current < table.pagination.pags) {
-				table.pagination.current++
-				table.data = 
-					data.slice(table.index.top += table.pagination.itemsPerPage, table.index.bottom += table.pagination.itemsPerPage)
-				if (table.pagination.current > table.pagination.shown.last){
-					table.pagination.shown.pages.push(table.pagination.current)
-					table.pagination.shown.pages = table.pagination.shown.pages.slice(1)
-					table.pagination.shown.first++
-					table.pagination.shown.last++
-				}
-			}
-		},
-		goto: function(page) {
-			table.pagination.current = page
-			table.index.top = (table.pagination.itemsPerPage * page) - table.pagination.itemsPerPage
-			table.index.bottom = table.pagination.itemsPerPage * page
-			table.data =
-				data.slice(table.index.top, table.index.bottom)
-		},
-		first: function() {
-			table.pagination.shown.first = 1
-			table.pagination.shown.last = 5
-			table.pagination.shown.pages = []
-			for (let i = table.pagination.shown.first; i <= table.pagination.shown.last; i++)
-				table.pagination.shown.pages.push(i)
-				this.goto(1)
-		},
-		last: function() {
-			table.pagination.shown.first = table.pagination.pags - 4
-			table.pagination.shown.last = table.pagination.pags
-			table.pagination.shown.pages = []
-			for (let i = table.pagination.shown.first; i <= table.pagination.shown.last; i++)
-				table.pagination.shown.pages.push(i)
-			this.goto(table.pagination.pags)
-		}
-	}
-}
-
-let init = (table,data) => {
-	table.data = data
-	table.pagination.pags = Math.ceil(data.length / table.pagination.itemsPerPage)
-	table.pagination.current = data.length > 0 ? 1 : 0
-	table.data = data.slice(table.index.top = 0, table.index.bottom = table.pagination.itemsPerPage)
-	table.pagination.shown.first = table.pagination.current
-	table.pagination.shown.last = Math.min(table.pagination.pags,5)
-	for(let i = table.pagination.shown.first; i <= table.pagination.shown.last; i++)
-		table.pagination.shown.pages.push(i)
-}
-
+Vue.use(VueTables.ClientTable, theme = 'bulma')
 var vm = new Vue({
-    el: '#app',
-    data: {
-			announs: [],
-			projects: [],
-			tabs: {
-				announs: true,
-				projects: false,
-				selected: 'announs'
-			},
-			table: {
-				announs: {},
-				projects: {}
-			}
+  el: '#app',
+  data: {
+		announs: [],
+		projects: [],
+		tabs: {
+			announs: true,
+			projects: false,
+			selected: 'announs'
 		},
-		created: function () {
-			this.table.announs = Table()
-			this.table.projects = Table()
-			window.axios.get(`/api/announcement/user/${id}`)
-				.then(({data}) => {
-					data.forEach(e => {
-						e.partakers = 0
-						getProjectsByAnnoun(e._id, data);
-						e.endEnrollmentsDate = getDate(e.endEnrollmentsDate)
-						e.evaluationDate = getDate(e.evaluationDate)
-						e.deadlineDate = getDate(e.deadlineDate)
-					})
-					this.announs = data;
-					init(this.table.announs, data)
-				})
-				window.axios.get(`/api/project/user/${id}`)
-				.then(({ data }) => {
-					console.log(0/0)
-					this.projects = data
-					init(this.table.projects, data)
-				})
-				
-		},
-		methods: {
-			changeContent: function (page) {
-				if (this.tabs[page] !== true) {
-					this.tabs[this.tabs.selected] = false
-					this.tabs[page] = true
-					this.tabs.selected = page
+		table: {
+			announs: {
+				columns: ['title', 'creationDate', 'deadlineDate', 'options'],
+				options: {
+					headings: {
+						title: 'Título',
+						creationDate: 'Inicio',
+						deadlineDate: 'Fin',
+						options: 'Opciones'
+					},
+					skin: 'table is-striped is-fullwidth is-hoverable',
+					sortable: ['title', 'creationDate', 'deadlineDate'],
+					filterable: ['title', 'creationDate', 'deadlineDate'],
+					orderBy: {'column': 'deadlineDate'},
+					perPage: 5,
+					perPageValues: [5,10,25],
+					preserveState: true,
+					pagination: {
+						nav: 'fixed',
+						edge: true
+					}
 				}
 			},
-			table_: function (table,data) {
-				return {
-					announs: pagination(table,data),
-					projects: pagination(table,data)
+			projects: {
+				columns: ['title', 'description', 'options'],
+				options: {
+					headings: {
+						title: 'Título',
+						description: 'Descripción',
+						options: 'Opciones'
+					},
+					skin: 'table is-striped is-fullwidth is-hoverable',
+					sortable: ['title', 'description'],
+					filterable: ['title', 'description'],
+					orderBy: {'column': 'title'},
+					perPage: 5,
+					perPageValues: [5,10,25],
+					preserveState: true,
+					pagination: {
+						nav: 'fixed',
+						edge: true
+					}
 				}
 			}
 		}
+	},
+	created: function () {
+		const vm = this
+		window.axios.get(`${url}/api/announcement/user/${id}`)
+			.then(({data}) => setAnnounDates(data).then(res => vm.announs = res))
+			.catch(err => console.log(err))
+		window.axios.get(`${url}/api/project/user/${id}`)
+		.then(({ data }) => this.projects = data)
+	},
+	methods: {
+		changeContent: function (page) {
+			if (this.tabs[page] !== true) {
+				this.tabs[this.tabs.selected] = false
+				this.tabs[page] = true
+				this.tabs.selected = page
+			}
+		}
+	}
 })
 
+const setAnnounDates = (data) => {
+	return new Promise(resolve => {
+		data.forEach(e => {
+			e.partakers = 0
+			getProjectsByAnnoun(e._id, data);
+			e.creationDate = new Date(e.creationDate)
+			e.endEnrollmentsDate = new Date(e.endEnrollmentsDate)
+			e.evaluationDate = new Date(e.evaluationDate)
+			e.deadlineDate = new Date(e.deadlineDate)
+			window.date = new Date(e.creationDate)
+		})
+		resolve(data)
+	})
+}
 
 function getUserName(id, object) {
 	window.axios.get('/api/user/' + id + '/name')
