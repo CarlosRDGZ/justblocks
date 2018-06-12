@@ -14,7 +14,8 @@ const announcementSchema = new Schema({
 	projectsEvaluatedTimes: { type: Number, default: 0 },//r
 	content: { type: String },
 	prize: { type: String },
-	image: {type: Schema.Types.ObjectId, ref: "FileAnnouncement" }
+	image: {type: Schema.Types.ObjectId, ref: "FileAnnouncement" },
+	byTraditionalMethod: {type: Boolean, default: false}
 })
 announcementSchema.index({title: 'text'});
 delete mongoose.models.Announcement;

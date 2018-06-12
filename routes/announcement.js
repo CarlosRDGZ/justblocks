@@ -34,7 +34,6 @@ announ.get('/view/:id', function(req, res) {
 	res.render('announcement/view', {id: req.params.id});
 })
 
-
 announ.get('/view/:id', function(req, res) {
 	Announcement.find({_id: req.params.id})
 		.then((announcementGot) => {

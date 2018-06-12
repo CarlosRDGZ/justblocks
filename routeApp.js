@@ -23,6 +23,32 @@ router.get('/announcement/admin/:id', (req, res) => {
 	})
 })
 
+router.get('/announcement/projectsPerEvaluator/:id', (req, res) => {
+	Announcement.findById(req.params.id)
+		.then(announGot => {
+			if(announGot.idCreator == req.session.user_id) {
+      	let today = new Date(2018,4, 8);
+      	if(today < announGot.endEnrollmentsDate) //Etapa de registro, redirigir a la vista correspondiente
+      		res.sendStatus(404);
+      	else if(today >= announGot.deadlineDate) {//Convocatoria cerrada, se redirige a los resultados
+      		let body = 'redirect';
+      		let url = `http://127.0.0.1:3000/announcement/results/${announGot._id}`;
+					res.writeHead(302, {
+							'Content-Type': 'text/plain',
+							'Location': url,
+							'Content-Length': body.length
+						});
+					res.end(body);					
+				}	
+				else
+					res.render('app/announcement/projectsPerEvaluator.pug', {announ: announGot});
+			}
+			else
+				res.sendStatus(403);
+		})
+		.catch(err => {console.log('FindAnnouncement error ', err.message); res.status(500).json({err: err.message});})
+})
+
 router.get('/announcement/adminEvaluators/:id', (req, res) => {
 	console.log("ANNNOUNCEMt")
 	console.log(req.params.id);
