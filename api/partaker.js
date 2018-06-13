@@ -1,5 +1,6 @@
 const partakers = require('express').Router()
 const Partaker = require('../models/Partaker').Partaker
+const Project = require('../models/Project').Project
 const bodyParser = require('body-parser')
 
 partakers.use(bodyParser.urlencoded({ extended: true }))
@@ -9,8 +10,14 @@ partakers.route('/')
   .post((req,res) => { 
     const partaker = new Partaker(req.body)
     partaker.save()
-      .then(data => res.json(data))//Validar que no pertenezca ya, que no sea el dueño de la convocatoria ni evaluador de la misma
-      .catch(err => res.status(400).json(err))
+      .then(data => {
+        Partaker.findById(data._id)
+        .populate('idUser', ['_id', 'name'])
+        .exec()
+        .then(data => res.json(data))
+        .catch(err => res.status(500).json(err))
+      })
+      .catch(err => res.status(500).json(err))
   }) 
   .get((req, res) => {
     console.log("GET partakers");
@@ -65,6 +72,20 @@ partakers.route('/user/:id')
       if (err) res.status(400).json(data)
       res.json(data)
     })
+  })
+
+partakers.route('/announcement/:idAnnoun/user/:idUser')
+  .get((req,res) => {
+    const user = req.params.idUser
+    const announ = req.params.idAnnoun
+    Partaker.find({ idUser: user })
+      .populate('idProject',['_id','idAnnouncement'])
+      .exec()
+      .then(data => {
+        const found = data.find(partaker => partaker.idProject.idAnnouncement == announ)
+        res.json(found === undefined ? null : found)
+      })
+      .catch(err => res.status(500).json(err))
   })
 
 partakers.route('/:id')

@@ -5,6 +5,7 @@ Vue.use(VueTables.ClientTable, theme = 'bulma');
 const vm = new Vue({
 	el: '#app',
 	data: {
+		announ: { },
 		evaluators: [],
 		projects: [],
 		empty: {
@@ -90,14 +91,30 @@ const vm = new Vue({
 			}
 		},
 		updateStatus: function (id, status, target) {
+			const vm = this
 			window.axios.put(`${url}/api/${target}/status/${id}`, { status: status })
 				.then(({data}) => {
+					let notification = { }
 					let index = this[`${target}s`].findIndex(e => e._id === data._id)
-					data[target === 'project' ? 'idCreator' : 'idUser'].fullName = function () { return this.name.first + ' ' + this.name.last }
-					if (status === 1)
-						this[`${target}s`].splice(index,1,data)
-					else 
-						this[`${target}s`].splice(index,1)
+					let old = { }
+					let id = target === 'project' ? 'idCreator' : 'idUser'
+					data[id].fullName = function () { return this.name.first + ' ' + this.name.last }
+					if (status !== 2) {
+						old = this[`${target}s`].splice(index,1,data)[0]
+						notification = {
+							title: `Su solicitud de ${target} para participar en ${vm.announ.title}. fue aceptada.`,
+							url: `${url}/app/`
+						}
+					} else {
+						old = this[`${target}s`].splice(index,1)[0]
+						notification = {
+							title: `Su solicitud de ${target} para participar en ${vm.announ.title}. fue rechazada.`,
+							url: `${url}/app/`
+						}
+					}
+					window.axios.post(`${url}/api/notification/${old[id]._id}`, notification)
+						.then(res => console.log(res))
+						.catch(err => console.log(err))
 					console.log(data)
 				})
 				.catch(err => console.log(err))
@@ -109,6 +126,7 @@ const vm = new Vue({
 	},
 	created: function () {
 		this.modal.project.info = this.empty.project
+		this.announ = window.announ
 		window.axios.get(`${url}/api/project/announcement/${idAnnoun}`)
 			.then(({data}) => {
 				this.projects = data.map(p => {
@@ -124,7 +142,8 @@ const vm = new Vue({
 					return e
 				})
 			})
-	}
+	},
+	beforeMount: function () { window.announ = undefined }
 })
 
 /*

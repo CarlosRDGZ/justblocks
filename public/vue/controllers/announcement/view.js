@@ -70,11 +70,11 @@ const vm = new Vue({
       let indexSemicolon = document.cookie.indexOf(';')
       let length = indexSemicolon === -1 ? document.cookie.length : indexSemicolon - start
       let id = document.cookie.slice(start,length).split('=')[1]
-      window.axios.get(`${url}/api/partaker/user/${id}`)
-        .then(res => this.ui.enrolled = res.data == null ? false : true)
+      window.axios.get(`${url}/api/partaker/announcement/${window.id}/user/${id}`)
+        .then(res => this.ui.enrolled = res.data !== null)
         .catch(err => console.log(err))
       window.axios.get(`${url}/api/evaluator/announcement/${window.id}/user/${id}`)
-        .then(res => this.ui.enrolled = res.data === null ? false : true)
+        .then(res => this.ui.enrolled = res.data !== null)
         .catch(err => console.log(err))
       this.user = id
     }
@@ -99,19 +99,26 @@ const vm = new Vue({
             project = res.data
             console.log('project', project)
             const contestant = {
-              idUser: this.user,
+              idUser: project.idCreator,
               idProject: project._id,
               rol: 'Owner'
             }
-            console.log(contestant)
-            window.axios.post(`${url}/api/partaker`, contestant)
-              .then(res => location.href = `${url}app`)
+            window.axios.post(`${url}/api/partaker/`, contestant)
+              .then(res => {
+                const user = res.data.idUser
+                const notification = {
+                  title: `${user.name.first + ' ' + user.name.last} envió solicitud de projecto para participar en ${vm.announ.title}.`,
+                  url: `${url}/app/announcement/admin/${vm.announ._id}`
+                }
+                window.axios.post(`${url}/api/notification/${vm.announ.idCreator}`, notification)
+                  .then(res => window.location.href = `${url}/app`)
+                  .catch(err => console.log(err))
+              })
               .catch(err => {
                 console.log(err)
                 window.axios.delete(`${url}/api/project/${project._id}`)
                   .then(res => {
                     console.log(res.data)
-                    vm.enrolled = true,
                     vm.ui.success = false
                     vm.ui.send = true
                   })
@@ -138,11 +145,7 @@ const vm = new Vue({
           idUser: this.user,
         }
         window.axios.post(`${url}/api/evaluator`,evaluator)
-          .then(res => {
-            console.log(res.data)
-            vm.ui.success = true
-            vm.ui.send = true
-          })
+          .then(res => window.location.href = `${url}/app`)
           .catch(err => {
             console.log(err)
             vm.ui.success = false

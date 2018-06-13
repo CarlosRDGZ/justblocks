@@ -61,13 +61,30 @@ projects.route('/:id')
     })
   })
 
+projects.route('/user/:user/status/')
+  .get((req,res) => {
+    const user = req.params.user
+    Project.find({ idCreator: user, status: { $not: { $eq: 2 } } })
+      .then(data => res.json(data))
+      .catch(err => res.status(err).json(err))
+  })
+
 projects.route('/status/:id')
   .put((req,res) => {
     const id = req.params.id
-    Project.findOneAndUpdate(id,{ $set: { status: req.body.status } }, { new: true })
-      .populate('idCreator', ['_id', 'name', 'email'])
-      .exec()
-      .then(data => res.json(data))
+    const status = req.body.status
+    Project.update({ _id: id }, { $set: { status: status } })
+      .then(data => {
+        // Project.findOneAndUpdate(id, { $set: { status: status } }, { new: true })
+        if (data.ok === 1) {
+          // { n: 1, nModified: 1, ok: 1 }
+          Project.findById(id)
+            .populate('idCreator', ['_id', 'name', 'email'])
+            .exec()
+            .then(data => res.json(data))
+            .catch(err => res.status(500).json(err))
+        }
+      })
       .catch(err => res.status(500).json(err))
   })
 
@@ -102,6 +119,7 @@ projects.route('/announcement/:id')
       .populate('idCreator', ['_id', 'name', 'email'])
       .exec()
       .then(data => {
+        console.log(data)
         if (data)
           res.json(data)
         else

@@ -48,8 +48,9 @@ html(lang="en")
                 span Agregar Convocatoria
           .column.is-three-quarters
             .notification.is-primary
-              h1.title(v-if='tabs.announs') Mis Convocatorias
+              h1.title(v-if='tabs.announs') Convocatorias
               h1.title(v-else-if='tabs.projects') Proyectos
+              h1.title(v-else-if='tabs.evaluator') Evaluador
             .notification.is-white
               .tabs
                 ul
@@ -57,12 +58,17 @@ html(lang="en")
                     a(style="text-decoration: none")
                       span.icon.is-small
                         i.fas.fa-bullhorn(aria-hidden='true')
-                      span Mis Convocatorias
+                      span Convocatorias
                   li(:class="{ 'is-active' : tabs.projects }" @click='changeContent("projects")')
                     a(style="text-decoration: none")
                       span.icon.is-small
                         i.fas.fa-project-diagram(aria-hidden='true')    
                       span Proyectos
+                  li(:class="{ 'is-active' : tabs.evaluator }" @click='changeContent("evaluator")')
+                    a(style="text-decoration: none")
+                      span.icon.is-small
+                        i.fas.fa-book-open(aria-hidden='true')    
+                      span Evaluador
               .tile.is-antecesor
                 .tile.is-vertical.parent
                   div(v-if='tabs.announs')
@@ -107,6 +113,30 @@ html(lang="en")
                               span.icon.is-small
                                 i.fas.fa-toolbox
                               span Administrar
+                  div(v-else-if='tabs.evaluator')
+                    .tile.is-child.box
+                      v-client-table(:columns='table.evaluator.columns' :data='evaluator' :options='table.evaluator.options')
+                        div(slot='announ' slot-scope='props') {{ props.row.idAnnouncement.title }}
+                        div(slot='rol' slot-scope='props')
+                          p(v-if='props.row.status == 1')
+                            span.icon.is-small.has-text-success
+                              i.fas.fa-check
+                            span &nbsp;Aceptado
+                          p(v-else-if='props.row.status == 3')
+                            span.icon.is-small.has-text-info
+                              i.fas.fa-people-carry
+                            span &nbsp;Suplente
+                        .field.has-addons(slot='options' slot-scope='props')
+                          p.control
+                            a.button.is-primary.is-outlined(:href="`/app/project/edit/${props.row._id}`")
+                              span.icon.is-small
+                                i.fas.fa-edit
+                              span Editar
+                          p.control
+                            a.button.is-info.is-outlined(:href="`project/edit/${props.row  ._id}`")
+                              span.icon.is-small
+                                i.fas.fa-toolbox
+                              span Administrar                
     include ../footer.pug
     script(src=pathToRoot + "vue/vue.min.js")
     script(src=pathToRoot + 'tables/vue-tables-2.min.js')

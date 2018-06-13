@@ -55,11 +55,30 @@ evaluators.route('/:id')
 evaluators.route('/status/:id')
   .put((req,res) => {
     const id = req.params.id
-    Evaluator.findOneAndUpdate(id,{ $set: { status: req.body.status } }, { new: true })
-      .populate('idUser', ['_id', 'name', 'email'])
+    const status = req.body.status
+    Evaluator.update({ _id: id }, { $set: { status: status } })
+      .then(data => {
+        // Evaluator.findOneAndUpdate(id, { $set: { status: status } }, { new: true })
+        if (data.ok === 1) {
+          // { n: 1, nModified: 1, ok: 1 }
+          Evaluator.findById(id)
+            .populate('idUser', ['_id', 'name', 'email'])
+            .exec()
+            .then(data => res.json(data))
+            .catch(err => res.status(500).json(err))
+        }
+      })
+      .catch(err => res.status(500).json(err))
+  })
+
+evaluators.route('/user/:user/status/')
+  .get((req,res) => {
+    const user = req.params.user
+    Evaluator.find({ idUser: user, status: { $not: { $eq: 2 } } })
+      .populate('idAnnouncement', ['_id','title'])
       .exec()
       .then(data => res.json(data))
-      .catch(err => res.status(500).json(err))
+      .catch(err => res.status(err).json(err))
   })
 
 evaluators.route('/announcement/:idAnnoun')

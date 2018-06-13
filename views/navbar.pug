@@ -66,7 +66,7 @@ nav#mainNavbar.navbar.is-info(role='navigation')
               span(class="badge is-badge-danger" id="notificationsCount" data-badge=`${notis.length}`)
                 span.icon
                   i.far.fa-bell
-            .navbar-dropdown.is-boxed(id="notificationsItems")
+            .navbar-dropdown.is-right.is-boxed(id="notificationsItems")
               each val in notis
                 a.navbar-item(id=`not${val._id}` href=`javascript:checkNotification("${val._id}", "${val.url}")`) #{val.title}
               a.navbar-item(href=`${pathToRoot}app/notifications`) Ver todas
