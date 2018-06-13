@@ -62,15 +62,25 @@ html(lang="en")
                       p Proyecto
                     th 
                       p Calificación
+                    th(v-if="isNormalMean")
+                      p Promedio (normal)
                 tbody(v-for="proj in projectsPerEvaluator[index]")
                   tr.row
                     td
                       p {{proj.idProject.title}}
                     td.has-text-centered
                       p {{proj.grade > -1 ? proj.grade : 'Sin calificar'}}
+                    td.has-text-centered(v-if="isNormalMean")
+                      p {{proj.idProject.mean}}
               button.button.is-info(@click="sendReminder(index)" :id="eval._id") Enviar aviso para calificar
               br
               br
+            div(v-if="isNormalMean")
+              h1 Para ser que las calificaciones ya fueron entregadas y que los promedios normales ya fueron calculados, ¿Deseas realizar el cálculo de lo promedios ajustados con el modelo BIB?
+              button.button.is-success(@click="calculateAdjustedGrades") Aceptar
+            div(v-else-if="isComplete")
+              h1 ¡Genial!, todos los proyectos han sido evaluados, ¿quieres calcular primero los promedios con el método tradicional?
+              button.button.is-success(@click="calculateNormalMeans") Aceptar
 
       else
         //Etapa final, convocatoria terminada, para entonces ya debió haber sido evaluado, también con el modelo
