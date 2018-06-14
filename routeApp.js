@@ -38,7 +38,7 @@ router.get('/announcement/projectsPerEvaluator/:id', (req, res) => {
 	Announcement.findById(req.params.id)
 		.then(announGot => {
 			if(announGot.idCreator == req.session.user_id) {
-      	let today = new Date(2018,4, 8);
+      	let today = new Date(2018, 4, 8);
       	if(today < announGot.endEnrollmentsDate) //Etapa de registro, redirigir a la vista correspondiente
       		res.sendStatus(404);
       	else if(today >= announGot.deadlineDate) {//Convocatoria cerrada, se redirige a los resultados
@@ -67,7 +67,7 @@ router.get('/announcement/adminEvaluators/:id', (req, res) => {
 		.then(announ => {
 			console.log(announ);
 			if(announ != undefined) {
-				res.render('app/announcement/adminEvaluators', {announ: announ});
+				res.render('app/announcement/admin.pug', {announ: announ});
 			}
 			else
 				res.status(404).send("404 NOT FOUND");

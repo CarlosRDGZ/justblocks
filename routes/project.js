@@ -12,8 +12,8 @@ project.get('/admin/:idProject', (req, res) => {
 		.populate('idAnnouncement')
 		.exec()
 		.then(proj => {
+			console.log(proj)
 			if (proj) {
-				console.log(proj)
 				if(proj.idCreator == req.session.user_id)
 					res.render('project/adminView.pug', {project: proj});
 				else

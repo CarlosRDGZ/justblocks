@@ -27,7 +27,7 @@ announ.get('/adminEvaluators/:id', (req, res) => {
 		.then(announ => {
 			console.log(announ);
 			if(announ != undefined)
-				res.render('app/announcement/adminEvaluators', {announ: announ});
+				res.render('app/announcement/admin', {announ: announ});
 			else
 				res.status(404).send("404 NOT FOUND");
 		})
