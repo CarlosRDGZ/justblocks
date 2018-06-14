@@ -1,12 +1,12 @@
 const url = 'http://127.0.0.1:3000/'
-Vue.use(VueTables.ClientTable);
-
-let vm = new Vue({
+Vue.use(VueTables.ClientTable, theme = 'bulma')
+const vm = new Vue({
   el: "#app",
   data: {
     columns: ['title', 'description', 'grade'],
     data: [],
     options: {
+      skin: 'table is-striped is-fullwidth is-hoverable',
       headings: {
         title: 'Título',
         description: 'Descripción',
@@ -15,7 +15,10 @@ let vm = new Vue({
       sortable: ['title', 'grade'],
       filterable: ['title', 'grade'],
     	orderBy: 'grade',
-    	perPage: 10
+    	preserveState: true,
+			perPage: 5,
+			perPageValues: [5,10,25],
+			pagination: { nav: 'fixed', edge: true }
     }
   },
   created: function() {

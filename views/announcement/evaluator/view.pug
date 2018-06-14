@@ -1,58 +1,111 @@
-- const pathToRoot = "../../../";
-- const today = new Date(2018, 4, 11);//Se cuenta desde 0
-- const months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+- const pathToRoot = 'http://127.0.0.1:3000/'
+- const today = new Date(2018, 4, 30) //Se cuenta desde 0
+- const months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
+- let evaluationTime = false
+- evaluator.status = 3
 doctype html
 html(lang="en")
   head
     include ../../header.pug
     link(rel="stylesheet", href=pathToRoot + "css/index.css")
     link(rel="stylesheet", href=pathToRoot + "css/social-buttons.css")
-    link(rel="stylesheet", href=pathToRoot + "bulma-extensions/bulma-extensions.min.css")
   body
     include ../../navbar.pug
-
-    h1 #{evaluator.status}
-    h1 #{evaluator.idAnnouncement.deadlineDate}
-    h1 #{today}
-    if evaluator.status == 0
-      //Enviado
-      h1 Tu solicitud para ser evaluador ha sido enviada, pronto te notificarán si fuiste aceptado.
-    else if evaluator.status == 1
-      if today < evaluator.idAnnouncement.endEnrollmentsDate
-        //aceptado
-        //Etapa de registro de proyectos y esas cosas
-        - let endDate = evaluator.idAnnouncement.endEnrollmentsDate
-        h1 Enhorabuena, has sido aceptado para ser evaluador en esta convocatoria
-        h1 Prep&aacute;rate porque el #{endDate.getDate()} de #{months[endDate.getMonth()]} del #{endDate.getFullYear()} comenzará la etapa de evaluación
-      else if today < evaluator.idAnnouncement.deadlineDate
-        //Etapa de evaluación
-        //Toda la magia con Vue, sus proyectos asignados
-        h1.title.is-3 Es hora de la evaluación
-        h1.title.is-5 A continuación te presentamos los proyectos que te corresponden evaluar
-        .container-fluid
-          #app
-            v-client-table(:columns="columns" :data="data" :options="options")
-              a(slot="title" slot-scope="props" target="_blank" :href="props.row.projectUri") {{props.row.title}}
-      else
-        //Etapa final, convocatoria terminada
-        - const idAnnoun = evaluator.idAnnouncement._id;
-        h1 Gracias por haber participado en esta convocatoria, se ha cerrado todo el proceso, si quieres ver los resultados finales visita el siguiente 
-          a(href=gUrl + "api/project/winners/" + idAnnoun) enlace 
-    else if evaluator.status == 2
-      //Rechazado
-      h1 Lo sentimos, por esta ocasión no podrás formar parte del equipo de evaluación en la convocatoria "#{evaluator.idAnnouncement.title}", pero esperamos poder contar contigo en próximas ediciones
-    else 
-      //Aceptado (Banca)
-      h1 Enhorabuena, has sido aceptado para ser evaluador complementario en esta convocatoria, los administradores se pondrán en contacto contigo cuando puedas apoyar en el proceso de evaluación.
-      h1 Ten en cuenta que existe la posibilidad de que todo vaya bien y no sea necesaria tu intervención, pero nos alegra tenerte en nuestro equipo
+    //- h1 #{evaluator.status}
+    //- h1 #{evaluator.idAnnouncement.deadlineDate}
+    //- h1 #{today}
+    section.hero.has-carousel
+      .hero-carousel.carousel-animated.carousel-animate-fade
+        .carousel-container
+          .carousel-item.has-background.is-active
+            img.is-background(src='https://wikiki.github.io/images/merry-christmas.jpg', alt='')
+      .hero-body.has-text-centered
+        .columns.is-mobile.is-centered
+          .column.is-half.is-narrow
+            p.title.is-1 #{ evaluator.idAnnouncement.title }
+    main.section(style='background-color: #fff')
+      .container
+        if evaluator.status == 0 
+          //- Enviado
+          .columns.is-centered
+            .column.has-text-centered
+              article.message.is-info
+                .message-body
+                  h1.title Solicitud enviada
+                  p Tu solicitud para ser evaluador ha sido enviada, pronto te notificarán si fuiste aceptado.
+                  a(href=pathToRoot + 'app') Regresar
+        else if evaluator.status == 1
+          if today < evaluator.idAnnouncement.endEnrollmentsDate
+            //- aceptado
+            //- Etapa de registro de proyectos y esas cosas
+            .columns.is-centered
+              .column.has-text-centered
+                article.message.is-success
+                  .message-body
+                    - const endDate = evaluator.idAnnouncement.endEnrollmentsDate
+                    h1.title(style='padding-bottom: 10px') &iexcl;Enhorabuena!
+                    h2.subtitle Has sido aceptado para ser evaluador en esta convocatoria
+                    p 
+                      | El 
+                      |
+                      b #{endDate.getDate()} de #{months[endDate.getMonth()]} del #{endDate.getFullYear()} 
+                      | comenzará la etapa de evaluaci&oacute;n
+                    a(href=pathToRoot + 'app') Regresar
+          else if today < evaluator.idAnnouncement.deadlineDate
+            - evaluationTime = true
+            - const deadLine = evaluator.idAnnouncement.endEnrollmentsDate
+            //- Etapa de evaluaci&oacute;n
+            //- Toda la magia con Vue, sus proyectos asignados
+            .notification.is-primary
+              h1.title Periodo de evaluaci&oacute;n
+            .tile.is-antecesor
+              .tile.is-vertical.parent
+                .tile.is-child(v-if='tabs.projects')
+                  .columns.is-centered
+                    .column
+                      .has-text-right
+                        h2.subtitle.is-6 Cierre de evaluaciones #{deadLine.getDate()} de #{months[deadLine.getMonth()]} del #{deadLine.getFullYear()}
+                      br
+                      .box#app
+                        v-client-table(:columns="columns" :data="data" :options="options")
+                          a(slot="title" slot-scope="props" target="_blank" :href="props.row.projectUri") {{props.row.title}}
+          else
+            //- Etapa final, convocatoria terminada
+            - const idAnnoun = evaluator.idAnnouncement._id;
+            .columns.is-centered
+              .column.has-text-centered
+                article.message.is-dark
+                  .message-body
+                    h1.title Convocatoria Cerrada
+                    p Gracias por haber participado en esta convocatoria, si quieres ver los resultados finales visita el siguiente enlace.
+                    a(href=gUrl + "api/project/winners/" + idAnnoun) Resultados 
+        else if evaluator.status == 2
+          //- Rechazado
+          .columns.is-centered
+            .column.has-text-centered
+              article.message.is-danger
+                .message-body
+                  h1.title Solicitud Rechazada
+                  p
+                  | Lo sentimos, por esta ocasi&oacute;n no podrás formar parte del equipo de evaluaci&oacute;n en la convocatoria 
+                  b #{evaluator.idAnnouncement.title}.
+        else 
+          //- Aceptado (Suplente)
+          .columns.is-centered
+            .column.has-text-centered
+              article.message.is-link
+                .message-body
+                  h1.title Enhorabuena
+                  .has-text-justified
+                    p Has sido aceptado para ser evaluador complementario en esta convocatoria, los administradores se pondrán en contacto contigo cuando puedas apoyar en el proceso de evaluaci&oacute;n.
+                    p Ten en cuenta que existe la posibilidad de que todo vaya bien y no sea necesaria tu intervenci&oacute;n, pero nos alegra tenerte en nuestro equipo
 
   include ../../footer.pug
 script.
   const idAnnoun = `#{evaluator.idAnnouncement._id}`;
   const idEvaluator = `#{evaluator._id}`;
-
 script(src=pathToRoot + 'vue/vue.min.js')
-if today < evaluator.idAnnouncement.deadlineDate && evaluator.status == 1
+if evaluationTime
   script(src=pathToRoot + 'tables/vue-tables-2.min.js')
-  //- script(src=pathToRoot + 'pagination/vue-pagination-2.min.js')
+  script(src=pathToRoot + 'pagination/vue-pagination-2.min.js')
   script(src=pathToRoot + 'vue/controllers/announcement/viewEvalutor.js')

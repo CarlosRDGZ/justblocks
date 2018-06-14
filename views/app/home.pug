@@ -109,7 +109,7 @@ html(lang="en")
                                 i.fas.fa-edit
                               span Editar
                           p.control
-                            a.button.is-info.is-outlined(:href="`project/edit/${props.row  ._id}`")
+                            a.button.is-info.is-outlined(:href="`project/edit/${props.row._id}`")
                               span.icon.is-small
                                 i.fas.fa-toolbox
                               span Administrar
@@ -128,12 +128,12 @@ html(lang="en")
                             span &nbsp;Suplente
                         .field.has-addons(slot='options' slot-scope='props')
                           p.control
-                            a.button.is-primary.is-outlined(:href="`/app/project/edit/${props.row._id}`")
+                            a.button.is-info.is-outlined(:href='`announcement/view/evaluator/${props.row.idAnnouncement._id}`')
                               span.icon.is-small
-                                i.fas.fa-edit
-                              span Editar
+                                i.fas.fa-eye
+                              span Ver
                           p.control
-                            a.button.is-info.is-outlined(:href="`project/edit/${props.row  ._id}`")
+                            a.button.is-info.is-outlined(:href="`project/edit/${props.row._id}`")
                               span.icon.is-small
                                 i.fas.fa-toolbox
                               span Administrar                

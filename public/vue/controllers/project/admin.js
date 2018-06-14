@@ -5,25 +5,58 @@ const emailMatch = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\")
 const vm = new Vue({
 	el: '#partakers',
 	data: {
+		documents: [],
+		partakers: [],
 		columns: ['name', 'email', 'rol', 'options'],
-		data: {
-			partakers: [],
-			documents: []
+		tabs: {
+			projects: true,
+			partakers: false,
+			selected: 'projects'
 		},
-		options: {
-			headings: {
-				name: 'Nombre',
-				email: 'Correo',
-				rol: 'Rol',
-				options: 'Eliminar'
+		table: {
+			partakers: {
+				columns: ['name', 'email', 'status', 'options'],
+				options: {
+					skin: 'table is-striped is-fullwidth is-hoverable',
+					headings: {
+						name: 'Nombre',
+						email: 'Correo',
+						rol: 'Rol',
+						options: 'Eliminar'
+					},
+					sortable: ['name', 'rol'],
+					filterable: ['name', 'email'],
+					orderBy: {'column': 'rol'},
+					preserveState: true,
+					perPage: 5,
+					perPageValues: [5,10,25],
+					pagination: { nav: 'fixed', edge: true }
+				}
 			},
-			sortable: ['name', 'rol'],
-			filterable: ['name', 'email'],
-			orderBy: {'column': 'rol'}
 		},
-		searchedUser: {}
+		empty: {
+			user: {
+				_id: '',
+				name: {
+					first: '',
+					last: ''
+				},
+				email: '',
+				ocupation: '',
+				education: '',
+				bio: '',
+			}
+		},
+		searchedEmail: '',
+		badEmail: false,
+		notFound: false,
+		searchedUser: {},
+		modal: {
+			user: false
+		},
 	},
 	created: function() {
+		this.searchedUser = this.empty.user
 		window.axios.get(`${url}api/partaker/project/${idProject}`)
 			.then(({data}) => {
 				console.log(data);
@@ -38,65 +71,58 @@ const vm = new Vue({
 					rows.push(temp);
 				}
 				console.log(rows);
-				this.data.partakers = rows;
+				this.partakers = rows;
 			})
 
 		window.axios.get(`${url}api/project/documents/${idProject}`)
 			.then(({data}) => {
-				this.data.documents = data;
+				this.documents = data;
 				console.log(data);
 			})
 			.catch(err => {console.log(err.err);})
 	},
 	methods: {
+		changeContent: function (page) {
+			if (this.tabs[page] !== true) {
+				this.tabs[this.tabs.selected] = false
+				this.tabs[page] = true
+				this.tabs.selected = page
+			}
+		},
 		get: function(id) {
 			return document.getElementById(id);
 		},
 		searchPartaker: function() {
-			let txtSearch = this.get('searchMail');
-			if(emailMatch.test(txtSearch.value)) {
-				window.axios.get(`${url}api/user/email/${txtSearch.value}`)
+			if(emailMatch.test(this.searchedEmail)) {
+				window.axios.get(`${url}api/user/email/${this.searchedEmail}`)
 					.then(({data}) => {
-						this.searchedUser = data;
-						console.log(data);
-						this.get('result').removeAttribute('hidden');
-						this.get('result').innerHTML = data.name.first + " " + data.name.last;
-						this.get('question').removeAttribute('hidden');
-						this.get('btnAddPartaker').removeAttribute('hidden');						
-						this.get('btnAddPartaker').value = data._id;
+						if (data != null) {
+							this.searchedUser = data;
+							this.modal.user = true
+						} else
+							this.notFound = true
 					})
 					.catch(err => console.log(err))
 			}
-			else {
-				console.log("Correo incorrecto");
-				txtSearch.style.border = 'background:red;'
-			}
+			else
+				this.badEmail = true
 		},
 		addNewPartaker: function() {
 			let id = this.get('btnAddPartaker').value;
 			let partaker = {
 				idProject: idProject,
-				idUser: id,
+				idUser: this.searchedUser._id,
 				rol: 'Contestant'
 			};
 			window.axios.post(`${url}api/partaker/`, partaker)
 				.then(({data}) => {
-					console.log(data);
-					console.log(this.searchedUser);
 					let temp = {}
 					temp.name = this.searchedUser.name.first + " " + this.searchedUser.name.last;
 					temp.email = this.searchedUser.email;
 					temp.rol = "Contestant";
 					temp.options = "Eliminar";
-
-					this.data.partakers.push(temp);
-					
-					this.get('searchMail').value = "";
-					this.get('result').setAttribute('hidden', true);
-					this.get('result').innerHTML = "";
-					this.get('question').setAttribute('hidden', true);
-					this.get('btnAddPartaker').setAttribute('hidden', true);
-					this.get('btnAddPartaker').value = "";					
+					this.partakers.push(temp);
+					this.modal.user = false				
 				})
 				.catch(err => console.log(err))
 		},
@@ -106,7 +132,7 @@ const vm = new Vue({
 			if(confirm(`¿Estás seguro que quieres eliminar a ${info.name} como integrante del proyecto?`)) {
 				window.axios.delete(`${url}api/partaker/${info.id}`)
 					.then(({data}) => {
-						this.data.partakers = this.data.partakers.filter(e => e.id != info.id);
+						this.partakers = this.partakers.filter(e => e.id != info.id);
 						console.log("Eliminado")
 					})
 					.catch(err => console.log(err))
@@ -124,7 +150,7 @@ const vm = new Vue({
 	        const config = { headers: { 'content-type': 'multipart/form-data' } }
 	        window.axios.post(`${url}api/project/documents/${idProject}`, formData, config)
 	          .then(({data}) => {
-	          	this.data.documents.push(data);
+	          	this.documents.push(data);
 	          	console.log(data);
 	          })
 	          .catch(err => console.log(err))
@@ -138,7 +164,7 @@ const vm = new Vue({
 			if(confirm(`¿Estás seguro que quieres eliminar el docuemento "${doc.name}" del proyecto?`)) {
 				window.axios.delete(`${url}api/project/document/${doc._id}`)
 					.then(({data}) => {
-						this.data.documents = this.data.documents.filter(e => e._id != doc._id);
+						this.documents = this.documents.filter(e => e._id != doc._id);
 						console.log("Eliminado");
 						console.log(data);
 					})
