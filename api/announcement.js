@@ -4,6 +4,7 @@ const Announcement = require('../models/Announcement').Announcement;
 const Project = require('../models/Project').Project;
 const ProjectsEvaluator = require('../models/projectsEvaluator').ProjectsEvaluator;
 const Evaluator = require('../models/Evaluator').Evaluator;
+const Notification = require('../models/Notification').Notification;
 const FileAnnouncement = require('../models/FileAnnouncement').FileAnnouncement;
 
 //Middlewares
@@ -171,6 +172,7 @@ announcements.route('/search/:str')
       .populate('image')
       .exec()
       .then(announs => {
+        console.log(announs);
         res.json(announs);
       })
       .catch(err => {console.log('Get Announcement error'); console.log(err.message); res.status(500).json({err: err.message});})
@@ -468,16 +470,26 @@ announcements.get('/R/projectsAssign/:idAnnoun', (req, res) => {
 //Debuggin function: Retorna un entero aleatorio entre min (incluido) y max (excluido) 
 function getRandomInt(min, max) {return Math.floor(Math.random() * (max - min)) + min;}
 
-announcements.route('/setK/:idAnnoun')
-  .get((req, res) => {
-    Announcement.findById(req.params.idAnnoun)
-      .then(announ => {
-        //if(función para Validar K) announ.projectsPerEvaluator
-          //function projectsAssign(idAnnoun)
-        //else
-          //Error
+announcements.route('/setKandR/:idAnnoun')
+  .post((req, res) => {
+    Announcement.findByIdAndUpdate(req.params.idAnnoun, 
+      {$set: {projectsPerEvaluator: req.body.k, projectsEvaluatedTimes: req.body.r}})
+      .then(async announ => {
+        console.log(announ);
+        let result = await projectsAssignmentR(req.params.idAnnoun);
+
+        res.json(announ);
       })
       .catch(err => {console.log("Announcement error"); console.log(err.message); res.status(500).json({err: err.message});})
+  })
+
+announcements.route('/setTraditionalMethod/:idAnnoun')
+  .put((req, res) => {
+    Announcement.findByIdAndUpdate(req.params.idAnnoun, {$set:{byTraditionalMethod: true}})
+      .then(result => {
+        res.json(result);
+      })
+      .catch(err => {console.log("FindAndUpdate Announcement: ", err.message); res.status(500).json({err: err.message});})
   })
 
 //Get all the possible values of r and k
@@ -520,6 +532,111 @@ function getRsAndKsAnnouncement(idAnnoun) {
       })
     .catch(err => {console.log("Project error"); console.log(err.message); reject({err: err.message})})
   })
+}
+
+function projectsAssignmentR(idAnnoun) {
+  return new Promise((resolve, reject) => {
+    console.log("idAnnoun: ", idAnnoun);
+    Announcement.findById(idAnnoun)
+      .then(announ => {
+        console.log("1");
+        let today = new Date(2018, 4, 14);
+        if(announ.evaluationDate <= today) {
+          console.log("2");
+          let treatments = []
+          let treatmentsCount = 0
+          let blocks = []
+          let blocksCount = 0
+          let trtPerBlock
+          let trtPerBlockCount = 0
+          console.log("3");
+          Project.find({idAnnouncement: idAnnoun})
+            .then(projects => {
+              console.log("4");
+              Evaluator.find({idAnnouncement: idAnnoun})
+                .then(evaluators => {
+                  console.log("5");
+                  treatments = projects;
+                  treatmentsCount = projects.length;
+                  blocks = evaluators;
+                  blocksCount = evaluators.length;
+                  let trtPerBlockCount = announ.projectsPerEvaluator;
+                  console.log("6");
+                  console.log("R 1");
+                  const { spawn } = require('child_process');
+                  const child = spawn('Rscript', ['C:/Users/brand/source/repos/justblocks/BIBANOVA/projectsAssign.R', treatmentsCount, blocksCount, trtPerBlockCount]);
+
+                  let out = ''
+                  let err = ''
+                  console.log("R 2");
+                  child.stdout.on('data', (chunk) => {
+                    out += chunk
+                  });
+
+                  console.log("R 3");
+                  child.stderr.on('data', (chunk) => {
+                    err += chunk
+                  })
+
+                  console.log("R 4");
+                  child.on('close', (code) => {
+                    if (err) console.log('STDERR:\n', err.toString())
+                    let i = 0;
+                    trtPerBlock = JSON.parse(out.toString());
+                    // let gradesPrueba = [9, 8, 10, 9, 9, 9, 7, 6, 6, 8, 7, 7, 3, 6, 4, 6, 5, 5, 2, 2, 1, 0, 3, 2, 8, 7, 8, 8, 8, 8];
+                    trtPerBlock.forEach((current, index) => {
+                      current.forEach(trt => {
+                        let projectsEvaluator = new ProjectsEvaluator({
+                          idEvaluator: blocks[index]._id,
+                          idProject: treatments[trt - 1]._id,
+                          idAnnouncement: idAnnoun,
+                          index: i++,
+                          // grade: gradesPrueba[i++]//Para puebas, borrar en producción :v
+                          // grade: getRandomInt(5, 11)//Para puebas, borrar en producción :v
+                          grade: -1
+                        })
+
+                        projectsEvaluator.save()
+                          .then(data => {console.log(i);resolve({result: true});})
+                          .catch(err => {console.log("Err projectsEvaluator"); reject({result: false, err: err});})
+                      })
+                    })
+
+                    //Enviar notificación
+                    evaluators.forEach(eval => {
+                      let notification = new Notification({
+                        owner: eval._id,
+                        title: "Ya se te han asignado los proyectos a evaluar de la convocatoria " + announ.title,
+                        url: 'http://127.0.0.1:3000/announcement/view/evaluator/' + announ._id
+                      }); 
+
+                      notification.save()
+                        .then(result => {
+                          console.log('new notificación');
+                        })  
+                        .catch(err => {console.log('saveNotification error;'); console.log(err.message); res.status(500).json({err: err.message});})
+                    })
+
+
+                    console.log("**************");
+                    console.log(trtPerBlock);
+                    console.log("**************");
+                    // console.log(out.toString())
+                    console.log(`child process exited with code ${code}`);
+                    resolve({result: true});
+                  });
+                })
+                .catch(err => {console.log("Evaluator error"); console.log(err); reject({result: false, err: err});})
+            })
+            .catch(err => {console.log("Project error"); console.log(err); reject({result: false, err: err});})
+        }
+        else {
+          console.log("Fecha de evaluación mayor a la actual"); 
+          reject({result: false, err: "Fecha de evaluación mayor a la actual"})
+        }
+      })
+      .catch(err => {console.log("Announcement error"); console.log(err.message); reject({result: false, err: err});})
+  }) 
 }
 
 announcements.get('/possibleRsAndKs/:idAnnoun', (req, res) => {

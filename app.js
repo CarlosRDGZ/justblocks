@@ -49,6 +49,7 @@ const navBarMiddleware = require('./middlewares/navBarMiddleware');//Para valida
 
 //*************Modelos
 const User = require('./models/User').User;
+const projectsEvaluator = require('./models/projectsEvaluator').ProjectsEvaluator;
 
 
 //*************Para poder acceder a los parámetros del cuerpo de las peticiones
@@ -103,44 +104,43 @@ app.get('/R', (req, res) => {
 function getRandomInt(min, max) {return Math.floor(Math.random() * (max - min)) + min;}
 
 let idAnnoun = '5b01d16ffc5ae925acfbce0f';
-let t = 10, b = 5, k = 4
+let t = 10, b = 5, k = 3
 
 const Project = require('./models/Project').Project;
 const Evaluator = require('./models/Evaluator').Evaluator
 //const Evaluator = require('./models/evaluator').Evaluator;
-let falseNames = [{"name":"Oliver","surname":"Teichmann","gender":"male","region":"Germany"},{"name":"Maila","surname":"Schulze","gender":"female","region":"Germany"},{"name":"Michael","surname":"Richter","gender":"male","region":"Germany"},{"name":"Annika","surname":"Schulze","gender":"female","region":"Germany"},{"name":"Linus","surname":"Bergmann","gender":"male","region":"Germany"},{"name":"Ben","surname":"Albrecht","gender":"male","region":"Germany"},{"name":"Oliver","surname":"Thiele","gender":"male","region":"Germany"},{"name":"Oliver","surname":"Heinrich","gender":"male","region":"Germany"},{"name":"John","surname":"Hartmann","gender":"male","region":"Germany"},{"name":"Lena","surname":"Schmidt","gender":"female","region":"Germany"},{"name":"Robert","surname":"Martin","gender":"male","region":"Germany"},{"name":"John","surname":"Schneider","gender":"male","region":"Germany"},{"name":"Ben","surname":"Friedrichs","gender":"male","region":"Germany"},{"name":"Ida","surname":"Kühn","gender":"female","region":"Germany"},{"name":"Ingo","surname":"Sommer","gender":"male","region":"Germany"},{"name":"Luise","surname":"Günther","gender":"female","region":"Germany"},{"name":"Mia","surname":"Berger","gender":"female","region":"Germany"},{"name":"Pia","surname":"Weiß","gender":"female","region":"Germany"},{"name":"Annabell","surname":"Beck","gender":"female","region":"Germany"},{"name":"Ann-Julie","surname":"Engel","gender":"female","region":"Germany"}];
+let falseNames = [{"first": "Lana", "last": "Julien", }, {"first": "Alexandre", "last": "Brunet", }, {"first": "Elsa", "last": "Poirier", }, {"first": "Marc", "last": "Lamy", }, {"first": "Mila", "last": "Simon", }, {"first": "Florentin", "last": "Robert", }, {"first": "Adrian", "last": "Baron", }, {"first": "Anna", "last": "Menard", }, {"first": "Dylan", "last": "Roy", }, {"first": "Robin", "last": "Dupuy", }, {"first": "Colin", "last": "Bailly", }, {"first": "Alexandre", "last": "Antoine", }, {"first": "Pauline", "last": "Gaillard", }, {"first": "Clément", "last": "Andre", }, {"first": "Mateo Le", "last": "gall", }, {"first": "Brandon", "last": "Germain", }, {"first": "Clara", "last": "Hamon", }, {"first": "Florian", "last": "Bertin", }, {"first": "Jasmine", "last": "Baron", }, {"first": "Martin", "last": "Bertrand", }, {"first": "Manon", "last": "Renaud", }, {"first": "Jeanne", "last": "Boyer", }, {"first": "Florentin", "last": "Lamy", }, {"first": "Amandine", "last": "Jacquet", }, {"first": "Yüna", "last": "Monnier", }, {"first": "Arthur", "last": "Gilbert", }, {"first": "Lamia", "last": "Besson", }, {"first": "Ambre", "last": "Roussel", }, {"first": "Antoine", "last": "Antoine", }, {"first": "Julie", "last": "Giraud", }, {"first": "Marion", "last": "Philippe", }, {"first": "Loevan", "last": "Gilbert", }, {"first": "Florian", "last": "Mercier", }, {"first": "Mathilde", "last": "Garcia", }, {"first": "Françoise", "last": "Denis", }, {"first": "Zacharis", "last": "Besson", }, {"first": "Ethan", "last": "Garcia", }, {"first": "Yohan", "last": "Fleury", }, {"first": "Candice", "last": "Denis", }, {"first": "Loevan Le", "last": "roux", }, {"first": "Adam", "last": "Rousseau", }, {"first": "Lamia Le", "last": "gall", }, {"first": "Lilian", "last": "Etienne", }, {"first": "Léane", "last": "Antoine", }, {"first": "Titouan", "last": "Giraud", }, {"first": "Zoé", "last": "Petit", }, {"first": "Mathilde", "last": "Bébert", }, {"first": "Guillaume Le", "last": "goff", }, {"first": "Julia", "last": "Leclerc", }, {"first": "Léa", "last": "Jean", }, {"first": "Lou", "last": "Hubert", }, {"first": "Timothée", "last": "Marchal", }, {"first": "Françoise", "last": "Gilbert", }, {"first": "Léonard", "last": "Lemoine", }, {"first": "Alexandre", "last": "Guerin", }, {"first": "Marie-léontine", "last": "Hamon", }, {"first": "Amélie", "last": "Martin", }, {"first": "Jade", "last": "Marie", }, {"first": "Gabin", "last": "Girard", }, {"first": "Salomé", "last": "Rodriguez", }, {"first": "Loevan", "last": "Noel", }, {"first": "Antonin", "last": "Carpentier", }, {"first": "Gilbert", "last": "Deschamps", }, {"first": "Alexis", "last": "Millet", }, {"first": "Martin", "last": "Andre", }, {"first": "Antonin", "last": "Gauthier", }, {"first": "Capucine", "last": "Hamon", }, {"first": "Lauriane", "last": "Clement", }, {"first": "Amandine", "last": "Deschamps", }, {"first": "Edwige", "last": "Deschamps", }, {"first": "Clémence", "last": "Tessier", }, {"first": "Jérémy", "last": "Andre", }, {"first": "Chaïma", "last": "Fleury", }, {"first": "Ambre", "last": "Jacquet", }, {"first": "Maïwenn", "last": "Lecomte", }, {"first": "Pierre", "last": "Rousseau", }, {"first": "Clémence", "last": "Leveque", }, {"first": "Jérémy", "last": "Laporte", }, {"first": "Félix", "last": "Tessier", }, {"first": "Romane", "last": "Leclercq", }, {"first": "Cloé", "last": "Leclerc", }, {"first": "Mohamed", "last": "Lopez", }, {"first": "Titouan", "last": "Lambert", }, {"first": "Yüna", "last": "Lamy", }, {"first": "Maïwenn", "last": "Poulain", }, {"first": "Éléna", "last": "Leclerc", }, {"first": "Inès", "last": "Lemoine", }, {"first": "Paul", "last": "Fontaine", }, {"first": "Lucie", "last": "Nicolas", }, {"first": "Marie-léontine", "last": "Daniel", }, {"first": "Yohan", "last": "Legrand", }, {"first": "Nolan", "last": "Robert", }, {"first": "Titouan", "last": "Berger", }, {"first": "Mélissa", "last": "Leveque", }, {"first": "Louise", "last": "Rousseau", }, {"first": "Lamia", "last": "Leclerc", }, {"first": "Thibault", "last": "Mercier", }, {"first": "Marie-léontine", "last": "Rey", }, {"first": "Lina", "last": "Carpentier", }, {"first": "Lilou", "last": "Caron", } ];
 
 app.get('/PRUEBAS/USER', (req, res) => {
-  result = [];
-  for (var i = 0; i < (b + t); i++) {
-    console.log(falseNames[i]);
+  generateUsers(t + b + 1);
+  res.send(200);
+})
+
+function generateUsers(amount) {
+  for (var i = 0; i < amount; i++) {
     var user = new User({
-        name: {first: falseNames[i].name, last: falseNames[i].surname},
+        name: falseNames[i],
         password: "74b87337454200d4d33f80c4663dc5e5",//aaaa
         passwordConfirmation: "74b87337454200d4d33f80c4663dc5e5",
-        dateOfBirth: new Date(1998, 2, 29),
-        email: falseNames[i].name + falseNames[i].surname + "@ucol.mx",
+        dateOfBirth: new Date(1998, getRandomInt(0, 11), 29),
+        email: `${falseNames[i].first}-${getRandomInt(0, 100)}@ucol.mx`
       });
 
       user.save().then(function(userSaved) {
-        result.push(userSaved);
+        console.log("User ", i);
       }).catch(function(err) {
         console.log(err.message);
-        if(err.message.includes("E11000 duplicate key error collection"))
-          res.json({err: "El correo que tratas de registrar ya existe"});
-        else
-          res.json({err: err.message/*"Hubo un problema al guardar el usuario"*/});
+        console.log(`${falseNames[i].first}-${getRandomInt(0, 100)}@ucol.mx`);
       })
   }
-  res.json(result);
-})
+}
 
 app.get('/PRUEBAS/EVALUATOR', (req, res) => {
   User.count({}, function(err, c) {
       if(err){console.log("USER ERROR"); console.log(err); res.status(500).json({err: err});}
       else
-      {
-        User.find({}, null, {skip: 1})
+      {//Agarra de los últimos usuarios
+        User.find({}, null, {skip: 11})
           .then(users => {
             users.forEach(current => {
               let evaluador = new Evaluator({
@@ -160,7 +160,7 @@ app.get('/PRUEBAS/EVALUATOR', (req, res) => {
 })
 
 app.get('/PRUEBAS/PROJECT', (req, res) => {
-  User.find({}, null, {skip: 6, limit: 10}, (err, usersGot) => {
+  User.find({}, null, {skip: 1, limit: 10}, (err, usersGot) => {
     usersGot.forEach((user, index) => {
       console.log(user);
       let project = new Project({
@@ -175,6 +175,30 @@ app.get('/PRUEBAS/PROJECT', (req, res) => {
     })
     res.send("OK");
   })
+})
+
+app.get('/PRUEBAS/QUALIFY/:idAnnoun', (req, res) => {
+  projectsEvaluator.find({idAnnouncement: req.params.idAnnoun})
+    .then(projs => {
+      projs.forEach(pro => {
+        pro.grade = getRandomInt(0, 11);
+        // pro.grade = -1;
+        pro.save()
+          .then(res => {
+            console.log("Calificado");
+          })
+          .catch(err => res.json({err: err.message}))
+      })
+    })
+    .catch(err => {console.log(err.message); res.json({err: err.message});})
+})
+
+app.get('/deleteAllUSer', (req, res) => {
+  User.deleteMany({_id: {$not: {$eq: '5b01d106fc5ae925acfbce0d'}}})
+    .then(result => {
+      res.json(result);
+    })
+    .catch(err => {console.log(err); res.json({err: err.message});})
 })
 //Pruebas de scripts para generar usuario etc
 

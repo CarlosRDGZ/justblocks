@@ -31,8 +31,6 @@ announ.get('/results/:id', (req, res) => {
 
 announ.get('/create', (req, res) => res.render('announcement/create.pug'))
 
-// announ.get('/view/:id', (req, res) => res.render('announcement/view', {id: req.params.id}))
-
 announ.get('/view/:id', function(req, res) {
 	Announcement.find({_id: req.params.id})
 		.then((announcementGot) => {

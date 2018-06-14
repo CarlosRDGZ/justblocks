@@ -29,7 +29,7 @@ html(lang="en")
           .column.is-half.is-narrow
             .field.has-addons.has-icons-left
               .control.is-expanded.has-icons-left
-                input#txtSearch.input(type="text" placeholder="Encontrar Convocatoria")
+                input#txtSearch.input(type="text" placeholder="Encontrar Convocatoria" autofocus)
                 span.icon.is-small.is-left
                   i.fa.fa-search
               .control
@@ -55,17 +55,15 @@ html(lang="en")
                   .column.is-three-fifths
                     .notification.has-text-centered.is-success.is-inverted
                       p
-                        b Etapa: Lanzamiento
-                      progress.progress.is-success(value='33', max='100') 33%
+                        b Etapa: {{announs[(j + (3 * (i - 1))) - 1].stage}}
+                      progress.progress.is-success(:value='announs[(j + (3 * (i - 1))) - 1].progress', max='100') 
+                      p {{announs[(j + (3 * (i - 1))) - 1].progress}}%
                   .column.is-two-fifths
                     .notification.has-text-centered
                       p
                         b 183
                       p Participates
                 .content
-                  p(hidden='')
-                    | Desarrollar una app web que permita a la población conocer sobre el Cambio Climático y colaborar con acciones
-                    | para su mitigación.
                   p
                     a(:href="`/announcement/view/${announs[(j + (3 * (i - 1))) - 1]._id}`") ver más...
 

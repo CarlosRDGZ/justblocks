@@ -232,6 +232,12 @@
 	  }	
 	POST: Registra una nueva notificación a nombre del usuario con el id enviado
 		y también devuelve la notificación creada con el mismo formato que en GET
+			Recibe el idUser en la URL, el título y la url a la que hará referencia deben ser enviadas en un json
+			en el cuerpo de la solicitud, con el formato
+			{
+				title: "Notificación de prueba 2",
+				url: "http://127.0.0.1:3000/announcement/results/5b01d16ffc5ae925acfbce0f",
+			} 
 '/checked/:idUser' //Funcionando bien
 	GET: Devuelve todas las notificaciones que no han sido revisado por el usuario
 		con el formato tradicional de notificaciones

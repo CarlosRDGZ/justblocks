@@ -1,0 +1,99 @@
+- const pathToRoot = '../../../';
+- const today = new Date(2018, 4, 8);
+doctype html
+html(lang="en")
+  head
+    include ../../header.pug
+    title Proyectos por evaluador
+  body
+    include ../../navbar.pug
+    section.hero.is-success
+      .hero-body
+        .container.has-text-centered
+          h1.title Proyectos por evaluador
+    .container
+      h1 #{announ.projectsPerEvaluator}
+      if today < announ.deadlineDate
+        h1 En la etapa de evaluación
+        if announ.projectsPerEvaluator <= 0
+          div#app
+            //Todavía no se ha definido una k
+            //Números de proyectos y evaluadores aceptados
+            table.table
+              tbody
+                tr.row
+                  td
+                    label Número de proyectos: {{projects}}
+                tr.row
+                  td
+                    label Número de evaluadores: {{evaluators}}
+            table   
+              tbody(v-if="possibleK.length > 0") 
+                tr.row
+                  td
+                    label Número de proyectos por evaluador: 
+                    select#projPerEval(v-model="kSelected" @change="updateR")
+                      option(value="" disabled) Selecciona una opción
+                      option(v-for='(k, index) in possibleK' :value="index") {{ k }}
+                tr.row
+                  td
+                    label Número de veces que será evaluado un proyecto: {{possibleR[rSelected]}}
+                    //- select#projEvalTimes(v-model="rSelected")
+                    //-   option(value="" selected disabled) Selecciona una opción
+                    //-   option(v-for='(r, index) in possibleR' :value="index") {{ r }}
+                tr.row
+                  td
+                    button.button.is-info(@click="setK") Guardar
+              tbody(v-else)
+                tr.row
+                  td
+                    h1 Lo sentimos, el modelo no se ajusta para estos datos por lo que se procederá a calcular las calificaciones con el método tradicional.
+                tr.row
+                  td
+                    button.button.is-info(@click="traditionalWay") Aceptar
+        else
+          #app2
+            div(v-for="(eval, index) in evaluators")
+              h1.title.is-4 Evaluador {{index + 1}}: {{eval.idUser.name.first}} {{eval.idUser.name.last}}
+              table.table
+                thead
+                  tr.row
+                    th
+                      p Proyecto
+                    th 
+                      p Calificación
+                    th(v-if="isNormalMean")
+                      p Promedio (normal)
+                tbody(v-for="proj in projectsPerEvaluator[index]")
+                  tr.row
+                    td
+                      p {{proj.idProject.title}}
+                    td.has-text-centered
+                      p {{proj.grade > -1 ? proj.grade : 'Sin calificar'}}
+                    td.has-text-centered(v-if="isNormalMean")
+                      p {{proj.idProject.mean}}
+              button.button.is-info(@click="sendReminder(index)" :id="eval._id") Enviar aviso para calificar
+              br
+              br
+            div(v-if="isNormalMean")
+              h1 Para ser que las calificaciones ya fueron entregadas y que los promedios normales ya fueron calculados, ¿Deseas realizar el cálculo de lo promedios ajustados con el modelo BIB?
+              button.button.is-success(@click="calculateAdjustedGrades") Aceptar
+            div(v-else-if="isComplete")
+              h1 ¡Genial!, todos los proyectos han sido evaluados, ¿quieres calcular primero los promedios con el método tradicional?
+              button.button.is-success(@click="calculateNormalMeans") Aceptar
+
+      else
+        //Etapa final, convocatoria terminada, para entonces ya debió haber sido evaluado, también con el modelo
+        h1 En la etapa final, resultados
+        - let idAnnoun = announ._id
+        h1 Esta convocatoria está terminada, para ver los resultados por favor dirígete a este 
+          a(href=`http://127.0.0.1:3000/announcement/results/` + idAnnoun) enlace
+  include ../../footer.pug
+script.
+  const idAnnoun = `#{announ._id}`;
+  const announTitle = `#{announ.title}`;
+script(src=pathToRoot + 'vue/vue.js')
+if today < announ.deadlineDate && announ.projectsPerEvaluator <= 0
+  script(src=pathToRoot + 'vue/controllers/announcement/projectsPerEvaluator.js')
+else
+  script(src=pathToRoot + 'vue/controllers/announcement/projectsPerEvaluator2.js')

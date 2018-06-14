@@ -20,7 +20,7 @@ router.use('/project', project)
 
 module.exports = router;
 
-/*
+
 //router.get('/announcement/admin/:id', (req, res) => {
 router.get('/announcement/edit/:id', (req, res) => {
 	Announcement.count({_id: req.params.id}, (err, count) => {
@@ -34,6 +34,31 @@ router.get('/announcement/edit/:id', (req, res) => {
 	})
 })
 
+router.get('/announcement/projectsPerEvaluator/:id', (req, res) => {
+	Announcement.findById(req.params.id)
+		.then(announGot => {
+			if(announGot.idCreator == req.session.user_id) {
+      	let today = new Date(2018, 4, 8);
+      	if(today < announGot.endEnrollmentsDate) //Etapa de registro, redirigir a la vista correspondiente
+      		res.sendStatus(404);
+      	else if(today >= announGot.deadlineDate) {//Convocatoria cerrada, se redirige a los resultados
+      		let body = 'redirect';
+      		let url = `http://127.0.0.1:3000/announcement/results/${announGot._id}`;
+					res.writeHead(302, {
+							'Content-Type': 'text/plain',
+							'Location': url,
+							'Content-Length': body.length
+						});
+					res.end(body);					
+				}	
+				else
+					res.render('app/announcement/projectsPerEvaluator.pug', {announ: announGot});
+			}
+			else
+				res.sendStatus(403);
+		})
+		.catch(err => {console.log('FindAnnouncement error ', err.message); res.status(500).json({err: err.message});})
+})
 
 router.get('/announcement/adminEvaluators/:id', (req, res) => {
 	console.log("ANNNOUNCEMt")
@@ -42,7 +67,7 @@ router.get('/announcement/adminEvaluators/:id', (req, res) => {
 		.then(announ => {
 			console.log(announ);
 			if(announ != undefined) {
-				res.render('app/announcement/adminEvaluators', {announ: announ});
+				res.render('app/announcement/admin.pug', {announ: announ});
 			}
 			else
 				res.status(404).send("404 NOT FOUND");
@@ -53,13 +78,6 @@ router.get('/announcement/adminEvaluators/:id', (req, res) => {
 			res.status(500).json({err: err.message});
 		})
 })
-*/
-/*
-			console.log("Find announcement error"); 
-			console.log(err.message); 
-			res.status(500).json({err: err.message})
-		});
-})		
                
 router.get('/project/admin/:id', (req,res) => {
 	Project.count({_id: req.params.id}, (err, count) => {
@@ -69,7 +87,7 @@ router.get('/project/admin/:id', (req,res) => {
 			res.status(403).send('Denegado');
 	})
 })
-*/
+
 
 router.get('/notifications', (req, res) => {
 	res.render('app/notifications', {idUser: req.session.user_id});

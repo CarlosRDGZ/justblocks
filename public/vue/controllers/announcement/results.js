@@ -1,5 +1,5 @@
 const url = 'http://127.0.0.1:3000/'
-Vue.use(VueTables.ClientTable);
+Vue.use(VueTables.ClientTable, theme="bulma");
  
 let vm = new Vue({ 
   el: "#winners",
@@ -19,6 +19,7 @@ let vm = new Vue({
       },
       sortable: ['title', 'mean', 'adjustedMean', 'group', 'creator'],
       filterable: ['title', 'grade', 'creator'],
+      columnsClasses: {mean: 'has-text-centered'},
     	orderBy: {'column': 'group'}
     }
   },
@@ -31,7 +32,7 @@ let vm = new Vue({
           for(let j = 0; j < data[i].length; j++) { 
             let temp = {};
             temp.title = data[i][j].title;
-            temp.mean = data[i][j].mean;
+            temp.mean = this.round(data[i][j].mean, 4);
             temp.adjustedMean = data[i][j].adjustedGrade;
             temp.group = data[i][j].group;
             temp.creator = data[i][j].idCreator.name.first + " " + data[i][j].idCreator.name.last;
@@ -56,5 +57,11 @@ let vm = new Vue({
         this.data.rest = restRows;
       })  
   		.catch(err => {console.log(err.err);})
+  },
+  methods: {
+    round: function(num, decimals) {
+      let toRound = parseFloat(num);
+      return Math.round(toRound * Math.pow(10, decimals)) / Math.pow(10, decimals);
+    }
   }
 });

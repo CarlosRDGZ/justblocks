@@ -1,7 +1,6 @@
-let today = new Date(2018,4,10);
-let fecha;
+let today = new Date();
 // import Vue from "vue";
-const vm = new Vue({
+const vm = new Vue({ 
   el: '#app', 
   data: {
     items: [],
@@ -95,7 +94,6 @@ const vm = new Vue({
           res.data[i].endEnrollmentsDate = new Date(res.data[i].endEnrollmentsDate);
           res.data[i].evaluationDate = new Date(res.data[i].evaluationDate);
           res.data[i].deadlineDate = new Date(res.data[i].deadlineDate);
-          fecha = res.data[i].deadlineDate;
           if(today < res.data[i].endEnrollmentsDate) {
             res.data[i].stage = "Lanzamiento y registro";
             res.data[i].progress = "25";
