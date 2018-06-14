@@ -19,7 +19,7 @@ const vm = new Vue({
 				for (var i = data.allEvaluatorProjects.length - 1; i >= 0; i--) {
 					for (var j = data.allEvaluatorProjects[i].length - 1; j >= 0; j--) {
 						if(data.allEvaluatorProjects[i][j].grade < 0) { //Falta por lo menos una proyecto por evaluar
-							// this.isComplete = false;
+							this.isComplete = false;
 							break;
 						}
 						else if(data.allEvaluatorProjects[i][j].idProject.mean > -1) {

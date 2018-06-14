@@ -10,8 +10,8 @@ Para ver los proyectos que le toca evaluar: 'http://127.0.0.1:3000/announcement/
 (primeros los tienes que asignar con la cuenta de administrador)
 
 
-proyecto: "5b21d2fe21bbd800dced5165", creadorProyecto: {_id: '5b209b1749c3e90e7c0faf34', email: 'project@ucol.mx', pass: 'aaaa'}
-Para administrar un proyecto (agregar participantes y documentos):'http://127.0.0.1:3000/project/admin/5b21d2fe21bbd800dced5165'
+proyecto: "5b21d2fe21bbd800dced5169", creadorProyecto: {_id: '5b209b1749c3e90e7c0faf34', email: 'project@ucol.mx', pass: 'aaaa'}
+Para administrar un proyecto (agregar participantes y documentos):'http://127.0.0.1:3000/project/admin/5b21d2fe21bbd800dced5169'
 //En todo puedes jugar con las fechas de la convocatoria para que te aparezcan las opciones
 
 

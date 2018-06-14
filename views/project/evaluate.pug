@@ -6,12 +6,17 @@ html(lang="en")
     link(rel="stylesheet", href=pathToRoot + "css/index.css")
     link(rel="stylesheet", href=pathToRoot + "css/social-buttons.css")
     link(rel="stylesheet", href=pathToRoot + "bulma-extensions/bulma-extensions.min.css")
+    title Calificar proyecto
   body
     include ../navbar.pug
 
     .container
       .notification
-        h1.title.is-3 #{project.idProject.title}
+        section.hero.is-info(style="margin: 0px; padding: 0px;")
+          .hero-body
+            .container.has-text-centered
+              h1.title.is-3 #{project.idProject.title}
+        br
         h1.title.is-6 Descripci&oacute;n
         p #{project.idProject.description}
         br
@@ -21,9 +26,12 @@ html(lang="en")
             tbody(id="documents")
               tr
         br
-        h1.title.is-6 Calificaci&oacute;n
-        input(type="number" min="0" max="10" id="grade" value="8")
-        input.button.is-success(type="button" id="evaluate" value="Evaluar") 
+        .field
+            label(for="grade" class="title is-5") Calificación
+            .control
+              input(type="number" min="0" max="10" id="grade") 
+        .field
+          input.button.is-success(type="button" id="evaluate" value="Evaluar") 
 
   include ../footer.pug
 
