@@ -1,92 +1,207 @@
 - const pathToRoot = 'http://127.0.0.1:3000/'
 - const today = new Date(2018, 4, 8);//Se cuenta desde 0
 - const months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+- project.status = 1
 script.
   window.project = !{JSON.stringify(project)}
-doctype html 
+doctype html
 html(lang="en")
   head
     include ../header.pug
     link(rel="stylesheet", href=pathToRoot + "css/index.css")
     link(rel="stylesheet", href=pathToRoot + "css/social-buttons.css")
     link(rel="stylesheet", href=pathToRoot + "bulma-extensions/bulma-extensions.min.css")
+    title #{project.title}
   body
     include ../navbar.pug
     - const announ = project.idAnnouncement
-    h1 Proyecto
-    h2 #{project.title}
-    h2 #{project.status}
-    .container
-      if today < announ.endEnrollmentsDate
-        //Etapa de registro de proyectos y esas cosas
-        if project.status == 0
-          //Enviado
-          h5 Tu solicitud para unirte a la convocatoria fue enviada, pronto recibirás noticias de la confirmación
-        else if project.status == 1
-          //Aceptado
-          h5 Tu proyecto ahora forma parte de los partipantes en la convocatoria "#{announ.title}".
-          h5 Te recordamos que la fecha de evaluación empieza el #{announ.endEnrollmentsDate.getDay()}/#{months[announ.endEnrollmentsDate.getMonth()]}/ #{announ.endEnrollmentsDate.getFullYear()} así que no demores en subir los documentos de tu proyecto
+    //- h1 Proyecto
+    //- h2 #{project.title}
+    //- h2 #{project.status}
+    section.hero.has-carousel
+      .hero-carousel.carousel-animated.carousel-animate-fade
+        .carousel-container
+          .carousel-item.has-background.is-active
+            img.is-background(src='https://wikiki.github.io/images/merry-christmas.jpg', alt='')
+      .hero-body.has-text-centered
+        .columns.is-mobile.is-centered
+          .column.is-half.is-narrow
+            p.title.is-1 #{ announ.title }
+    main.section(style='background-color: #fff')
+      .container
+        if today < announ.endEnrollmentsDate
+          //- Etapa de registro de proyectos y esas cosas
+          if project.status == 0
+            //- Enviado
+            .columns.is-centered
+              .column.has-text-centered
+                article.message.is-info
+                  .message-body
+                    h1.title Solicitud enviada
+                    p Tu solicitud para unirte a la convocatoria fue enviada, pronto recibir&aacute;s noticias de la confirmaci&oacute;n
+                    a(href=pathToRoot + 'app') Regresar
+          else if project.status == 1
+            //- Aceptado
+            .columns.is-centered
+              .column.has-text-centered
+                article.message.is-success
+                  .message-body
+                    h1.title Proyecto Aceptado
+                    p
+                      | Tu proyecto 
+                      b #{project.title} 
+                      | ahora forma parte de la convocatoria  
+                      b #{announ.title}.
+                    p La fecha de finalizaci&oacute;n del registro empieza el #{announ.endEnrollmentsDate.getDate()} de #{months[announ.endEnrollmentsDate.getMonth()]} de #{announ.endEnrollmentsDate.getFullYear()} y podras editar el proyecto.
+                    a(href=pathToRoot + 'app') Regresar
+          else
+            //- Rechazado
+            .columns.is-centered
+              .column.has-text-centered
+                article.message.is-danger
+                  .message-body
+                    h1.title Solicitud Rechazada
+                    p Lo sentimos, por esta ocasi&oacute;n no podr&aacute;s participar en esta convocatoria.
+                    p Para consultar otras convocatorias por favor visita el siguiente 
+                      a(href="http://127.0.0.1:3000/announcement/") enlace
+                    a(href=pathToRoot + 'app') Regresar
+        else if today < announ.evaluationDate
+          //- Etapa de evaluaci&oacute;n
+          h1 En etapa de evaluaci&oacute;n
+          if project.status == 1
+            #partakers
+              .notification.is-white
+                .tabs
+                  ul
+                    li(:class="{ 'is-active' : tabs.projects }" @click='changeContent("projects")')
+                      a(style="text-decoration: none")
+                        p.badge.is-badge-small.is-badge-info(:class='tabs.projects ? "" : "is-badge-outlined"' :data-badge='documents.length')
+                          span.icon.is-small
+                            i.far.fa-file-alt(aria-hidden='true')
+                          span Documentos
+                    li(:class="{ 'is-active' : tabs.partakers }" @click='changeContent("partakers")')
+                      a(style="text-decoration: none")
+                        p.badge.is-badge-small.is-badge-info(:class='tabs.partakers ? "" : "is-badge-outlined"' :data-badge='partakers.length')
+                          span.icon.is-small
+                            i.fas.fa-user-astronaut(aria-hidden='true')    
+                          span Colaboladores
+              .tile.is-antecesor
+              .tile.is-vertical.parent
+                .tile.is-child(v-if='tabs.partakers')
+                  .columns.is-centered
+                    .column.is-10.box
+                      nav.level
+                        //- Right side
+                        .level-left
+                        //- Left side
+                        .level-right
+                          .level-item
+                            p.subtitle.is-5 Buscar colaborador
+                          .level-item
+                            .field.has-addons
+                              p.filed
+                                .control
+                                  input.input(type="email" placeholder="Correo" v-model='searchedEmail' :class="{ 'is-danger': badEmail, 'is-warning': notFound }" @focus='badEmail = false; notFound = false')
+                                  p.help.is-warning(v-show='notFound') Correo no econtrado
+                                  p.help.is-danger(v-show='badEmail') Formato invalido
+                              p.control
+                                button#btnSearch.button.is-info(@click="searchPartaker") Buscar
+                      v-client-table(:columns="table.partakers.columns" :data="partakers" :options="table.partakers.options")
+                        button.button.is-danger(slot="options" slot-scope="props" target="_blank" :value="props.row.id" @click="deletePartaker(props)") Eliminar
+                      //- v-client-table(:columns="table.projects.columns" :data="projects" :options="table.projects.options")
+              //- h1 Puedes buscar otro compañero con su direcci&oacute;n de correo y agregarlo a este proyecto
+              //- label(for="search") Buscar Colaborador
+              //- input#searchMail(type="email" placeholder="Correo")
+              //- button#btnSearch.button.is-info(@click="searchPartaker") Buscar
+              .modal(:class='{ "is-active" : modal.user }')
+                .modal-background
+                .modal-card
+                  header.modal-card-head.has-text-centered
+                    p.modal-card-title Resultado
+                    button.delete(aria-label='close' @click='modal.user = false')
+                  section.modal-card-body
+                    .content
+                      b Usuario
+                      ul
+                        li
+                          span.icon.has-text-link
+                            i.fas.fa-user-astronaut
+                          span {{ searchedUser.name.first + ' ' + searchedUser.name.first }}
+                        li
+                          span.icon.has-text-link
+                            i.fas.fa-envelope
+                          span {{ searchedUser.email }}
+                        li(v-if='searchedUser.ocupation != null')
+                          span.icon.has-text-link
+                            i.fas.fa-briefcase
+                          span {{ searchedUser.ocupation }}
+                        li(v-if='searchedUser.education')
+                          span.icon.has-text-link
+                            i.fas.fa-graduation-cap
+                          span {{ searchedUser.education }}
+                        li(v-if='searchedUser.bio')
+                          span.icon.has-text-link
+                            i.fas.fa-address-card
+                          span {{ searchedUser.bio }}
+                      //- .has-text-centered
+                      div
+                        p ¿Es &eacute;l el usuario que buscas?
+                        .field.has-addons
+                          p.control
+                            button.button.is-success(@click="addNewPartaker" :value='searchedUser._id')
+                              span.icon.is-small
+                                i.fas.fa-plus
+                              span Guardar
+                          p.control
+                            button.button.is-danger(@click='modal.user = false')
+                              span.icon.is-small
+                                i.fas.fa-ban
+                              span Cancel
+                      //- button#btnAddPartaker Guardar
+                      //- button(@click='modal.user = false') Cancelar
+              p#result(hidden)
+              p#question(hidden) ¿Es &eacute;l el usuario que buscas?
+              button#btnAddPartaker(hidden @click="addNewPartaker") Guardar
+              br
+              br
+              h1.title.is-6 Documentos
+              .container-fluid
+                table
+                  tbody(id="documents")
+                    thead
+                      tr
+                        th Documento
+                        th Eliminar
+                    tbody
+                      tr(v-for="doc in documents")
+                          td 
+                            a(:href="`${url}/files/projects/${doc._id}.${doc.extension}`" :download="`${doc.name}.${doc.extension}`") {{doc.name}}
+                          td 
+                            button.button.is-danger(:value="`btn${doc._id}`" @click="deleteFile(doc)") Eliminar
+              br
+              br
+              h1 A continuaci&oacute;n puedes subir los documentos (uno a la vez) que servir&aacute;n para evaluar tu proyecto
+              label(for="documents")
+                input#docs(type="file")
+              button#btnUploadFiles(@click="uploadFile") Subir    
+          else
+            h1 404 NOT FOUND
+          
         else
-          //Rechazado
-          h5 Lo sentimos, por esta ocasión no podrás participar en esta convocatoria porque no cumples con alguno de los lineamientos, esperamos poder contar contigo en próximas ocasiones. 
-          h5 Para consultar otras convocatorias por favor visita el siguiente  
-            a(href="http://127.0.0.1:3000/announcement/") enlace
-      else if today < announ.deadlineDate
-        //Etapa de evaluación
-        h1 En etapa de evaluación
-        if project.status == 1
-          h1 TABLA  
-          #partakers
-            v-client-table(:columns="columns" :data="data.partakers" :options="options")
-              button.button.is-danger(slot="options" slot-scope="props" target="_blank" :value="props.row.id" @click="deletePartaker(props)") Eliminar
+          if project.status == 1
+            //Etapa final, convocatoria terminada, para entonces ya debi&oacute; haber sido evaluado, también con el modelo
+            h5 La espera ha terminado, a continuaci&oacute;n puedes encontrar la informaci&oacute;n correspondiente a la evaluaci&oacute;n de tu proyecto.
+            h5 N&uacute;mero de personas que evaluaron tu proyecto: #{announ.projectsEvaluatedTimes}
+            h5 Promedio obtenido de las evaluaciones: #{project.mean}
+            h5 Promedio ajustado obtenido con el modelo BIB: #{project.adjustedGrade}
+            h5 Grupo(s) estadístico al que entra el resultado de tu proyecto: #{project.group}
+            - let idAnnoun = announ._id
+            h4 Para ver los resultados completos de la convocatoria, así como los ganadores dirígete a este 
+              a(href=`http://127.0.0.1:3000/announcement/results/` + idAnnoun) enlace
 
-            h1 Puedes buscar otro compañero con su dirección de correo y agregarlo a este proyecto
-            label(for="search") Buscar compañero
-            input#searchMail(type="email" placeholder="Correo")
-            button#btnSearch.button.is-info(@click="searchPartaker") Buscar
-            p#result(hidden)
-            p#question(hidden) ¿Es él el compañero que buscas?
-            button#btnAddPartaker(hidden @click="addNewPartaker") Guardar
-            br
-            br
-            h1.title.is-6 Documentos
-            .container-fluid
-              table
-                tbody(id="documents")
-                  thead
-                    tr
-                      th Documento
-                      th Eliminar
-                  tbody
-                    tr(v-for="doc in data.documents")
-                        td 
-                          a(:href="`${url}/files/projects/${doc._id}.${doc.extension}`" :download="`${doc.name}.${doc.extension}`") {{doc.name}}
-                        td 
-                          button.button.is-danger(:value="`btn${doc._id}`" @click="deleteFile(doc)") Eliminar
-            br
-            br
-            h1 A continuación puedes subir los documentos (uno a la vez) que servirán para evaluar tu proyecto
-            label(for="documents")
-              input#docs(type="file")
-            button#btnUploadFiles(@click="uploadFile") Subir    
-        else
-          h1 404 NOT FOUND
-        
-      else
-        if project.status == 1
-          //Etapa final, convocatoria terminada, para entonces ya debió haber sido evaluado, también con el modelo
-          h5 La espera ha terminado, a continuación puedes encontrar la información correspondiente a la evaluación de tu proyecto.
-          h5 N&uacute;mero de personas que evaluaron tu proyecto: #{announ.projectsEvaluatedTimes}
-          h5 Promedio obtenido de las evaluaciones: #{project.mean}
-          h5 Promedio ajustado obtenido con el modelo BIB: #{project.adjustedGrade}
-          h5 Grupo(s) estadístico al que entra el resultado de tu proyecto: #{project.group}
-          - let idAnnoun = announ._id
-          h4 Para ver los resultados completos de la convocatoria, así como los ganadores dirígete a este 
-            a(href=`http://127.0.0.1:3000/announcement/results/` + idAnnoun) enlace
-
-          h5 ¡Gracias por tu participación!
-        else
-          h1 404 NOT FOUND
+            h5 ¡Gracias por tu participaci&oacute;n!
+          else
+            h1 404 NOT FOUND
 
   include ../footer.pug
 

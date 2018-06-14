@@ -1,12 +1,13 @@
 const url = 'http://127.0.0.1:3000/'
-Vue.use(VueTables.ClientTable, theme= 'bulma' ); 
 
-let vm = new Vue({
+Vue.use(VueTables.ClientTable, theme = 'bulma')
+const vm = new Vue({
   el: "#app",
   data: {
     columns: ['title', 'description', 'grade'],
     data: [],
     options: {
+      skin: 'table is-striped is-fullwidth is-hoverable',
       headings: {
         title: 'Título',
         description: 'Descripción',

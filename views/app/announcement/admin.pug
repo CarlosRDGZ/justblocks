@@ -4,7 +4,6 @@ doctype html
 html(lang="en")
   head
     include ../../header.pug
-    link(rel="stylesheet", href=pathToRoot + "bulma-extensions/bulma-extensions.min.css")
     title Administración de evaluadores
   body
     include ../../navbar.pug
@@ -81,7 +80,7 @@ html(lang="en")
                             span &nbsp;Enviado
                           p(v-else-if='props.row.status == 1')
                             span.icon.is-small.has-text-success
-                              i.fas.fa-checkfas fa-people-carry
+                              i.fas.fa-check
                             span &nbsp;Aceptado
                           p(v-else-if='props.row.status == 3')
                             span.icon.is-small.has-text-info
@@ -98,6 +97,11 @@ html(lang="en")
                               span.icon.is-small
                                 i.fas.fa-check
                               span Aceptar
+                          p.control(v-if='props.row.status == 0')
+                            button.button.is-info.is-outlined(@click='updateStatus(props.row._id,3,"evaluator")')
+                              span.icon.is-small
+                                i.fas.fa-people-carry
+                              span Suplente
                           p.control(v-if='props.row.status == 0')
                             button.button.is-danger.is-outlined(@click='updateStatus(props.row._id,2,"evaluator")')
                               span.icon.is-small
@@ -135,6 +139,7 @@ html(lang="en")
   include ../../footer.pug
 script.
   const idAnnoun = `#{announ._id}`
+  window.announ = !{JSON.stringify(announ)}
 script(src=pathToRoot + 'vue/vue.js')
 script(src=pathToRoot + 'tables/vue-tables-2.min.js')
 script(src=pathToRoot + 'vue/controllers/announcement/admin.js')

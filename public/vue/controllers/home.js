@@ -10,9 +10,11 @@ var vm = new Vue({
   data: {
 		announs: [],
 		projects: [],
+		evaluator: [],
 		tabs: {
 			announs: true,
 			projects: false,
+			evaluator: false,
 			selected: 'announs'
 		},
 		table: {
@@ -58,6 +60,27 @@ var vm = new Vue({
 						edge: true
 					}
 				}
+			},
+			evaluator: {
+				columns: ['announ', 'rol', 'options'],
+				options: {
+					headings: {
+						announ: 'Convocatoria',
+						rol: 'Rol',
+						options: 'Opciones'
+					},
+					skin: 'table is-striped is-fullwidth is-hoverable',
+					sortable: ['announ', 'rol'],
+					filterable: ['announ', 'rol'],
+					orderBy: {'column': 'announ'},
+					perPage: 5,
+					perPageValues: [5,10,25],
+					preserveState: true,
+					pagination: {
+						nav: 'fixed',
+						edge: true
+					}
+				}
 			}
 		}
 	},
@@ -65,9 +88,13 @@ var vm = new Vue({
 		const vm = this
 		window.axios.get(`${url}/api/announcement/user/${id}`)
 			.then(({data}) => setAnnounDates(data).then(res => vm.announs = res))
-			.catch(err => console.log(err))
-		window.axios.get(`${url}/api/project/user/${id}`)
-		.then(({ data }) => this.projects = data)
+			.catch(err => console.error(err))
+		window.axios.get(`${url}/api/project/user/${id}/status`)
+			.then(({ data }) => this.projects = data)
+			.catch(err => console.error(err))
+		window.axios.get(`${url}/api/evaluator/user/${id}/status`)
+			.then(({ data }) => this.evaluator = data)
+			.catch(err => console.error(err))
 	},
 	methods: {
 		changeContent: function (page) {

@@ -79,7 +79,6 @@ const vm = new Vue({
       console.log('empty',empty)
       console.log('errors',this.errors.indexOf(true))
       if (!empty && this.errors.indexOf(true) === -1) {
-        const url = 'http://127.0.0.1:3000/'
         console.log(this.announ);
         window.axios
           .post(`${url}api/announcement/`, this.announ)

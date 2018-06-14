@@ -43,7 +43,6 @@ announ.get('/view/:id', function(req, res) {
 		})
 })
 
-module.exports = announ;
 announ.get('/view/evaluator/:idAnnoun', (req, res) => {
 	console.log('View announcement evaluator');
 	let idAnnoun = req.params.idAnnoun;
@@ -51,10 +50,8 @@ announ.get('/view/evaluator/:idAnnoun', (req, res) => {
 		.populate('idAnnouncement')
 		.exec()
 		.then(evaluator => {
-			console.log(evaluator[0])
-			if(evaluator[0]) {
+			if(evaluator[0])
 				res.render('announcement/evaluator/view.pug', {evaluator: evaluator[0]});
-			}
 			else
 				res.send("404 not found");
 		})

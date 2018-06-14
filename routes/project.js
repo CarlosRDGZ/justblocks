@@ -19,7 +19,7 @@ project.get('/admin/:idProject', (req, res) => {
 				else
 					res.sendStatus(403);
 			} else
-				res.send("404 NOT FOUND");
+				res.send("404 Not found");
 		})
 		.catch(err => {
 			console.log('Project error');
