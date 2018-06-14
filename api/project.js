@@ -7,7 +7,9 @@ const Evaluator = require('../models/Evaluator').Evaluator
 const ProjectsEvaluator = require('../models/projectsEvaluator').ProjectsEvaluator
 const bodyParser = require('body-parser')
 const formidable = require("express-form-data");
-const fs = require('fs');
+// const fs = require('fs');
+const path = require('path')
+const mv = require('mv')
 
 projects.use(formidable.parse({keepExtensions: true}));
 projects.use(bodyParser.urlencoded({ extended: true }))
@@ -144,7 +146,10 @@ projects.route('/documents/:idProject')
 
     doc.save()
       .then(data =>{
-        fs.rename(req.files.document.path, "public/files/projects/" + doc._id + "." + extension );
+        mv(req.files.document.path, // source
+          path.join(gRootDir,`public/files/announcement/projects/${doc._id}.${extension}`), // destiny
+          err => err ? console.log(err) : console.log('file moved')) // callback
+        // fs.rename(req.files.document.path, "public/files/projects/" + doc._id + "." + extension );
         res.json(data);
       })
       .catch(err =>{console.log("DocumentProject error"); console.log(err.message); res.status(500).json({err: err.message});})  

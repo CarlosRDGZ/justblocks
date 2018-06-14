@@ -1,5 +1,5 @@
 - const pathToRoot = 'http://127.0.0.1:3000/'
-- const today = new Date(2018, 4, 8);//Se cuenta desde 0
+- const today = new Date(2018, 4, 28);//Se cuenta desde 0
 - const months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 - project.status = 1
 script.
@@ -12,6 +12,28 @@ html(lang="en")
     link(rel="stylesheet", href=pathToRoot + "css/social-buttons.css")
     link(rel="stylesheet", href=pathToRoot + "bulma-extensions/bulma-extensions.min.css")
     title #{project.title}
+    style.
+      .has-text-ppt {
+        color: #EA3C00 !important;
+      }
+      .has-text-word {
+        color: #185b8d !important;
+      }
+      .has-text-excel {
+        color: #006f52 !important;
+      }
+      .has-text-audio {
+        color: #00838f !important;
+      }
+      .has-text-video {
+        color: #4a148c !important;
+      }
+      .has-text-compressed {
+        color: #edbb99 !important;
+      }
+      .has-text-pdf {
+        color: #b71c1c !important;
+      }
   body
     include ../navbar.pug
     - const announ = project.idAnnouncement
@@ -67,15 +89,15 @@ html(lang="en")
                     a(href=pathToRoot + 'app') Regresar
         else if today < announ.evaluationDate
           //- Etapa de evaluaci&oacute;n
-          h1 En etapa de evaluaci&oacute;n
+          //- h1 En etapa de evaluaci&oacute;n
           if project.status == 1
             #partakers
               .notification.is-white
                 .tabs
                   ul
-                    li(:class="{ 'is-active' : tabs.projects }" @click='changeContent("projects")')
+                    li(:class="{ 'is-active' : tabs.documents }" @click='changeContent("documents")')
                       a(style="text-decoration: none")
-                        p.badge.is-badge-small.is-badge-info(:class='tabs.projects ? "" : "is-badge-outlined"' :data-badge='documents.length')
+                        p.badge.is-badge-small.is-badge-info(:class='tabs.documents ? "" : "is-badge-outlined"' :data-badge='documents.length')
                           span.icon.is-small
                             i.far.fa-file-alt(aria-hidden='true')
                           span Documentos
@@ -87,13 +109,76 @@ html(lang="en")
                           span Colaboladores
               .tile.is-antecesor
               .tile.is-vertical.parent
+                .tile.is-child(v-if='tabs.documents')
+                  .columns.is-centered
+                    .column.is-10.box
+                      nav.level
+                        .level-left
+                        .level-right
+                          .level-item
+                            .field.has-addons
+                              p.filed
+                                .control
+                                  input.input#docs(type="file")
+                                .control
+                                  button.button.is-success#btnUploadFiles(@click="uploadFile") Agregar
+                      v-client-table(:columns="table.documents.columns" :data="documents" :options="table.documents.options")
+                        div(slot='type' slot-scope='props')
+                          p(v-if='image.indexOf(props.row.extension) !== -1')
+                            span.icon.is-large.has-text-primary
+                              i.fas.fa-file-image.fa-2x
+                            span &nbsp;Imagen
+                          p(v-else-if='text.indexOf(props.row.extension) !== -1')
+                            span.icon.is-large.has-text-word
+                              i.fas.fa-file-word.fa-2x
+                            span &nbsp;Documento
+                          p(v-else-if='sheet.indexOf(props.row.extension) !== -1')
+                            span.icon.is-large.has-text-excel
+                              i.fas.fa-file-excel.fa-2x
+                            span &nbsp;Hoja de Calculo
+                          p(v-else-if='slide.indexOf(props.row.extension) !== -1')
+                            span.icon.is-large.has-text-ppt
+                              i.fas.fa-file-powerpoint.fa-2x
+                            span &nbsp;Presentaci&oacute;n
+                          p(v-else-if='audio.indexOf(props.row.extension) !== -1')
+                            span.icon.is-large.has-text-audio
+                              i.fas.fa-file-audio.fa-2x
+                            span &nbsp;Audio
+                          p(v-else-if='video.indexOf(props.row.extension) !== -1')
+                            span.icon.is-large.has-text-video
+                              i.fas.fa-file-video.fa-2x
+                            span &nbsp;Video
+                          p(v-else-if='compressed.indexOf(props.row.extension) !== -1')
+                            span.icon.is-large.has-text-compressed
+                              i.fas.fa-file-archive.fa-2x
+                            span &nbsp;Compreso
+                          p(v-else-if='pdf == props.row.extension')
+                            span.icon.is-large.has-text-pdf
+                              i.fas.fa-file-pdf.fa-2x
+                            span &nbsp;PDF
+                          p(v-else)
+                            span.icon.is-large
+                              i.fas.fa-file.fa-2x
+                            span &nbsp;Archivo
+                        .field.has-addons(slot='options' slot-scope='props')
+                          p.field
+                            .control
+                              a.button.is-info(:href="`${url}/files/projects/${props.row._id}.${props.row.extension}`" :download="`${props.row.name}.${props.row.extension}`")
+                                span.icons.is-small
+                                  i.fas.fa-download
+                                span &nbsp;Descargar
+                            .control
+                              button.button.is-danger(:value="`btn${props.row._id}`" @click="deleteFile(props.row)")
+                                span.icons.is-small
+                                  i.fas.fa-times 
+                                span &nbsp;Eliminar
+                        //- button.button.is-danger(slot="options" slot-scope="props" target="_blank" :value="props.row.id" @click="deletePartaker(props)") Eliminar
                 .tile.is-child(v-if='tabs.partakers')
                   .columns.is-centered
                     .column.is-10.box
                       nav.level
                         //- Right side
                         .level-left
-                        //- Left side
                         .level-right
                           .level-item
                             p.subtitle.is-5 Buscar colaborador
@@ -108,11 +193,6 @@ html(lang="en")
                                 button#btnSearch.button.is-info(@click="searchPartaker") Buscar
                       v-client-table(:columns="table.partakers.columns" :data="partakers" :options="table.partakers.options")
                         button.button.is-danger(slot="options" slot-scope="props" target="_blank" :value="props.row.id" @click="deletePartaker(props)") Eliminar
-                      //- v-client-table(:columns="table.projects.columns" :data="projects" :options="table.projects.options")
-              //- h1 Puedes buscar otro compañero con su direcci&oacute;n de correo y agregarlo a este proyecto
-              //- label(for="search") Buscar Colaborador
-              //- input#searchMail(type="email" placeholder="Correo")
-              //- button#btnSearch.button.is-info(@click="searchPartaker") Buscar
               .modal(:class='{ "is-active" : modal.user }')
                 .modal-background
                 .modal-card
@@ -159,31 +239,22 @@ html(lang="en")
                               span Cancel
                       //- button#btnAddPartaker Guardar
                       //- button(@click='modal.user = false') Cancelar
-              p#result(hidden)
-              p#question(hidden) ¿Es &eacute;l el usuario que buscas?
-              button#btnAddPartaker(hidden @click="addNewPartaker") Guardar
-              br
-              br
-              h1.title.is-6 Documentos
-              .container-fluid
-                table
-                  tbody(id="documents")
-                    thead
-                      tr
-                        th Documento
-                        th Eliminar
-                    tbody
-                      tr(v-for="doc in documents")
-                          td 
-                            a(:href="`${url}/files/projects/${doc._id}.${doc.extension}`" :download="`${doc.name}.${doc.extension}`") {{doc.name}}
-                          td 
-                            button.button.is-danger(:value="`btn${doc._id}`" @click="deleteFile(doc)") Eliminar
-              br
-              br
-              h1 A continuaci&oacute;n puedes subir los documentos (uno a la vez) que servir&aacute;n para evaluar tu proyecto
-              label(for="documents")
-                input#docs(type="file")
-              button#btnUploadFiles(@click="uploadFile") Subir    
+              //- h1.title.is-6 Documentos
+              //- .container-fluid
+              //-   table
+              //-     tbody(id="documents")
+              //-       thead
+              //-         tr
+              //-           th Documento
+              //-           th Eliminar
+              //-       tbody
+              //-         tr(v-for="doc in documents")
+              //-             td 
+              //-               a(:href="`${url}/files/projects/${doc._id}.${doc.extension}`" :download="`${doc.name}.${doc.extension}`") {{doc.name}}
+              //-             td 
+              //-               button.button.is-danger(:value="`btn${doc._id}`" @click="deleteFile(doc)") Eliminar
+              //- input#docs.input(type="file")
+              //- button#btnUploadFiles(@click="uploadFile") Subir    
           else
             h1 404 NOT FOUND
           

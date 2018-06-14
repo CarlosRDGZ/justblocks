@@ -40,12 +40,12 @@ html(lang="en")
                       i.fas.fa-user-astronaut
                     span Bio
                     article.notification #{user.bio !== '' ? user.bio : 'bio'}
-            nav.panel                                                                                 
-              p.panel-heading Menu
-              a.panel-block(onclick="window.location='/announcement/create'") 
-                span.panel-icon
-                  i.fas.fa-plus-square
-                span Agregar Convocatoria
+            //- nav.panel                                                                                 
+            //-   p.panel-heading Menu
+            //-   a.panel-block(onclick="window.location='/announcement/create'")
+            //-     span.panel-icon
+            //-       i.fas.fa-plus-square
+            //-     span Agregar Convocatoria
           .column.is-three-quarters
             .notification.is-primary
               h1.title(v-if='tabs.announs') Convocatorias
@@ -104,12 +104,12 @@ html(lang="en")
                         div(slot='description' slot-scope='props') {{ props.row.description != '' ? props.row.description : 'Sin Título' }}
                         .field.has-addons(slot='options' slot-scope='props')
                           p.control
-                            a.button.is-primary.is-outlined(:href="`/app/project/edit/${props.row._id}`")
+                            a.button.is-primary.is-outlined(:href="`project/edit/${props.row._id}`")
                               span.icon.is-small
                                 i.fas.fa-edit
                               span Editar
                           p.control
-                            a.button.is-info.is-outlined(:href="`project/edit/${props.row._id}`")
+                            a.button.is-info.is-outlined(:href="`project/admin/${props.row._id}`")
                               span.icon.is-small
                                 i.fas.fa-toolbox
                               span Administrar

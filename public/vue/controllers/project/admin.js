@@ -9,11 +9,28 @@ const vm = new Vue({
 		partakers: [],
 		columns: ['name', 'email', 'rol', 'options'],
 		tabs: {
-			projects: true,
+			documents: true,
 			partakers: false,
-			selected: 'projects'
+			selected: 'documents'
 		},
 		table: {
+			documents: {
+				columns: ['type', 'name', 'options'],
+				options: {
+					skin: 'table is-striped is-fullwidth is-hoverable',
+					headings: {
+						type: 'Tipo',
+						name: 'Nombre',
+						email: 'Correo',
+						rol: 'Rol',
+						options: 'Eliminar'
+					},
+					filterable: ['name'],
+					perPage: 10,
+					perPageValues: [10,25],
+					pagination: { nav: 'fixed', edge: true }
+				}
+			},
 			partakers: {
 				columns: ['name', 'email', 'status', 'options'],
 				options: {
@@ -32,7 +49,7 @@ const vm = new Vue({
 					perPageValues: [5,10,25],
 					pagination: { nav: 'fixed', edge: true }
 				}
-			},
+			}
 		},
 		empty: {
 			user: {
@@ -54,6 +71,14 @@ const vm = new Vue({
 		modal: {
 			user: false
 		},
+		text: ['odt','ott','odm','tml','oth','ods','ots','odg','otg','odp','otp','odf','odb','oxt','doc','docm','docx'],
+		slide: ['pptx','pptm','ppt','xps','potx','potm','pot','thmx','ppsx','ppsm','pps','ppam','ppa'],
+		sheet: ['xlsx','xls','xml','xml','xlam'],
+		pdf: 'pdf',
+		image: ['bmp','gif','jpg','jpge','png','psd','ai','cdr','dwg','svg','raw','nef'],
+		audio: ['mp3','mid','midi','wav','wma','cda','ogg','ogm','aac','ac3','flac','aym'],
+		video: ['asf','lsf','asx','bik','smk','div','divx','dvd','wob','ivf','m1v','mp2v','mp4','mpa','mpe','mpeg','mpg','mpv2','mov','qt','qtl','rpm','wm','wmv','avi'],
+		compressed: ['7z','7z001','7z002','a00','a01','a02','ace','alz','ar','arc','arj','ark','b1','b64','ba','bh','bndl','boo','bz','bz2','bza','bzip','bzip2','c00','c01','c02','c10','cb7','cba','cbr','cbt','cbz','cmp','cp9','cpgz','czip','dar','deb','dgc','dist','dl_','drz','dwz','dz','ecs','efw','egg','gca','gpk','gz','gz2','gza','gzi','gzip','ha','hbc','hbc2','hbe','hki','hki1','hki2','hki3','ice','ipg','ish','ita','ize','jam','jarpack','jgz','jic','kgb','kz','lbr','lemon','lha','lqr','lz','lzh','lzm','lzma','lzo','lzx','mcp','mint','mls','mou','mpkg','mrt','mv','mzp','oar','oz','packgz','pae','pak','paq6','paq7','paq8','paq8f','par','par2','pax','pbi','pcv','pea','pet','pit','piz','pkg','prp','psz','pup','pwa','qda','r0','r00','r01','r02','r03','r1','r2','r21','r30','rar','rar5','rev','rk','rp9','rpm','rz','s00','s7z','sar','sea','sen','sfs','sfx','shar','shk','shr','sit','sitx','sqx','srep','sy_','targz','targz2','tarlzma','tarxz','taz','tbz','tbz2','tg','tgz','tlz','tlzma','txz','tx_','tz','uc2','ufsuzip','uha','uzip','vem','vsi','w02','war','xef','xez','xmcdz','xx','xz','yz','yz1','z','z01','z02','z03','z04','zfsendtotarget','zi','zip','zipx','zix','zl','zoo','zz']
 	},
 	created: function() {
 		this.searchedUser = this.empty.user
@@ -108,7 +133,6 @@ const vm = new Vue({
 				this.badEmail = true
 		},
 		addNewPartaker: function() {
-			let id = this.get('btnAddPartaker').value;
 			let partaker = {
 				idProject: idProject,
 				idUser: this.searchedUser._id,
